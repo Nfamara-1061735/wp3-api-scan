@@ -1,0 +1,1 @@
+from .research_model import Researches
