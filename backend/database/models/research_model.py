@@ -7,8 +7,9 @@ from sqlalchemy.testing.schema import mapped_column
 
 from backend import db
 
-class Researches(db.Model):
-    """Research Table"""
+class Research(db.Model):
+    """Researches Table"""
+    __tablename__ = 'researches'
 
     research_id: Mapped[int] = mapped_column(primary_key=True)
     """Unique identifier for the research."""
