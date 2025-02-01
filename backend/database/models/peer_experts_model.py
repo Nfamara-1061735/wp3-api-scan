@@ -26,7 +26,12 @@ class PeerExperts(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
 
     
+class PeerExpertsLimitations(db.Model):
+    __tablename__ = "peer_experts_limitations"
 
+    peer_experts_limitations_id: Mapped[int]
+    limitation_id: Mapped[int] = mapped_column(ForeignKey('limitations.limitation_id'))
+    peer_expert_id: Mapped[int] = mapped_column(ForeignKey('peer_experts.peer_expert_id'))
 
 
 
