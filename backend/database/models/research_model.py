@@ -46,7 +46,7 @@ class Research(db.Model):
 
     # Define foreign key relationships
     status_id: Mapped[int] = mapped_column(ForeignKey('research_statuses.research_status_id'))
-    """Foreign key to the research status."""
+    """Foreign key to the current research status."""
 
     research_type_id: Mapped[int] = mapped_column(ForeignKey('research_types.research_type_id'))
-    """Foreign key to the research type."""
+    """Foreign key to the type of research."""
