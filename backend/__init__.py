@@ -21,6 +21,8 @@ def create_app():
     db.init_app(app)
     app.cli.add_command(init_db_command)
 
+    from backend.database import models
+
     return app
 
 @click.command("init-db")
