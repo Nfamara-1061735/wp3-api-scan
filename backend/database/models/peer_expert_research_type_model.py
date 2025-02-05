@@ -8,7 +8,7 @@ class PeerExpertResearchTypeModel(db.Model):
     """peer_expert_research_type Table"""
     __tablename__ = 'peer_expert_research_type'
 
-    expert_research_type_id: Mapped[int] = mapped_column(primary_key=True, nullable=False, unique=True, unsigned=True)
+    expert_research_type_id: Mapped[int] = mapped_column(primary_key=True, nullable=False, unique=True)
     """ID for identification of expert research type"""
 
     peer_expert_id: Mapped[int] = mapped_column(ForeignKey('peer_experts.peer_expert_id'), nullable=False)
