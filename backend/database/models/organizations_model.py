@@ -32,5 +32,5 @@ class Organizations(db.Model):
     additional_information: Mapped[str]
     """additional information about organization"""
 
-    organization_types: Mapped[int] = mapped_column(ForeignKey("organisatie_types.id"),nullable=False)
+    organization_types: Mapped[int] = mapped_column(ForeignKey("organization_types.organization_type_id"),nullable=False)
     """?"""
