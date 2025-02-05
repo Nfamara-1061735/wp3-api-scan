@@ -8,7 +8,7 @@ class Organizations(db.Model):
     """Organizations Table"""
     __tablename__ = 'organizations'
 
-    organization_id: Mapped[int] = mapped_column(primary_key=True, nullable=False, unique=True, autoincremental=True)
+    organization_id: Mapped[int] = mapped_column(primary_key=True, nullable=False, unique=True)
     """ID for identifying the organization"""
 
     name: Mapped[str]
