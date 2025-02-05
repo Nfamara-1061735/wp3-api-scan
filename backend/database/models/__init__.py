@@ -1,3 +1,4 @@
+from .contact_preferences_model import ContactPreferences
 from .limitations_model import LimitationsModel
 from .organization_types_model import OrganizationType
 from .organizations_model import Organizations
