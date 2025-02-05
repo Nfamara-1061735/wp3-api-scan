@@ -2,7 +2,7 @@ from .contact_preferences_model import ContactPreferences
 from .limitations_model import LimitationsModel
 from .organization_types_model import OrganizationType
 from .organizations_model import Organizations
-from .peer_expert_research_type_model import PeerExpertResearchTypeModel
+from .peer_experts_research_types_model import PeerExpertsResearchTypes
 from .peer_experts_model import PeerExperts
 from .research_limitations_model import ResearchLimitations
 from .research_model import Research
