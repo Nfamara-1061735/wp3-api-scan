@@ -10,5 +10,6 @@ app.config['SECRET_KEY'] = "dev"
 def main():
     return render_template("index.html")
 
+# run the app (don't forget to set debug=False when the app is done)
 if __name__ == "__main__":
-    app.run(debug=True) 
+    app.run(debug=True)

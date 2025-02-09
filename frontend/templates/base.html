@@ -22,7 +22,7 @@
       href="{{ url_for('static', filename='style.css') }}"
     />
   </head>
-  <body>
+  <body class="d-flex flex-column vh-100">
     <header class="header">
       <nav class="navbar navbar-expand" style="background-color: #334ee6">
         <div class="container">
@@ -49,12 +49,12 @@
         </div>
       </nav>
     </header>
-    <main>
+    <main class="flex-grow-1">
         {% block content %} {% endblock %}
     </main>
     <footer>
         <div class="copyright">
-            <div class="text-center p-3" style="background-color: #fff; color: #1a2e83">
+            <div class="text-center p-3 mt-auto" style="background-color: #fff; color: #1a2e83">
                 <a href="/" style="text-decoration: none; color: #1a2e83">© 2025 Stichting Accessibility</a>
             </div>
         </div>
