@@ -148,7 +148,7 @@ def generate_peer_experts(fake: Faker, user_organizations: list[UserOrganization
             has_supervisor = random.choice([True, False])
             peer_expert = PeerExperts(
                 postal_code=fake.postcode(),
-                gender=random.choice(['Man', 'Vrouw']),
+                gender=random.choice(['man', 'vrouw']),
                 birth_date=fake.date_of_birth(minimum_age=1, maximum_age=65),
                 tools_used=fake.word(),
                 short_bio=fake.text(max_nb_chars=300),
