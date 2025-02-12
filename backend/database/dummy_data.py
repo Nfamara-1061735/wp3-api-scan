@@ -3,9 +3,11 @@ import random
 
 import click
 
-from backend.database.models import Users, Organizations, UserOrganization, OrganizationType, LimitationsModel
+from backend.database.models import Users, Organizations, UserOrganization, OrganizationType, LimitationsModel, \
+    PeerExperts, PeerExpertsLimitations, ContactPreferences
 from backend import db
 from faker import Faker
+
 
 # Very simple wrapper for message logging
 def print_message(message):
@@ -124,6 +126,62 @@ def generate_limitations():
     return limitations
 
 
+def generate_contact_preferences():
+    print_message("Importing contact preferences...")
+    organization_type_data = [
+        "telefonisch",
+        "email"
+    ]
+    organization_types = [ContactPreferences(type=organization_type) for organization_type in organization_type_data]
+
+    return organization_types
+
+
+def generate_peer_experts(fake: Faker, user_organizations: list[UserOrganization], fake_users: list[Users],
+                          contact_preferences: list[ContactPreferences]):
+    print_message("Generating dummy peer experts data...")
+    peer_experts = []
+
+    for user in fake_users:
+        # Only assign to users not in any organization for now
+        if not any(user_organization.user_id == user.user_id for user_organization in user_organizations):
+            has_supervisor = random.choice([True, False])
+            peer_expert = PeerExperts(
+                postal_code=fake.postcode(),
+                gender=random.choice(['Man', 'Vrouw']),
+                birth_date=fake.date_of_birth(minimum_age=1, maximum_age=65),
+                tools_used=fake.word(),
+                short_bio=fake.text(max_nb_chars=300),
+                special_notes=fake.text(max_nb_chars=200),
+                accepted_terms=random.choice([True, False]),
+                has_supervisor=has_supervisor,
+                supervisor_or_guardian_name=fake.name() if has_supervisor else None,
+                availability_notes=fake.text(max_nb_chars=100),
+                contact_preference_id=random.choice(contact_preferences).contact_preference_id,
+                user_id=user.user_id
+            )
+            peer_experts.append(peer_expert)
+
+    return peer_experts
+
+
+def generate_peer_experts_limitations(peer_experts: list[PeerExperts], limitations: list[LimitationsModel]):
+    print_message("Assigning limitations to peer experts...")
+    peer_experts_limitations = []
+
+    for peer_expert in peer_experts:
+        # Randomly assign 1 to 3 limitations to each peer expert
+        assigned_limitations = random.sample(limitations, random.randint(1, 3))
+
+        for limitation in assigned_limitations:
+            peer_expert_limitation = PeerExpertsLimitations(
+                limitation_id=limitation.limitation_id,
+                peer_expert_id=peer_expert.peer_expert_id
+            )
+            peer_experts_limitations.append(peer_expert_limitation)
+
+    return peer_experts_limitations
+
 def init_db_data():
     # Drop all tables and create new ones
     print_message("Dropping existing tables...")
@@ -148,7 +206,16 @@ def init_db_data():
     db.session.bulk_save_objects(user_organizations)
 
     limitations = generate_limitations()
-    db.session.bulk_save_objects(limitations)
+    db.session.bulk_save_objects(limitations, return_defaults=True)
+
+    contact_preferences = generate_contact_preferences()
+    db.session.bulk_save_objects(contact_preferences, return_defaults=True)
+
+    peer_experts = generate_peer_experts(fake, user_organizations, fake_users, contact_preferences)
+    db.session.bulk_save_objects(peer_experts, return_defaults=True)
+
+    peer_experts_limitations = generate_peer_experts_limitations(peer_experts, limitations)
+    db.session.bulk_save_objects(peer_experts_limitations)
 
     db.session.commit()
 
