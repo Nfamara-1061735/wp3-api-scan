@@ -19,7 +19,7 @@ class PeerExperts(db.Model):
     short_bio: Mapped[str]
     special_notes:Mapped[Optional[str]] 
     accepted_terms:Mapped[bool] = mapped_column(default=False)
-    is_supervisor: Mapped[bool] = mapped_column(default=False)
+    has_supervisor: Mapped[bool] = mapped_column(default=False)
     supervisor_or_guardian_name: Mapped[Optional[str]]
     availability_notes: Mapped[str]
 
