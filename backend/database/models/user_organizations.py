@@ -19,5 +19,5 @@ class UserOrganization(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
     """Foreign key to the employee user."""
 
-    organization_id: Mapped[int] = mapped_column(ForeignKey('user_organizations.organization_id'))
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
     """Foreign key to the employing company."""

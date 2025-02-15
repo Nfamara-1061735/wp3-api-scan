@@ -21,11 +21,15 @@ def create_app():
     db.init_app(app)
     app.cli.add_command(init_db_command)
 
+    from backend.database import models
+
     return app
 
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
+    click.echo("Dropping existing tables...")
     db.drop_all()
+    click.echo("Creating tables...")
     db.create_all()
-    click.echo("Initialized the database.")
+    click.echo("✅ Initialized database.")

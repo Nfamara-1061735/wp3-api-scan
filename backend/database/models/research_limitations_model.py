@@ -14,5 +14,5 @@ class ResearchLimitations(db.Model):
     research_id: Mapped[int] = mapped_column(ForeignKey("researches.research_id"), nullable=False)
     """ID for research"""
 
-    limitation_id: Mapped[int] = mapped_column(ForeignKey("limitations.beperking_id"), nullable=False)
+    limitation_id: Mapped[int] = mapped_column(ForeignKey("limitations.limitation_id"), nullable=False)
     """ID for limitation"""

@@ -1,1 +1,14 @@
-from .research_model import Researches
+from .contact_preferences_model import ContactPreferences
+from .limitations_model import LimitationsModel
+from .organization_types_model import OrganizationType
+from .organizations_model import Organizations
+from .peer_experts_research_types_model import PeerExpertsResearchTypes
+from .peer_experts_model import PeerExperts
+from .research_limitations_model import ResearchLimitations
+from .research_model import Research
+from .research_types_model import ResearchTypesModel
+from .status_model import ResearchStatus
+from .user_organizations import UserOrganization
+from .users_model import Users
+from .users_stichting_accessibility_model import UsersStichtingAccessibility
+

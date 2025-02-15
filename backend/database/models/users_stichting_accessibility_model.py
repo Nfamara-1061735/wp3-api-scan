@@ -8,7 +8,7 @@ class UsersStichtingAccessibility(db.Model):
     """Users of stichting accessibility Table"""
     __tablename__ = 'users_stichting_accessibility'
 
-    gebruikers_id: Mapped[int] = mapped_column(primary_key=True, nullable=False, unique=True, unsigned=True)
+    gebruikers_id: Mapped[int] = mapped_column(primary_key=True, nullable=False, unique=True)
     """ID from users"""
 
     admin: Mapped[bool] = mapped_column(nullable=False)
