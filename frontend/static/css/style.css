@@ -2,21 +2,4 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: aliceblue;
-}
-
-body {
-    background: aliceblue;
-}
-
-.login-card-img{
-    width: 150px;
-}
-
-.card {
-   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card:hover {
-   transform: translateY(-10px);
-   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
