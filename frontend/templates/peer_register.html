@@ -2,6 +2,47 @@
 {% block title %} index {% endblock %}
 {% block content %}
 
+<body>
+    <h1>Peer Expert Registratie</h1>
+    <form method="POST" action="/register">
+        <label>Postcode:</label>
+        <input type="text" name="postal_code" required><br>
 
+        <label>Geslacht:</label>
+        <input type="text" name="gender" required><br>
+
+        <label>Geboortedatum:</label>
+        <input type="date" name="birth_date" required><br>
+
+        <label>Hulpmiddelen:</label>
+        <input type="text" name="tools_used"><br>
+
+        <label>Korte Bio:</label>
+        <textarea name="short_bio" required></textarea><br>
+
+        <label>Speciale Opmerkingen:</label>
+        <textarea name="special_notes"></textarea><br>
+
+        <label>Akkoord met voorwaarden:</label>
+        <input type="checkbox" name="accepted_terms" required><br>
+
+        <label>Is Begeleider:</label>
+        <input type="checkbox" name="is_supervisor"><br>
+
+        <label>Naam Begeleider/Voogd:</label>
+        <input type="text" name="supervisor_or_guardian_name"><br>
+
+        <label>Beschikbaarheid:</label>
+        <textarea name="availability_notes" required></textarea><br>
+
+        <label>Contactvoorkeur ID:</label>
+        <input type="number" name="contact_preference_id" required><br>
+
+        <label>Gebruikers ID:</label>
+        <input type="number" name="user_id" required><br>
+
+        <button type="submit">Registreer</button>
+    </form>
+</body>
 
 {% endblock %}
