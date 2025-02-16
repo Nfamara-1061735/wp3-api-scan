@@ -4,6 +4,7 @@ from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 
+
 class BaseModel(DeclarativeBase):
     pass
 
@@ -12,7 +13,8 @@ db:SQLAlchemy = SQLAlchemy(model_class=BaseModel)
 def create_app():
     """Create and configure an instance of the Flask application"""
     # Create flask instance
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static',static_url_path='/')
+
 
     # Config flask application
     app.config['SECRET_KEY'] = "dev"
