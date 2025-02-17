@@ -10,6 +10,10 @@ app.config['SECRET_KEY'] = "dev"
 def main():
     return render_template("home.html")
 
+@app.route('/signin', methods=['GET', 'POST'])
+def signup():
+    return render_template("sign_in.jinja")
+
 # run the app (don't forget to set debug=False when the app is done)
 if __name__ == "__main__":
     app.run(debug=True)
