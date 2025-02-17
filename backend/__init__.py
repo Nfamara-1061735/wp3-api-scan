@@ -35,3 +35,12 @@ def init_db_command():
     click.echo("Creating tables...")
     db.create_all()
     click.echo("✅ Initialized database.")
+
+@click.command("init-db-data")
+@with_appcontext
+def init_db_command():
+    from .database.dummy_data import init_db_data
+
+    click.echo("Initializing database with fake data...")
+    message = init_db_data()
+    click.echo(message)
