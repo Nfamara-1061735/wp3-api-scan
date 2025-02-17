@@ -14,10 +14,11 @@ from faker import Faker
 def print_message(message):
     click.echo(message)
 
-def generate_dummy_users(fake:Faker):
+
+def generate_dummy_users(fake: Faker, multiplier=1):
     print_message("Generating dummy user data...")
     fake_users = []
-    for _ in range(random.randrange(10, 25)):
+    for _ in range(random.randrange(10 * multiplier, 25 * multiplier)):
         password = fake.password()  # generate fake password
         salt = fake.uuid4()  # generate fake salt
 
@@ -43,11 +44,12 @@ def generate_organization_types():
 
     return organization_types
 
-def generate_dummy_organizations(fake:Faker, organization_types:list[OrganizationType]):
+
+def generate_dummy_organizations(fake: Faker, organization_types: list[OrganizationType], multiplier=1):
     print_message("Generating dummy organization data...")
 
     fake_organizations = []
-    for _ in range(random.randrange(5, 15)):  # Create 5-15 fake organizations
+    for _ in range(random.randrange(5 * multiplier, 15 * multiplier)):  # Create 5-15 fake organizations
         fake_organization = Organizations(
             name=fake.company(),
             website=fake.url(),
@@ -177,7 +179,7 @@ def generate_peer_experts_limitations(peer_experts: list[PeerExperts], limitatio
 
     for peer_expert in peer_experts:
         # Randomly assign 1 to 3 limitations to each peer expert
-        assigned_limitations = random.sample(limitations, random.randint(1, 3))
+        assigned_limitations = random.sample(limitations, random.randint(1, 5))
 
         for limitation in assigned_limitations:
             peer_expert_limitation = PeerExpertsLimitations(
@@ -216,11 +218,12 @@ def generate_research_types():
     return research_types
 
 
-def generate_researches(fake: Faker, research_statuses: list[ResearchStatus], research_types: list[ResearchTypesModel]):
+def generate_researches(fake: Faker, research_statuses: list[ResearchStatus], research_types: list[ResearchTypesModel],
+                        multiplier=1):
     print_message("Generating dummy organization data...")
 
     fake_researches = []
-    for _ in range(random.randrange(5, 15)):
+    for _ in range(random.randrange(5 * multiplier, 15 * multiplier)):
         # Start date
         start_date = fake.date_time_between_dates(datetime_start=datetime(2020, 1, 1),
                                                   datetime_end=datetime(2030, 1, 1))
@@ -316,7 +319,8 @@ def set_accounts_admin(accounts: list[Users]):
         ))
     return admin_accounts
 
-def init_db_data():
+
+def init_db_data(amount_multiplier=1):
     # Drop all tables and create new ones
     print_message("Dropping existing tables...")
     db.drop_all()
@@ -327,13 +331,13 @@ def init_db_data():
     fake = Faker(['nl_NL', 'nl_BE', 'fr_FR', 'en_GB'])
 
     # Generate fake data
-    fake_users = generate_dummy_users(fake)
+    fake_users = generate_dummy_users(fake, amount_multiplier)
     db.session.bulk_save_objects(fake_users, return_defaults=True)
 
     organization_types = generate_organization_types()
     db.session.bulk_save_objects(organization_types, return_defaults=True)
 
-    fake_organizations = generate_dummy_organizations(fake, organization_types)
+    fake_organizations = generate_dummy_organizations(fake, organization_types, amount_multiplier)
     db.session.bulk_save_objects(fake_organizations, return_defaults=True)
 
     user_organizations = generate_user_organization_relationships(fake_users, fake_organizations)
@@ -355,7 +359,7 @@ def init_db_data():
     research_types = generate_research_types()
     db.session.bulk_save_objects([*research_statuses, *research_types], return_defaults=True)
 
-    fake_researches = generate_researches(fake, research_statuses, research_types)
+    fake_researches = generate_researches(fake, research_statuses, research_types, amount_multiplier)
     db.session.bulk_save_objects(fake_researches, return_defaults=True)
 
     research_limitations = generate_research_limitations(fake_researches, limitations)

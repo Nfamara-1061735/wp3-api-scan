@@ -37,10 +37,11 @@ def init_db_command():
     click.echo("✅ Initialized database.")
 
 @click.command("init-db-data")
+@click.argument('amount_multiplier', default=100)
 @with_appcontext
-def init_db_command():
+def init_db_command(amount_multiplier: int = 1):
     from .database.dummy_data import init_db_data
 
     click.echo("Initializing database with fake data...")
-    message = init_db_data()
+    message = init_db_data(round(max(1, amount_multiplier)))
     click.echo(message)
