@@ -1,0 +1,21 @@
+{% extends "base.jinja" %}
+{% block title %} Sign-in page {% endblock %}
+{% block head %}
+    <meta charset="UTF-8">
+    <title>Sign-in page</title>
+    <link rel="stylesheet" href="../static/css/signin.css">
+{% endblock %}
+{% block content %}
+    <form action="#" method="post">
+        <div class="input-area">
+            <div>
+                <input type="text" class="input-fields" id="email-adres" placeholder="email-adres" required>
+                <label for="email-adres"></label>
+            </div>
+            <div>
+                <input type="text" class="input-fields" id="password" placeholder="wachtwoord" required>
+                <label for="password"></label>
+            </div>
+        </div>
+    </form>
+{% endblock %}
