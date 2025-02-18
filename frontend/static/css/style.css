@@ -37,3 +37,10 @@
     font-family: nexa-font, serif;
     color: black;
 }
+
+.submit-button {
+    width: 150px;
+    color: black;
+    font-family: nexa-font, serif;
+    background: #334ee6;
+}
