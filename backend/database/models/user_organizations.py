@@ -13,11 +13,11 @@ class UserOrganization(db.Model):
     user_organizations_id: Mapped[int] = mapped_column(primary_key=True)
     """Unique identifier for the user organization link."""
 
-    has_reward: Mapped[bool]
-    """Indicates if this user has admin privileges within this company."""
-
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
     """Foreign key to the employee user."""
+
+    is_admin: Mapped[bool]
+    """Indicates if this user has admin privileges within this company."""
 
     organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
     """Foreign key to the employing company."""

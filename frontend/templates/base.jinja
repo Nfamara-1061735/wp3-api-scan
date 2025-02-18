@@ -17,6 +17,7 @@
     />
   </head>
   <body class="d-flex flex-column min-vh-100">
+<!--header van de html paginas-->
     <header class="header">
       <nav class="navbar navbar-expand" style="background-color: #334ee6; justify-content: space-between;">
         <div class="container-fluid d-flex justify-content-between align-items-center">
@@ -36,16 +37,19 @@
           </a>
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a href="#" class="btn btn-primary" style="cursor: pointer;">Log In</a>
+              <a href="#" class="btn btn-primary" style="cursor: pointer;">Uitloggen</a>
               <!--bij deze hashtag komt de link naar de login pagina-->
             </li>
           </ul>
         </div>
       </nav>
     </header>
+    <!--Dit is voor de main content-->
     <main>
         {% block content %} {% endblock %}
     </main>
+
+    <!--Dit is voor de footer van alle html paginas-->
     <footer class="mt-auto">
         <div class="copyright">
             <div class="text-center p-3 mt-auto" style="background-color: #fff; color: #1a2e83">
