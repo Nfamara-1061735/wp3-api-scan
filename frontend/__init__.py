@@ -10,7 +10,7 @@ app.config['SECRET_KEY'] = "dev"
 def main():
     return render_template("home.html")
 
-@app.route('/signin', methods=['GET', 'POST'])
+@app.route('/signin')
 def signup():
     return render_template("sign_in.jinja")
 
