@@ -16,6 +16,10 @@ def register():
         return render_template('peer_register.html')
 
 
+@app.route('/signin')
+def signup():
+    return render_template("sign_in.jinja")
+
 @app.route('/admin')
 def dashboard():
     return render_template("admin_dashboard.jinja")
