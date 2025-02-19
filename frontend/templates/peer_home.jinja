@@ -1,0 +1,42 @@
+{% extends "base.jinja" %}
+{% block title %} Ervaringsdeskundige {% endblock %}
+{% block logout %} {% endblock %}
+{% block content %}
+    <h1 class="text-center mt-5">Wat wilt u doen?</h1>
+    <section class="p-5">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <a href="{{ url_for('signup') }}" class="text-decoration-none">
+                        <!--link naar inlogpagina voor onderzoeksbureau-->
+                        <div class="card bg-light border-dark-subtle rounded">
+                            <div class="card-body text-center">
+                                <!--img
+                                  src="img/onderzoeksbureau.png"
+                                  class="login-card-img rounded-circle mb-3"
+                                  alt=""
+                                /-->
+                                <h3 class="card-title">Inloggen</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{{ url_for('register') }}" class="text-decoration-none">
+                        <!--link naar inlogpagina voor stichting accesibility-->
+                        <div class="card bg-light border-dark-subtle rounded">
+                            <div class="card-body text-center">
+                                <!--img
+                                  src="img/beheer.png"
+                                  class="login-card-img rounded-circle mb-3"
+                                  alt=""
+                                /-->
+                                <h3 class="card-title">Registreren</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
