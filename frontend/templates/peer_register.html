@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "base.jinja" %}
 {% block title %} index {% endblock %}
+{% block logout %} {% endblock %}
 {% block content %}
-
 <body>
     <h1>Peer Expert Registratie</h1>
-    <form method="POST" action="/register">
+    <form method="POST" action="{{ url_for('peer_dashboard') }}">
         <label>Postcode:</label>
         <input type="text" name="postal_code" required><br>
 

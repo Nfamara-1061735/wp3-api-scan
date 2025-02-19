@@ -36,10 +36,12 @@
             />
           </a>
           <ul class="navbar-nav">
-            <li class="nav-item">
-              <a href="#" class="btn btn-primary" style="cursor: pointer;">Uitloggen</a>
-              <!--bij deze hashtag komt de link naar de login pagina-->
-            </li>
+              {% block logout %}
+                  <li class="nav-item">
+                      <a href="{{ url_for('main') }}" class="btn btn-primary" style="cursor: pointer;">Uitloggen</a>
+                      <!--bij deze hashtag komt de link naar de login pagina-->
+                  </li>
+              {% endblock %}
           </ul>
         </div>
       </nav>

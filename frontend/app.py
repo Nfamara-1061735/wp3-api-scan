@@ -1,19 +1,44 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from backend import create_app,db
+from backend import create_app, db
 from backend.database.models.peer_experts_model import PeerExperts
 
 # Create flask instance
 app = create_app()
+
 
 @app.route('/')
 def main():
     return render_template("home.html")
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/peer/home')
+def peer_home():
+    return render_template("peer_home.jinja")
+
+
+@app.route('/peer/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('peer_register.html')
+
+
+@app.route('/peer/signin')
+def signup():
+    return render_template("sign_in.jinja")
+
+
+@app.route('/admin/dashboard')
+def dashboard():
+    return render_template("admin_dashboard.jinja")
+
+
+@app.route('/peer/dashboard', methods=['GET', 'POST'])
+def peer_dashboard():
+    return render_template("peer_dashboard.jinja")
+
+@app.route('/docs')
+def documentation():
+    return render_template("api_documentation.jinja")
 
 
 # run the app (don't forget to set debug=False when the app is done)

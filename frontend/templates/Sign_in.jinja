@@ -1,8 +1,9 @@
 {% extends "base.jinja" %}
 {% block title %} Sign-in page {% endblock %}
+{% block logout %} {% endblock %}
 {% block content %}
     <h1 class="sign-in-title center">Log in:</h1>
-    <form action="#" method="post">
+    <form action="{{ url_for('peer_dashboard') }}" method="post">
         <div class="input-area center">
             <div>
                 <input type="text" class="input-fields" id="email-adres" placeholder="email-adres" required>
