@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.jinja" %}
 {% block title %} Admin - Peer Experts {% endblock %}
 {% block content %}
     <!-- ervaringsdeskundige aanmelding onderzoek goed/af keuren (front-end) -->
@@ -94,22 +94,5 @@
         </div>
     </div>
 
-    <script>
-        function removeElement(sender) {
-            let element = sender.parentElement
-            let accordionContent = element.parentElement
-
-            // Remove element
-            element.remove();
-
-            // Add text if no more elements left
-            if (accordionContent.childElementCount < 1) {
-                let p = document.createElement("p");
-                p.classList.add("text-muted");
-                p.textContent = "Er zijn geen nieuwe elementen om goed te keuren.";
-
-                accordionContent.appendChild(p);
-            }
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
 {% endblock %}
