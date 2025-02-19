@@ -3,3 +3,44 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+/* sign-in page: */
+.center{
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-fields{
+    width: 400px;
+    color: black;
+    border-radius: 14px;
+    border-color: dimgrey;
+    border-width: 3px;
+    padding: 2px;
+    margin: 15px;
+}
+
+.input-area{
+    background: lightgray;
+    padding: 25px;
+    border-radius: 15px;
+    border-width: 4px;
+    border-color: black;
+}
+
+@font-face {
+    font-family: nexa-font;
+    src: url(../fonts/Nexa-Heavy.ttf);
+}
+.sign-in-title{
+    font-family: nexa-font, serif;
+    color: black;
+}
+
+.submit-button {
+    width: 150px;
+    color: black;
+    font-family: nexa-font, serif;
+    background: #334ee6;
+}
