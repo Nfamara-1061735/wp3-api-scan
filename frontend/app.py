@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from backend import create_app,db
+from backend import create_app, db
 from backend.database.models.peer_experts_model import PeerExperts
 
 # Create flask instance
 app = create_app()
+
 
 @app.route('/')
 def main():
@@ -20,9 +21,16 @@ def register():
 def signup():
     return render_template("sign_in.jinja")
 
+
 @app.route('/admin')
 def dashboard():
     return render_template("admin_dashboard.jinja")
+
+
+@app.route('/docs')
+def documentation():
+    return render_template("api_documentation.jinja")
+
 
 # run the app (don't forget to set debug=False when the app is done)
 if __name__ == '__main__':
