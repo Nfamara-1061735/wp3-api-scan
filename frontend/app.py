@@ -16,6 +16,10 @@ def register():
         return render_template('peer_register.html')
 
 
+@app.route('/admin')
+def dashboard():
+    return render_template("admin_dashboard.jinja")
+
 # run the app (don't forget to set debug=False when the app is done)
 if __name__ == '__main__':
     with app.app_context():
