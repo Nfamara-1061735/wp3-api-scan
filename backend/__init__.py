@@ -21,9 +21,14 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
     db.init_app(app)
+
     app.cli.add_command(init_db_command)
+    app.cli.add_command(init_db_data_command)
 
     from backend.database import models
+
+    from backend.api import api
+    api.init_app(app)
 
     return app
 
@@ -39,7 +44,7 @@ def init_db_command():
 @click.command("init-db-data")
 @click.argument('amount_multiplier', default=100)
 @with_appcontext
-def init_db_command(amount_multiplier: int = 1):
+def init_db_data_command(amount_multiplier: int = 1):
     from .database.dummy_data import init_db_data
 
     click.echo("Initializing database with fake data...")
