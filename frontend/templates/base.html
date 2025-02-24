@@ -23,7 +23,7 @@
         <div class="container-fluid d-flex justify-content-between align-items-center">
           <a
             class="navbar-brand"
-            href="#"
+            href"{{ url_for('home') }}"
             title="Home van stichting Accessibility"
             aria-current="page"
           >
@@ -38,7 +38,7 @@
           <ul class="navbar-nav">
               {% block logout %}
                   <li class="nav-item">
-                      <a href="{{ url_for('main') }}" class="btn btn-primary" style="cursor: pointer;">Uitloggen</a>
+                      <a href="{{ url_for('home') }}" class="btn btn-primary" style="cursor: pointer;">Uitloggen</a>
                       <!--bij deze hashtag komt de link naar de login pagina-->
                   </li>
               {% endblock %}
