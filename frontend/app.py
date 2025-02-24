@@ -7,7 +7,7 @@ app = create_app()
 
 
 @app.route('/')
-def main():
+def home():
     return render_template("home.jinja")
 
 
