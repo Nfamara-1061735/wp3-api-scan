@@ -8,7 +8,7 @@ app = create_app()
 
 @app.route('/')
 def main():
-    return render_template("home.html")
+    return render_template("home.jinja")
 
 
 @app.route('/peer/home')
