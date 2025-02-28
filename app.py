@@ -1,4 +1,6 @@
 from flask import Flask
+
+from backend.api import api_bp
 from frontend import frontend_bp
 from backend import db, init_db_command, init_db_data_command
 
@@ -20,7 +22,7 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(frontend_bp)
-    # app.register_blueprint(api_bp, url_prefix='/api')  # API routes with '/api' prefix
+    app.register_blueprint(api_bp, url_prefix='/api')  # API routes with '/api' prefix
 
     return app
 
