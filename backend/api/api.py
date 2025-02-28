@@ -1,10 +1,12 @@
 import datetime
-from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
+
+from flask import Blueprint
+from flask_restful import Resource, Api, reqparse, fields, marshal_with
 from backend.database.models.research_model import Research
 from backend import db
 
-
-api = Api()
+api_bp = Blueprint('api', __name__)
+api = Api(api_bp)
 
 research_args = reqparse.RequestParser()
 research_args.add_argument('title', type=str, required=True)
@@ -66,7 +68,4 @@ class Researches(Resource):
       return researches, 201
 
 
-api.add_resource(Researches, '/api/researches/')
-
-
-
+api.add_resource(Researches, '/researches/')
