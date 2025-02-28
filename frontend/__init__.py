@@ -7,7 +7,7 @@ static_dir = os.path.abspath('./frontend/static/')
 
 # Define the frontend blueprint
 frontend_bp = Blueprint('frontend', __name__, template_folder=template_dir, static_folder=static_dir,
-                        static_url_path='/awioawoidwoidwaoidhwaoidwhaoid')
+                        static_url_path='/static/frontend')
 
 
 @frontend_bp.before_request
