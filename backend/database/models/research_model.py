@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional
-
+import sqlalchemy as sa
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped
 from sqlalchemy.testing.schema import mapped_column
@@ -23,10 +23,10 @@ class Research(db.Model):
     description: Mapped[Optional[str]]
     """Description of the research."""
 
-    start_date: Mapped[datetime.datetime]
+    start_date: Mapped[datetime.datetime] = mapped_column(sa.Date)
     """The start date and time of the research."""
 
-    end_date: Mapped[datetime.datetime]
+    end_date: Mapped[datetime.datetime] = mapped_column(sa.Date)
     """The end date and time of the research."""
 
     location: Mapped[str]
@@ -50,3 +50,6 @@ class Research(db.Model):
 
     research_type_id: Mapped[int] = mapped_column(ForeignKey('research_types.research_type_id'))
     """Foreign key to the type of research."""
+
+    def __repr__(self):
+        return f"Onderzoek(title = {self.title}, is_availeble = {self.is_available}, description = {self.description}, start_date = {self.start_date}, end_date = {self.end_date}, location = {self.location}, has_reward = {self.has_reward}, reward = {self.reward}, target_min_age = {self.target_min_age}, target_max_age = {self.target_max_age})"

@@ -14,7 +14,7 @@ class PeerExperts(db.Model):
     peer_expert_id: Mapped[int] = mapped_column(primary_key=True)
     postal_code: Mapped[str]
     gender: Mapped[str]
-    birth_date: Mapped[datetime.datetime] = mapped_column(__type_pos=sa.Date) #only shows Date without time
+    birth_date: Mapped[datetime.datetime] = mapped_column(sa.Date) #only shows Date without time
     tools_used: Mapped[Optional[str]]
     short_bio: Mapped[str]
     special_notes:Mapped[Optional[str]] 
