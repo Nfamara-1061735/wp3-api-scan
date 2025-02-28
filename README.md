@@ -9,8 +9,8 @@ Casus: [opdracht](CASUS.md)
 Ga naar de officiële Python-website en download de installer voor Python 3.12:
 https://www.python.org/downloads/release/python-3120/
 
-Let op: Zorg ervoor dat de optie **'Add Python to PATH'** is aangevinkt tijdens de installatie, zodat Python
-toegankelijk is via de terminal.
+> [!warning]
+> Zorg ervoor dat de optie **'Add Python to PATH'** is aangevinkt tijdens de installatie, zodat Python toegankelijk is via de terminal.
 
 ### Stap 2: Maak een locale kloon van de repository.
 
@@ -68,6 +68,8 @@ flask init-db-data [factor]
 
 Waarbij `[factor]` een **optionele** vermenigvuldigingsfactor is voor het aantal dummy records. Laat de parameter weg om
 de standaardwaarde te gebruiken.
+
+
 **Voorbeeld zonder factor:**
 
 ```shell
@@ -75,6 +77,8 @@ flask init-db-data
 ```
 
 Dit commando maakt tussen de 10 en 25 dummy gebruikers en 5 tot 15 dummy bedrijven aan.
+
+
 **Voorbeeld met factor:**
 
 ```shell
