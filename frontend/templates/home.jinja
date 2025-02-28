@@ -14,12 +14,12 @@
         <h2 class="text-center mb-5">Kies uw rol:</h2>
         <div class="row">
           <div class="col">
-            <a href="{{ url_for('documentation') }}" class="text-decoration-none">
+              <a href="{{ url_for('frontend.documentation') }}" class="text-decoration-none">
               <!--link naar inlogpagina voor onderzoeksbureau-->
                 <div class="card bg-light-subtle border-dark-subtle rounded">
                 <div class="card-body text-center">
                   <img
-                    src="img/onderzoeksbureau.png"
+                          src="{{ url_for('static', filename='img/onderzoeksbureau.png') }}"
                     class="login-card-img rounded-circle mb-3"
                     alt="onderzoeksbureau"
                   />
@@ -29,12 +29,12 @@
             </a>
           </div>
           <div class="col">
-            <a href="{{ url_for('dashboard') }}" class="text-decoration-none">
+              <a href="{{ url_for('frontend.dashboard') }}" class="text-decoration-none">
               <!--link naar inlogpagina voor stichting accesibility-->
                 <div class="card bg-light-subtle border-dark-subtle rounded">
                 <div class="card-body text-center">
                   <img
-                    src="img/beheer.png"
+                          src="{{ url_for('static', filename='img/beheer.png') }}"
                     class="login-card-img rounded-circle mb-3"
                     alt="stichting Accesibility"
                   />
@@ -44,12 +44,12 @@
             </a>
           </div>
           <div class="col">
-            <a href="{{ url_for('peer_home') }}" class="text-decoration-none">
+              <a href="{{ url_for('frontend.peer_home') }}" class="text-decoration-none">
               <!--link naar inlogpagina voor ervaringsdeskundige-->
                 <div class="card bg-light-subtle border-dark-subtle rounded">
                 <div class="card-body text-center">
                   <img
-                    src="img/ervaringsdeskundige.png"
+                          src="{{ url_for('static', filename='img/ervaringsdeskundige.png') }}"
                     class="login-card-img rounded-circle mb-3"
                     alt="ervaringsdeskundige"
                   />
