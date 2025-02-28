@@ -13,7 +13,7 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
+      href="{{ url_for('.static', filename='css/style.css') }}"
     />
       {% block head %} {% endblock %}
   </head>
@@ -73,6 +73,6 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
         crossorigin="anonymous"
 ></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('.static', filename='js/main.js') }}"></script>
   </body>
 </html>

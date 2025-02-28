@@ -1,10 +1,16 @@
+import os
+
 from flask import render_template, request, g, Blueprint, Flask
 
+template_dir = os.path.abspath('./frontend/templates/')
+static_dir = os.path.abspath('./frontend/static/')
+
 # Define the frontend blueprint
-frontend = Blueprint('frontend', __name__, static_folder='static', static_url_path='/static/')
+frontend_bp = Blueprint('frontend', __name__, template_folder=template_dir, static_folder=static_dir,
+                        static_url_path='/awioawoidwoidwaoidhwaoidwhaoid')
 
 
-@frontend.before_request
+@frontend_bp.before_request
 def before_request():
     """
     Runs before the main route function
@@ -12,52 +18,38 @@ def before_request():
     g.theme = request.cookies.get('theme', 'light')  # 'g' is a temporary request specific value
 
 
-@frontend.route('/')
+@frontend_bp.route('/')
 def main():
+    print(os.listdir(frontend_bp.static_folder))
     return render_template("home.jinja", theme=g.theme)
 
 
-@frontend.route('/peer/home')
+@frontend_bp.route('/peer/home')
 def peer_home():
     return render_template("peer_home.jinja", theme=g.theme)
 
 
-@frontend.route('/peer/register', methods=['GET', 'POST'])
+@frontend_bp.route('/peer/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('peer_register.html', theme=g.theme)
 
 
-@frontend.route('/peer/signin')
+@frontend_bp.route('/peer/signin')
 def signup():
     return render_template("sign_in.jinja", theme=g.theme)
 
 
-@frontend.route('/admin/dashboard')
+@frontend_bp.route('/admin/dashboard')
 def dashboard():
     return render_template("admin_dashboard.jinja", theme=g.theme)
 
 
-@frontend.route('/peer/dashboard', methods=['GET', 'POST'])
+@frontend_bp.route('/peer/dashboard', methods=['GET', 'POST'])
 def peer_dashboard():
     return render_template("peer_dashboard.jinja", theme=g.theme)
 
 
-@frontend.route('/docs')
+@frontend_bp.route('/docs')
 def documentation():
     return render_template("api_documentation.jinja", theme=g.theme)
-
-
-def create_app():
-    app = Flask(__name__)
-
-    ## Register the frontend blueprint
-    app.register_blueprint(frontend)
-    return app
-
-
-# Debug when running this script directly
-# Use `flask --app frontend run` to run without debugging
-if __name__ == '__main__':
-    app = create_app()
-    app.run(debug=True)
