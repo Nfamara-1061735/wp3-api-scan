@@ -19,7 +19,7 @@ def before_request():
 
 
 @frontend_bp.route('/')
-def main():
+def home():
     print(os.listdir(frontend_bp.static_folder))
     return render_template("home.jinja", theme=g.theme)
 
