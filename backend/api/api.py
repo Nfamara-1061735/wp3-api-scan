@@ -17,6 +17,8 @@ research_args.add_argument('has_reward', type=bool, required=True, help="Reward 
 research_args.add_argument('reward', type=str)
 research_args.add_argument('target_min_age', type=int)
 research_args.add_argument('target_max_age', type=int)
+research_args.add_argument('status_id', type=int, required=True, help="Status ID is required")
+research_args.add_argument('research_type_id', type=int, required=True, help="Research Type ID is required")
 
 researchFields = {
    'research_id': fields.Integer,
@@ -29,7 +31,9 @@ researchFields = {
    'has_reward': fields.Boolean,
    'reward': fields.String,
    'target_min_age': fields.Integer,
-   'target_max_age': fields.Integer
+   'target_max_age': fields.Integer,
+   'status_id': fields.Integer,
+   'research_type_id': fields.Integer
 }
 
 class Researches(Resource):
@@ -42,7 +46,7 @@ class Researches(Resource):
          research.start_date = research.start_date.strftime('%d-%m-%Y')
          research.end_date = research.end_date.strftime('%d-%m-%Y')
 
-      return researches
+      return researches, 200 
    
    @marshal_with(researchFields)
    def post(self):
@@ -65,14 +69,16 @@ class Researches(Resource):
          has_reward = args['has_reward'],
          reward = args['reward'],
          target_min_age = args['target_min_age'],
-         target_max_age = args['target_max_age']
+         target_max_age = args['target_max_age'],
+         status_id = args['status_id']
+         research_type_id = arg['research_type_id']
       )
 
       db.session.add(new_research)
       db.session.commit()
+ 
 
-      researches = Research.query.all()
-      return researches, 201
+      return new_research, 201
 
 
 api.add_resource(Researches, '/api/researches/')

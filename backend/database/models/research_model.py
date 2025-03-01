@@ -2,9 +2,7 @@ import datetime
 from typing import Optional
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped
-from sqlalchemy.testing.schema import mapped_column
-
+from sqlalchemy.orm import Mapped, mapped_column
 from backend import db
 
 class Research(db.Model):
