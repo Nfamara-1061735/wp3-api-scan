@@ -101,6 +101,7 @@ class SingleResearch(Resource):
       if not single_research:
          abort(404, message="Research not found")
 
+      #gets the info that is already thare and then changes it with what you provide 
       if args.get('title'):
          single_research.title = args['title']
       if args.get('is_available') is not None:
@@ -129,6 +130,17 @@ class SingleResearch(Resource):
       db.session.commit()
 
       return single_research, 200
+   
+   @marshal_with(researchFields)
+   def delete(self, research_id):
+      single_research = Research.query.filter_by(research_id=research_id).first()
+      if not single_research:
+         abort(404, message="Research not found")
+
+      db.session.delete(single_research)
+      db.session.commit()
+      researches = Research.query.all()
+      return researches, 200
        
 api.add_resource(Researches, '/api/researches')
 api.add_resource(SingleResearch, '/api/researches/<int:research_id>')
