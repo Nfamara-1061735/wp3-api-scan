@@ -80,12 +80,55 @@ class Researches(Resource):
       return new_research, 201
    
 class SingleResearch(Resource):
-    @marshal_with(researchFields)
-    def get(self, research_id):
-      research = Research.query.filter_by(research_id=research_id).first()
-      if not research:
+   @marshal_with(researchFields)
+   def get(self, research_id):
+      single_research = Research.query.filter_by(research_id=research_id).first()
+      if not single_research:
          abort(404, message="Research not found")
-      return research, 200
+      return single_research, 200
+   
+   @marshal_with(researchFields)
+   def patch(self, research_id):
+      args = research_args.parse_args()
+
+      try:
+         start_date = datetime.datetime.strptime(args['start_date'], '%d-%m-%Y').date()
+         end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
+      except ValueError:
+         abort(400, message="Invalid date. Use DD-MM-YYYY.")
+
+      single_research = Research.query.filter_by(research_id=research_id).first()
+      if not single_research:
+         abort(404, message="Research not found")
+
+      if args.get('title'):
+         single_research.title = args['title']
+      if args.get('is_available') is not None:
+         single_research.is_available = args['is_available']
+      if args.get('description'):
+         single_research.description = args['description']
+      if start_date:
+         single_research.start_date = start_date
+      if end_date:
+         single_research.end_date = end_date
+      if args.get('location'):
+         single_research.location = args['location']
+      if args.get('has_reward') is not None:
+         single_research.has_reward = args['has_reward']
+      if args.get('reward'):
+         single_research.reward = args['reward']
+      if args.get('target_min_age') is not None:
+         single_research.target_min_age = args['target_min_age']
+      if args.get('target_max_age') is not None:
+         single_research.target_max_age = args['target_max_age']
+      if args.get('status_id'):
+         single_research.status_id = args['status_id']
+      if args.get('research_type_id'):
+         single_research.research_type_id = args['research_type_id']
+
+      db.session.commit()
+
+      return single_research, 200
        
 api.add_resource(Researches, '/api/researches')
 api.add_resource(SingleResearch, '/api/researches/<int:research_id>')
