@@ -49,5 +49,19 @@ class Research(db.Model):
     research_type_id: Mapped[int] = mapped_column(ForeignKey('research_types.research_type_id'))
     """Foreign key to the type of research."""
 
+    def __init__(self, title, is_available, description, start_date, end_date, location, has_reward, reward, target_min_age, target_max_age, status_id, research_type_id):
+        self.title = title
+        self.is_available = is_available
+        self.description = description
+        self.start_date = start_date
+        self.end_date = end_date
+        self.location = location
+        self.has_reward = has_reward
+        self.reward = reward
+        self.target_min_age = target_min_age
+        self.target_max_age = target_max_age
+        self.status_id = status_id
+        self.research_id = research_type_id
+
     def __repr__(self):
         return f"Onderzoek(title = {self.title}, is_availeble = {self.is_available}, description = {self.description}, start_date = {self.start_date}, end_date = {self.end_date}, location = {self.location}, has_reward = {self.has_reward}, reward = {self.reward}, target_min_age = {self.target_min_age}, target_max_age = {self.target_max_age})"
