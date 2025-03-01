@@ -7,13 +7,13 @@ from backend import db
 api = Api()
 
 research_args = reqparse.RequestParser()
-research_args.add_argument('title', type=str, required=True)
-research_args.add_argument('is_available', type=bool, required=True)
-research_args.add_argument('description', type=str, required=True)
+research_args.add_argument('title', type=str, required=True, help="Title is required (name of the organisation)")
+research_args.add_argument('is_available', type=bool, required=True, help="Availibility status is required.")
+research_args.add_argument('description', type=str, required=True, help="Description is required")
 research_args.add_argument('start_date', type=str, required=True, help="Valid input is dd-mm-yyyy")
 research_args.add_argument('end_date', type=str, required=True, help="Valid input is dd-mm-yyyy")
-research_args.add_argument('location', type=str, required=True)
-research_args.add_argument('has_reward', type=bool, required=True)
+research_args.add_argument('location', type=str, required=True, help="Location is required")
+research_args.add_argument('has_reward', type=bool, required=True, help="Reward status is required")
 research_args.add_argument('reward', type=str)
 research_args.add_argument('target_min_age', type=int)
 research_args.add_argument('target_max_age', type=int)
@@ -41,17 +41,26 @@ class Researches(Resource):
       for research in researches:
          research.start_date = research.start_date.strftime('%d-%m-%Y')
          research.end_date = research.end_date.strftime('%d-%m-%Y')
+
       return researches
    
    @marshal_with(researchFields)
    def post(self):
       args = research_args.parse_args()
+
+      #This converts the dates from strings to date.datetime objects
+      try:
+         start_date = datetime.datetime.strptime(args['start_date'], '%d-%m-%Y').date()
+         end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
+      except ValueError:
+         abort(400, message="Invalid date. Use DD-MM-YYYY.")
+         
       new_research = Research(
          title = args['title'],
          is_available = args['is_available'],
          description = args['description'],
-         start_date = args['start_date'],
-         end_date = args['end_date'],
+         start_date = start_date,
+         end_date = end_date,
          location = args['location'],
          has_reward = args['has_reward'],
          reward = args['reward'],
