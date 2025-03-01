@@ -77,11 +77,18 @@ class Researches(Resource):
       db.session.add(new_research)
       db.session.commit()
  
-
       return new_research, 201
-
-
-api.add_resource(Researches, '/api/researches/')
+   
+class SingleResearch(Resource):
+    @marshal_with(researchFields)
+    def get(self, research_id):
+      research = Research.query.filter_by(research_id=research_id).first()
+      if not research:
+         abort(404, message="Research not found")
+      return research, 200
+       
+api.add_resource(Researches, '/api/researches')
+api.add_resource(SingleResearch, '/api/researches/<int:research_id>')
 
 
 
