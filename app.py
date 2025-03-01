@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, g
 from backend import create_app, db
 from backend.database.models.peer_experts_model import PeerExperts
 
