@@ -70,8 +70,8 @@ class Researches(Resource):
          reward = args['reward'],
          target_min_age = args['target_min_age'],
          target_max_age = args['target_max_age'],
-         status_id = args['status_id']
-         research_type_id = arg['research_type_id']
+         status_id = args['status_id'],
+         research_type_id = args['research_type_id']
       )
 
       db.session.add(new_research)

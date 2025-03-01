@@ -26,9 +26,12 @@ def create_app():
     app.cli.add_command(init_db_data_command)
 
     from backend.database import models
-
     from backend.api import api
     api.init_app(app)
+
+    app.cli.add_command(init_db_command)
+    app.cli.add_command(init_db_data_command)
+
 
     return app
 
