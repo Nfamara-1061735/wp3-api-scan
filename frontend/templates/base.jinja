@@ -15,15 +15,16 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+      {% block head %} {% endblock %}
   </head>
-  <body class="d-flex flex-column min-vh-100">
+  <body class="d-flex flex-column min-vh-100" data-bs-theme="{{ theme }}">
 <!--header van de html paginas-->
     <header class="header">
       <nav class="navbar navbar-expand" style="background-color: #334ee6; justify-content: space-between;">
         <div class="container-fluid d-flex justify-content-between align-items-center">
           <a
             class="navbar-brand"
-            href="#"
+            href="/"
             title="Home van stichting Accessibility"
             aria-current="page"
           >
@@ -35,11 +36,16 @@
               alt="Homepage, logo Accessibility, onderdeel van Bartimeus"
             />
           </a>
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a href="#" class="btn btn-primary" style="cursor: pointer;">Uitloggen</a>
-              <!--bij deze hashtag komt de link naar de login pagina-->
-            </li>
+            <ul class="navbar-nav gap-3">
+              {% block logout %}
+                  <li class="nav-item">
+                      <a href="{{ url_for('main') }}" class="btn btn-primary">Uitloggen</a>
+                      <!--bij deze hashtag komt de link naar de login pagina-->
+                  </li>
+              {% endblock %}
+                <li class="nav-item">
+                    <button id="themeToggle" class="btn btn-primary" title="Selecteer donkere thema">🌙</button>
+                </li>
           </ul>
         </div>
       </nav>
@@ -52,8 +58,8 @@
     <!--Dit is voor de footer van alle html paginas-->
     <footer class="mt-auto">
         <div class="copyright">
-            <div class="text-center p-3 mt-auto" style="background-color: #fff; color: #1a2e83">
-                <a href="/" style="text-decoration: none; color: #1a2e83">© 2025 Stichting Accessibility</a>
+            <div class="text-center p-3 mt-auto bg-secondary-subtle">
+                <a href="/" style="text-decoration: none">© 2025 Stichting Accessibility</a>
             </div>
         </div>
     </footer>
@@ -62,6 +68,11 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"
+></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>

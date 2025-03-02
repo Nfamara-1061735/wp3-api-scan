@@ -1,0 +1,98 @@
+{% extends "base.jinja" %}
+{% block title %} Admin {% endblock %}
+{% block content %}
+    <!-- ervaringsdeskundige aanmelding onderzoek goed/af keuren (front-end) -->
+    <div class="p-5">
+        <h1 class="">Dashboard</h1>
+        <hr class="pb-3">
+
+        <!-- Section for displaying the approval items -->
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+
+            <!-- Goed te keuren onderzoeksaanvragen -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                            aria-controls="panelsStayOpen-collapseOne">
+                        Goed te keuren onderzoeksaanvragen
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                     aria-labelledby="panelsStayOpen-headingOne">
+                    <div class="accordion-body pb-3 d-flex flex-column gap-3">
+                        <div class="border rounded-3 p-3">
+                            <p>Onderzoeksaanvraag 1</p>
+                            <button onclick="removeElement(this)" class="btn btn-success me-2"
+                                    aria-label="Approve expert registration 1">Goedkeuren
+                            </button>
+                            <button onclick="removeElement(this)" class="btn btn-danger"
+                                    aria-label="Reject expert registration 1">Afkeuren
+                            </button>
+                        </div>
+                        <div class="border rounded-3 p-3">
+                            <p>Onderzoeksaanvraag 2</p>
+                            <button onclick="removeElement(this)" class="btn btn-success me-2">Goedkeuren</button>
+                            <button onclick="removeElement(this)" class="btn btn-danger">Afkeuren</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goed te keuren inschrijvingen -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true"
+                            aria-controls="panelsStayOpen-collapseTwo">
+                        Goed te keuren inschrijvingen op onderzoeken
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show"
+                     aria-labelledby="panelsStayOpen-headingTwo">
+                    <div class="accordion-body pb-3 d-flex flex-column gap-3">
+                        <div class="border rounded-3 p-3">
+                            <p>Inschrijving 1 door ervaringsdeskundige</p>
+                            <button onclick="removeElement(this)" class="btn btn-success me-2">Goedkeuren</button>
+                            <button onclick="removeElement(this)" class="btn btn-danger">Afkeuren</button>
+                        </div>
+                        <div class="border rounded-3 p-3">
+                            <p>Inschrijving 2 door ervaringsdeskundige</p>
+                            <button onclick="removeElement(this)" class="btn btn-success me-2">Goedkeuren</button>
+                            <button onclick="removeElement(this)" class="btn btn-danger">Afkeuren</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goed te keuren ervaringsdeskundigen -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true"
+                            aria-controls="panelsStayOpen-collapseThree">
+                        Goed te keuren nieuw geregistreerde ervaringsdeskundigen
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show"
+                     aria-labelledby="panelsStayOpen-headingThree">
+                    <div class="accordion-body pb-3 d-flex flex-column gap-3">
+                        <div class="border rounded-3 p-3">
+                            <p>Nieuwe ervaringsdeskundige 1</p>
+                            <button onclick="removeElement(this)" class="btn btn-success me-2">Goedkeuren</button>
+                            <button onclick="removeElement(this)" class="btn btn-danger">Afkeuren</button>
+                        </div>
+                        <div class="border rounded-3 p-3">
+                            <p>Nieuwe ervaringsdeskundige 2</p>
+                            <button onclick="removeElement(this)" class="btn btn-success me-2">Goedkeuren</button>
+                            <button onclick="removeElement(this)" class="btn btn-danger">Afkeuren</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+{% endblock %}
