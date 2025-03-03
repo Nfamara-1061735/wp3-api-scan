@@ -9,7 +9,6 @@ static_dir = os.path.abspath('./frontend/static/')
 frontend_bp = Blueprint('frontend', __name__, template_folder=template_dir, static_folder=static_dir,
                         static_url_path='/static/frontend')
 
-
 @frontend_bp.before_request
 def before_request():
     """
@@ -17,17 +16,14 @@ def before_request():
     """
     g.theme = request.cookies.get('theme', 'light')  # 'g' is a temporary request specific value
 
-
 @frontend_bp.route('/')
 def home():
     print(os.listdir(frontend_bp.static_folder))
     return render_template("home.jinja", theme=g.theme)
 
-
 @frontend_bp.route('/peer/home')
 def peer_home():
     return render_template("peer_home.jinja", theme=g.theme)
-
 
 @frontend_bp.route('/peer/register', methods=['GET', 'POST'])
 def register():
