@@ -1,5 +1,4 @@
 import click
-from flask import Flask
 from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
@@ -21,16 +20,14 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
     db.init_app(app)
-    with app.app_context():
-        db.create_all #creates tables when app is started 
-
-    from backend.database import models
-    from backend.api import api
-    api.init_app(app)
 
     app.cli.add_command(init_db_command)
     app.cli.add_command(init_db_data_command)
 
+    from backend.database import models
+
+    from backend.api import api
+    api.init_app(app)
 
     return app
 
