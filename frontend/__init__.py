@@ -1,6 +1,7 @@
 import os
 
-from flask import render_template, request, g, Blueprint, Flask
+from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash
+from backend.database.models.register_expert import ExpertRegistrationModule
 
 template_dir = os.path.abspath('./frontend/templates/')
 static_dir = os.path.abspath('./frontend/static/')
@@ -21,14 +22,25 @@ def home():
     print(os.listdir(frontend_bp.static_folder))
     return render_template("home.jinja", theme=g.theme)
 
+
 @frontend_bp.route('/peer/home')
 def peer_home():
     return render_template("peer_home.jinja", theme=g.theme)
+
 
 @frontend_bp.route('/peer/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('peer_register.html', theme=g.theme)
+    elif request.method == 'POST':
+        form_data = request.form  # Haalt alle gegevens op uit het HTML-formulier
+        registration = ExpertRegistrationModule()
+        if registration.register_expert(form_data):
+            flash('Registratie succesvol!', 'success')
+            return redirect(url_for('frontend.peer_home'))
+        else:
+            flash('Er is een fout opgetreden tijdens de registratie.', 'danger')
+            return render_template('peer_register.html')
 
 
 @frontend_bp.route('/peer/signin')
