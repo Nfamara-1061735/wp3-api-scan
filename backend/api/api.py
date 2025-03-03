@@ -146,8 +146,6 @@ class SingleResearch(Resource):
       researches = Research.query.all()
       return researches, 200
 
-api.add_resource(Researches, '/api/researches')
-api.add_resource(SingleResearch, '/api/researches/<int:research_id>')
 
-
-
+api.add_resource(Researches, '/researches')
+api.add_resource(SingleResearch, '/researches/<int:research_id>')
