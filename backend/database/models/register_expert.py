@@ -23,3 +23,11 @@ class ExpertRegistrationModule:
                 contact_preference_id=form_data.get('contact_preference_id'),
                 user_id=form_data.get('user_id')
             )
+            db.session.add(expert)
+            db.session.commit()
+            print("Nieuwe ervaringsdeskundige succesvol toegevoegd aan de database.")
+            return True
+        except Exception as e:
+            db.session.rollback()
+            print(f"Er is een fout opgetreden tijdens registratie: {str(e)}")
+            return False
