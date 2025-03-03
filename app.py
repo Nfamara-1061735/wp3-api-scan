@@ -1,57 +1,33 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, g
-from backend import create_app, db
-from backend.database.models.peer_experts_model import PeerExperts
+from flask import Flask
 
-# Create flask instance
-app = create_app()
-
-
-@app.before_request
-def before_request():
-    """
-    Runs before the main route function
-    """
-    g.theme = request.cookies.get('theme', 'light')  # 'g' is a temporary request specific value
+from backend.api import api_bp
+from frontend import frontend_bp
+from backend import db, init_db_command, init_db_data_command
 
 
-@app.route('/')
-def main():
-    return render_template("home.jinja", theme=g.theme)
+def create_app():
+    """Create and configure an instance of the Flask application"""
+    # Create flask instance
+    app = Flask(__name__)
+
+    # Config flask application
+    app.config['SECRET_KEY'] = "dev"
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+    db.init_app(app)
+    app.cli.add_command(init_db_command)
+    app.cli.add_command(init_db_data_command)
+
+    from backend.database import models
+
+    # Register blueprints
+    app.register_blueprint(frontend_bp)
+    app.register_blueprint(api_bp, url_prefix='/api')  # API routes with '/api' prefix
+
+    return app
 
 
-@app.route('/peer/home')
-def peer_home():
-    return render_template("peer_home.jinja", theme=g.theme)
-
-
-@app.route('/peer/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'GET':
-        return render_template('peer_register.html', theme=g.theme)
-
-
-@app.route('/peer/signin')
-def signup():
-    return render_template("sign_in.jinja", theme=g.theme)
-
-
-@app.route('/admin/dashboard')
-def dashboard():
-    return render_template("admin_dashboard.jinja", theme=g.theme)
-
-
-@app.route('/peer/dashboard', methods=['GET', 'POST'])
-def peer_dashboard():
-    return render_template("peer_dashboard.jinja", theme=g.theme)
-
-@app.route('/docs')
-def documentation():
-    return render_template("api_documentation.jinja", theme=g.theme)
-
-
-# run the app (don't forget to set debug=False when the app is done)
+# Debug when running this script directly
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-
+    app = create_app()
     app.run(debug=True)

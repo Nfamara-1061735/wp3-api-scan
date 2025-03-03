@@ -1,14 +1,16 @@
 import datetime
+
+from flask import Blueprint
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
 from backend import db
 
-
-api = Api()
+api_bp = Blueprint('api', __name__)
+api = Api(api_bp)
 
 research_args = reqparse.RequestParser()
 research_args.add_argument('title', type=str, required=True, help="Title is required (name of the organisation)")
-research_args.add_argument('is_available', type=bool, required=True, help="Availibility status is required.")
+research_args.add_argument('is_available', type=bool, required=True, help="Availability status is required.")
 research_args.add_argument('description', type=str, required=True, help="Description is required")
 research_args.add_argument('start_date', type=str, required=True, help="Valid input is dd-mm-yyyy")
 research_args.add_argument('end_date', type=str, required=True, help="Valid input is dd-mm-yyyy")
@@ -46,7 +48,7 @@ class Researches(Resource):
          research.start_date = research.start_date.strftime('%d-%m-%Y')
          research.end_date = research.end_date.strftime('%d-%m-%Y')
 
-      return researches, 200 
+      return researches, 200
    
    @marshal_with(researchFields)
    def post(self):
@@ -58,7 +60,8 @@ class Researches(Resource):
          end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
       except ValueError:
          abort(400, message="Invalid date. Use DD-MM-YYYY.")
-         
+         return
+
       new_research = Research(
          title = args['title'],
          is_available = args['is_available'],
@@ -76,9 +79,9 @@ class Researches(Resource):
 
       db.session.add(new_research)
       db.session.commit()
- 
+
       return new_research, 201
-   
+
 class SingleResearch(Resource):
    @marshal_with(researchFields)
    def get(self, research_id):
@@ -86,7 +89,7 @@ class SingleResearch(Resource):
       if not single_research:
          abort(404, message="Research not found")
       return single_research, 200
-   
+
    @marshal_with(researchFields)
    def patch(self, research_id):
       args = research_args.parse_args()
@@ -96,12 +99,13 @@ class SingleResearch(Resource):
          end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
       except ValueError:
          abort(400, message="Invalid date. Use DD-MM-YYYY.")
+         return
 
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
          abort(404, message="Research not found")
 
-      #gets the info that is already thare and then changes it with what you provide 
+      #gets the info that is already thare and then changes it with what you provide
       if args.get('title'):
          single_research.title = args['title']
       if args.get('is_available') is not None:
@@ -130,7 +134,7 @@ class SingleResearch(Resource):
       db.session.commit()
 
       return single_research, 200
-   
+
    @marshal_with(researchFields)
    def delete(self, research_id):
       single_research = Research.query.filter_by(research_id=research_id).first()
@@ -141,9 +145,7 @@ class SingleResearch(Resource):
       db.session.commit()
       researches = Research.query.all()
       return researches, 200
-       
-api.add_resource(Researches, '/api/researches')
-api.add_resource(SingleResearch, '/api/researches/<int:research_id>')
 
 
-
+api.add_resource(Researches, '/researches')
+api.add_resource(SingleResearch, '/researches/<int:research_id>')
