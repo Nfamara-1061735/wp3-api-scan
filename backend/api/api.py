@@ -1,28 +1,34 @@
 import datetime
 
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
 from backend import db
-import requests
+from functools import wraps
+
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
+VALID_API_KEYS = {"jouw-api-key", "andere-geldige-key"}
 
 
-api_key = 'YOUR_API_KEY'
-url = 'https://api.example.com/endpoint'
-headers = {
-    'Authorization': f'Bearer {api_key}'
-}
+def require_api_key(f):
 
-response = requests.get(url, headers=headers)
+   @wraps(f)
+   def decorated_function(*args, **kwargs):
+      api_key = request.headers.get("Authorization")
 
-if response.status_code == 200:
-    print('API key is valid:', response.json())
-else:
-    print('Invalid API key')
+      if not api_key or not api_key.startswith("Bearer "):
+         return jsonify({"error": "API-key ontbreekt of onjuist formaat"}), 401
 
+      api_key = api_key.split("Bearer ")[1]
+
+      if api_key not in VALID_API_KEYS:
+         return jsonify({"error": "Ongeldige API-key"}), 403
+
+      return f(*args, **kwargs)
+
+   return decorated_function
 
 
 research_args = reqparse.RequestParser()
