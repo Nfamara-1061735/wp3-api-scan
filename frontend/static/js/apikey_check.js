@@ -1,22 +1,12 @@
-const apiKey = 'YOUR_API_KEY';
-const url = 'https://api.example.com/endpoint';
-
-fetch(url, {
-    method: 'GET',
+fetch("https://jouw-api-url.com/api/data", {
+    method: "POST",
     headers: {
-        'Authorization': `Bearer ${apiKey}`
-    }
+        "Content-Type": "application/json",
+        "Authorization": "Bearer jouw-api-key"
+    },
+    body: JSON.stringify({ data: "Jouw data hier" })
 })
-.then(response => {
-    if (response.ok) {
-        return response.json();
-    } else {
-        throw new Error('Invalid API key');
-    }
-})
-.then(data => {
-    console.log('API key is valid:', data);
-})
-.catch(error => {
-    console.error('Error:', error.message);
-});
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error("Error:", error));
+
