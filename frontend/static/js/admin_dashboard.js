@@ -18,3 +18,14 @@ function removeElement(sender) {
 function addElement() {
 
 }
+
+function updateElement(type, variableName, newValue) {
+    fetch("/admin/dashboard", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({type: type, id: variableName, value: newValue})
+    })
+        .then(response => response.json())
+}

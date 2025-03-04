@@ -1,7 +1,8 @@
 import os
 
-from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash
+from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, jsonify
 from backend.database.models.register_expert import ExpertRegistrationModule
+from backend.database.models.research_status_model import ResearchStatus
 
 template_dir = os.path.abspath('./frontend/templates/')
 static_dir = os.path.abspath('./frontend/static/')
@@ -50,7 +51,19 @@ def signup():
 
 @frontend_bp.route('/admin/dashboard')
 def dashboard():
-    return render_template("admin_dashboard.jinja", theme=g.theme)
+    if request.method == 'GET':
+        return render_template("admin_dashboard.jinja", theme=g.theme)
+    elif request.method == 'POST':
+        data = request.json
+        item_id = data.get('id')
+        new_value = data.get('value')
+
+        if not item_id or not new_value:
+            return jsonify({'succes': False, 'error': 'Invalid input'})
+
+
+        if ResearchStatus.research_status_id == item_id:
+            ResearchStatus.status = new_value
 
 
 @frontend_bp.route('/peer/dashboard', methods=['GET', 'POST'])
