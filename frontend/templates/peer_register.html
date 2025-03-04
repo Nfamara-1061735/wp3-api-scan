@@ -4,47 +4,131 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/peer_register.css') }}">
 {% endblock %}
 {% block content %}
-<body>
-    <h1>Peer Expert Registratie</h1>
-    <form method="POST" action="{{ url_for('frontend.register') }}">
-        <label>Postcode:</label>
-        <input type="text" name="postal_code" required><br>
 
-        <label>Geslacht:</label>
-        <input type="text" name="gender" required><br>
+<div class="registration-container">
+    <h1 class="title">Peer Expert Registratie</h1>
+    <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}">
+        <div class="input-group">
+            <label>Postcode</label>
+            <input type="text" name="postal_code" required>
+        </div>
 
-        <label>Geboortedatum:</label>
-        <input type="date" name="birth_date" required><br>
+        <div class="input-group">
+            <label>Geslacht</label>
+            <select name="gender" required>
+                <option value="">Selecteer</option>
+                <option value="male">Man</option>
+                <option value="female">Vrouw</option>
+                <option value="other">Anders</option>
+            </select>
+        </div>
 
-        <label>Hulpmiddelen:</label>
-        <input type="text" name="tools_used"><br>
+        <div class="input-group">
+            <label>Geboortedatum</label>
+            <input type="date" name="birth_date" required>
+        </div>
 
-        <label>Korte Bio:</label>
-        <textarea name="short_bio" required></textarea><br>
+        <div class="input-group">
+            <label>Hulpmiddelen</label>
+            <input type="text" name="tools_used">
+        </div>
 
-        <label>Speciale Opmerkingen:</label>
-        <textarea name="special_notes"></textarea><br>
+        <div class="input-group">
+            <label>Korte Bio</label>
+            <textarea name="short_bio" required></textarea>
+        </div>
 
-        <label>Akkoord met voorwaarden:</label>
-        <input type="checkbox" name="accepted_terms" required><br>
+        <div class="input-group">
+            <label>Speciale Opmerkingen</label>
+            <textarea name="special_notes"></textarea>
+        </div>
 
-        <label>Is Begeleider:</label>
-        <input type="checkbox" name="has_supervisor"><br>
+        <div class="checkbox-group">
+            <input type="checkbox" name="accepted_terms" required>
+            <label>Ik ga akkoord met de voorwaarden</label>
+        </div>
 
-        <label>Naam Begeleider/Voogd:</label>
-        <input type="text" name="supervisor_or_guardian_name"><br>
+        <div class="checkbox-group">
+            <input type="checkbox" name="has_supervisor">
+            <label>Is Begeleider</label>
+        </div>
 
-        <label>Beschikbaarheid:</label>
-        <textarea name="availability_notes" required></textarea><br>
+        <div class="input-group">
+            <label>Naam Begeleider/Voogd</label>
+            <input type="text" name="supervisor_or_guardian_name">
+        </div>
 
-        <label>Contactvoorkeur ID:</label>
-        <input type="number" name="contact_preference_id" required><br>
+        <div class="input-group">
+            <label>Beschikbaarheid</label>
+            <textarea name="availability_notes" required></textarea>
+        </div>
 
-        <label>Gebruikers ID:</label>
-        <input type="number" name="user_id" required><br>
+        <div class="input-group">
+            <label>Contactvoorkeur ID</label>
+            <input type="number" name="contact_preference_id" required>
+        </div>
 
-        <button type="submit">Registreer</button>
+        <div class="input-group">
+            <label>Gebruikers ID</label>
+            <input type="number" name="user_id" required>
+        </div>
+
+        <button type="submit" class="register-btn">Registreer</button>
     </form>
-</body>
+</div>
+<style>
+    .registration-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+        margin-left: 30%;
+    }
 
+    .registration-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center; /* Zorgt voor centrering */
+    }
+
+    .input-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .input-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        background: #f9f9f9;
+    }
+
+    .register-btn {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        padding: 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+        width: 100%;
+    }
+</style>
 {% endblock %}
