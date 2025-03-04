@@ -31,6 +31,22 @@ def require_api_key(f):
    return decorated_function
 
 
+@api_bp.route("/api/data", methods=["POST"])
+@require_api_key
+def api_data():
+   data = request.json
+
+   try:
+      # Voorbeeld query (SQLAlchemy)
+      result = db_session.execute("SELECT * FROM some_table WHERE some_column = :val", {"val": data["key"]})
+      db_session.commit()
+
+      return jsonify({"message": "Data opgehaald", "result": [dict(row) for row in result]})
+
+   except Exception as e:
+      db_session.rollback()
+      return jsonify({"error": "Databasefout", "details": str(e)}), 500
+
 research_args = reqparse.RequestParser()
 research_args.add_argument('title', type=str, required=True, help="Title is required (name of the organisation)")
 research_args.add_argument('is_available', type=bool, required=True, help="Availability status is required.")
