@@ -5,7 +5,7 @@ from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
 from backend import db
 from functools import wraps
-
+from backend.database import db_session
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
