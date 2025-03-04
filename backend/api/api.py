@@ -4,9 +4,26 @@ from flask import Blueprint
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
 from backend import db
+import requests
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
+
+
+api_key = 'YOUR_API_KEY'
+url = 'https://api.example.com/endpoint'
+headers = {
+    'Authorization': f'Bearer {api_key}'
+}
+
+response = requests.get(url, headers=headers)
+
+if response.status_code == 200:
+    print('API key is valid:', response.json())
+else:
+    print('Invalid API key')
+
+
 
 research_args = reqparse.RequestParser()
 research_args.add_argument('title', type=str, required=True, help="Title is required (name of the organisation)")
