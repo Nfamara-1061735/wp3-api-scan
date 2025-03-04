@@ -1,6 +1,8 @@
 {% extends "base.jinja" %}
-{% block title %} index {% endblock %}
-{% block logout %} {% endblock %}
+{% block title %}Peer Register{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/peer_register.css') }}">
+{% endblock %}
 {% block content %}
 <body>
     <h1>Peer Expert Registratie</h1>
