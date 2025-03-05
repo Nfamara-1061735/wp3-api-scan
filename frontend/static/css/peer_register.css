@@ -1,102 +1,91 @@
-/*!* Algemene stijl *!*/
-/*body {*/
-/*    font-family: Arial, sans-serif;*/
-/*    background: linear-gradient(135deg, #667eea, #764ba2);*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    height: 100vh;*/
-/*    margin: 0;*/
-/*}*/
+/* Container voor het formulier */
+.registration-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+        margin-left: 30%;
+        margin-bottom: 50px;
+        margin-top: 50px;
+}
 
-/*!* Container voor het formulier *!*/
-/*.registration-container {*/
-/*    background: white;*/
-/*    padding: 30px;*/
-/*    border-radius: 10px;*/
-/*    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);*/
-/*    max-width: 500px;*/
-/*    width: 100%;*/
-/*    text-align: center;*/
-/*        margin-left: 30%;*/
-/*        margin-bottom: 50px;*/
-/*        margin-top: 50px;*/
-/*}*/
+/* Titel */
+.title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
 
-/*!* Titel *!*/
-/*.title {*/
-/*    margin-bottom: 20px;*/
-/*    font-size: 24px;*/
-/*    font-weight: bold;*/
-/*    color: #333;*/
-/*}*/
+/* Stijl voor het formulier */
+.registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
-/*!* Stijl voor het formulier *!*/
-/*.registration-form {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    gap: 15px;*/
-/*}*/
+/* Inputvelden en dropdown */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 100%;
+}
 
-/*!* Inputvelden en dropdown *!*/
-/*.input-group {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    text-align: left;*/
-/*    width: 100%;*/
-/*}*/
+.input-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
 
-/*.input-group label {*/
-/*    font-weight: bold;*/
-/*    margin-bottom: 5px;*/
-/*    font-size: 14px;*/
-/*}*/
+.input-group input,
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #f9f9f9;
+}
 
-/*.input-group input,*/
-/*.input-group select,*/
-/*.input-group textarea {*/
-/*    width: 100%;*/
-/*    padding: 10px;*/
-/*    border: 1px solid #ccc;*/
-/*    border-radius: 5px;*/
-/*    font-size: 14px;*/
-/*    background: #f9f9f9;*/
-/*}*/
+/* Checkboxes */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+}
 
-/*!* Checkboxes *!*/
-/*.checkbox-group {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    gap: 10px;*/
-/*    text-align: left;*/
-/*}*/
+.checkbox-group input {
+    transform: scale(1.2);
+}
 
-/*.checkbox-group input {*/
-/*    transform: scale(1.2);*/
-/*}*/
+/* Knopstijl */
+.register-btn {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    width: 100%;
+}
 
-/*!* Knopstijl *!*/
-/*.register-btn {*/
-/*    background: linear-gradient(90deg, #667eea, #764ba2);*/
-/*    color: white;*/
-/*    font-size: 16px;*/
-/*    font-weight: bold;*/
-/*    border: none;*/
-/*    padding: 12px;*/
-/*    border-radius: 5px;*/
-/*    cursor: pointer;*/
-/*    transition: background 0.3s ease, transform 0.2s ease;*/
-/*    width: 100%;*/
-/*}*/
+.register-btn:hover {
+    background: linear-gradient(90deg, #5a67d8, #6b46c1);
+    transform: scale(1.05);
+}
 
-/*.register-btn:hover {*/
-/*    background: linear-gradient(90deg, #5a67d8, #6b46c1);*/
-/*    transform: scale(1.05);*/
-/*}*/
-
-/*!* Responsief ontwerp voor kleinere schermen *!*/
-/*@media (max-width: 600px) {*/
-/*    .registration-container {*/
-/*        max-width: 90%;*/
-/*    }*/
-/*}*/
+/* Responsief ontwerp voor kleinere schermen */
+@media (max-width: 600px) {
+    .registration-container {
+        max-width: 90%;
+    }
+}
