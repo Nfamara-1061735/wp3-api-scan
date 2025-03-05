@@ -1,6 +1,7 @@
 from enum import unique
+from typing import List
 
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.testing.schema import mapped_column
 
 from backend import db
@@ -29,3 +30,7 @@ class Users(db.Model):
 
     salt: Mapped[bytes]
     """hashed password of the user"""
+
+    peer_expert_info: Mapped["PeerExperts"] = relationship(back_populates="user")
+    admin_info: Mapped["UsersStichtingAccessibility"] = relationship(back_populates="user")
+    organizations: Mapped[List["UserOrganization"]] = relationship(back_populates="user")
