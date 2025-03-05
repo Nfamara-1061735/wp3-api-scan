@@ -34,20 +34,23 @@
 
                 // Send AJAX request to validate credentials
                 $.ajax({
-                    url: '/api/login',  // Your login endpoint
+                    url: '/api/login?role={{ role }}',
                     type: 'POST',
-                    contentType: 'application/json',
-                    headers: {email: email, password: password},
+                    headers: {
+                        email: email,
+                        password: password
+                    },
                     success: function (response) {
                         if (response.success) {
                             // Redirect to peer dashboard if login is successful
-                            window.location.href = '{{ url_for("frontend.peer_dashboard") }}';
+                            window.location.href = '{{ target_redirect }}';
                         } else {
                             // Show error message if login fails
                             $('#error-message').text(response.message).show();
                         }
                     },
-                    error: function () {
+                    error: function (x) {
+                        console.log(x)
                         // Show error message for any server issues
                         $('#error-message').text('An error occurred. Please try again.').show();
                     }
