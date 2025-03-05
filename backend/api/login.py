@@ -14,7 +14,7 @@ class Login(Resource):
 
         # Verify credentials
         if user and verify_password(password, user.password, user.salt):
-            session["user"] = email  # Storing authentication using the session
+            session["user"] = email  # Storing authentication using a session
             return {"success": True}
         else:
             return {"success": False, "message": "Incorrect email or password"}
