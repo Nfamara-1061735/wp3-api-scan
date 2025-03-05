@@ -9,6 +9,8 @@ from backend.database.models import Users, Organizations, UserOrganization, Orga
 from backend import db
 from faker import Faker
 
+from backend.utils.password import hash_password, generate_salt
+
 
 # Very simple wrapper for message logging
 def print_message(message):
@@ -19,13 +21,13 @@ def generate_dummy_users(fake: Faker, multiplier=1):
     print_message("Generating dummy user data...")
     fake_users = []
     for _ in range(random.randrange(10 * multiplier, 25 * multiplier)):
-        password = fake.password()  # generate fake password
-        salt = fake.uuid4()  # generate fake salt
+        password = fake.binary(32)  # generate fake password
+        salt = fake.binary(16)  # generate fake salt
 
         fake_user = Users(
             first_name=fake.first_name(),
             last_name=fake.last_name(),
-            email=fake.email(),
+            email=fake.unique.email(),
             phone_number=fake.phone_number(),
             password=password,
             salt=salt,
@@ -299,13 +301,16 @@ def generate_peer_expert_research_types(research_types: list[ResearchTypesModel]
 
 def generate_admin_account():
     print_message("Adding admin account...")
+
+    salt = generate_salt()  # generate salt
+
     return [Users(
         first_name="admin",
         last_name="",
         email="admin",
         phone_number=-1,
-        password="admin",
-        salt="admin",
+        password=hash_password("admin", salt),
+        salt=salt,
     )]
 
 
@@ -328,9 +333,16 @@ def init_db_data(amount_multiplier=1):
     db.create_all()
     print_message("✅ Initialized database.")
 
-    fake = Faker(['nl_NL', 'nl_BE', 'fr_FR', 'en_GB'])
+    # Generate admin account
+    admin_account = generate_admin_account()
+    db.session.bulk_save_objects(admin_account, return_defaults=True)
+
+    admin_account_stichting_accessibility = set_accounts_admin(admin_account)
+    db.session.bulk_save_objects(admin_account_stichting_accessibility)
 
     # Generate fake data
+    fake = Faker(['nl_NL', 'nl_BE', 'fr_FR', 'en_GB'])
+
     fake_users = generate_dummy_users(fake, amount_multiplier)
     db.session.bulk_save_objects(fake_users, return_defaults=True)
 
@@ -367,12 +379,6 @@ def init_db_data(amount_multiplier=1):
 
     peer_experts_research_types = generate_peer_expert_research_types(research_types, peer_experts)
     db.session.bulk_save_objects(peer_experts_research_types)
-
-    admin_account = generate_admin_account()
-    db.session.bulk_save_objects(admin_account, return_defaults=True)
-
-    admin_account_stichting_accessibility = set_accounts_admin(admin_account)
-    db.session.bulk_save_objects(admin_account_stichting_accessibility)
 
     db.session.commit()
 

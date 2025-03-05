@@ -9,7 +9,7 @@ class Users(db.Model):
     """Users Table"""
     __tablename__ = 'users'
 
-    user_id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
+    user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
     """ID for identifying the user"""
 
     first_name: Mapped[str]
@@ -18,7 +18,7 @@ class Users(db.Model):
     last_name: Mapped[str]
     """Last name of the user"""
 
-    email: Mapped[str] = mapped_column(primary_key=True, nullable=False)
+    email: Mapped[str] = mapped_column(unique=True, nullable=False)
     """Email of the user"""
 
     phone_number: Mapped[str]
