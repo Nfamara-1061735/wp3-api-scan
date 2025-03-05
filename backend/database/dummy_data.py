@@ -1,4 +1,6 @@
 # data_generation.py
+import json
+import os
 import random
 from datetime import datetime, timedelta
 import click
@@ -16,18 +18,18 @@ from backend.utils.password import hash_password, generate_salt
 def print_message(message):
     click.echo(message)
 
-
 def generate_dummy_users(fake: Faker, multiplier=1):
     print_message("Generating dummy user data...")
     fake_users = []
-    for _ in range(random.randrange(10 * multiplier, 25 * multiplier)):
+    for i in range(random.randrange(10 * multiplier, 25 * multiplier)):
+        email = fake.unique.email()
         password = fake.binary(32)  # generate fake password
         salt = fake.binary(16)  # generate fake salt
 
         fake_user = Users(
             first_name=fake.first_name(),
             last_name=fake.last_name(),
-            email=fake.unique.email(),
+            email=email,
             phone_number=fake.phone_number(),
             password=password,
             salt=salt,
@@ -68,12 +70,16 @@ def generate_dummy_organizations(fake: Faker, organization_types: list[Organizat
     return fake_organizations
 
 
-def generate_user_organization_relationships(fake_users, fake_organizations):
+def generate_user_organization_relationships(fake_users: list[Users], fake_organizations: list[Organizations],
+                                             default_users: list[Users] = None):
+    if default_users is None:
+        default_users: list[Users] = []
+
     print_message("Generating user-organization relationships...")
     user_organizations = []
 
-    for user in fake_users:
-        if random.random() < 0.5:  # 50% chance the user will have any organization
+    for user in [*fake_users, *default_users]:
+        if user in default_users or random.random() < 0.5:  # 50% chance the user will have any organization
             organizations_count = 1 if random.random() < 0.9 else 2
             organizations_assigned = random.sample(fake_organizations, organizations_count)
 
@@ -325,6 +331,23 @@ def set_accounts_admin(accounts: list[Users]):
     return admin_accounts
 
 
+def add_credentials(fake: Faker, users: list[Users]):
+    credentials = []
+
+    for sample in users:
+        password_str = fake.password()
+        salt = generate_salt()
+        sample.password = hash_password(password_str, salt)
+        sample.salt = salt
+
+        credentials.append({
+            "login": sample.email,
+            "password": password_str
+        })
+
+    return credentials
+
+
 def init_db_data(amount_multiplier=1):
     # Drop all tables and create new ones
     print_message("Dropping existing tables...")
@@ -346,14 +369,22 @@ def init_db_data(amount_multiplier=1):
     fake_users = generate_dummy_users(fake, amount_multiplier)
     db.session.bulk_save_objects(fake_users, return_defaults=True)
 
+    random.shuffle(fake_users)
+    credential_users = fake_users[0:10]
+    fake_users = fake_users[10:]
+
+    with open('credentials.json', 'w') as f:
+        json.dump(add_credentials(fake, credential_users), f, indent=4)
+    db.session.bulk_save_objects(credential_users)
+
     organization_types = generate_organization_types()
     db.session.bulk_save_objects(organization_types, return_defaults=True)
 
     fake_organizations = generate_dummy_organizations(fake, organization_types, amount_multiplier)
     db.session.bulk_save_objects(fake_organizations, return_defaults=True)
 
-    user_organizations = generate_user_organization_relationships(fake_users, fake_organizations)
-    db.session.bulk_save_objects(user_organizations)
+    user_organizations = generate_user_organization_relationships(fake_users, fake_organizations, credential_users[:5])
+    db.session.bulk_save_objects(user_organizations, return_defaults=True)
 
     limitations = generate_limitations()
     db.session.bulk_save_objects(limitations, return_defaults=True)
@@ -380,6 +411,6 @@ def init_db_data(amount_multiplier=1):
     peer_experts_research_types = generate_peer_expert_research_types(research_types, peer_experts)
     db.session.bulk_save_objects(peer_experts_research_types)
 
-    db.session.commit()
+    db.session.commit()  # Save data
 
     return "✅ Added dummy data to database"
