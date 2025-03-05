@@ -3,8 +3,8 @@
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/peer_register.css') }}">
 {% endblock %}
+{% block logout %} {% endblock %}
 {% block content %}
-
 <div class="registration-container">
     <h1 class="title">Peer Expert Registratie</h1>
     <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}">
