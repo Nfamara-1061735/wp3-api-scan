@@ -2,6 +2,8 @@ import datetime
 
 from flask import Blueprint, request, jsonify
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
+
+from backend.api.login import Login
 from backend.database.models.research_model import Research
 from backend import db
 from functools import wraps
@@ -185,6 +187,6 @@ class SingleResearch(Resource):
       researches = Research.query.all()
       return researches, 200
 
-
 api.add_resource(Researches, '/researches')
 api.add_resource(SingleResearch, '/researches/<int:research_id>')
+api.add_resource(Login, '/login')

@@ -1,3 +1,5 @@
+from enum import unique
+
 from sqlalchemy.orm import Mapped
 from sqlalchemy.testing.schema import mapped_column
 
@@ -16,14 +18,14 @@ class Users(db.Model):
     last_name: Mapped[str]
     """Last name of the user"""
 
-    email: Mapped[str]
+    email: Mapped[str] = mapped_column(primary_key=True, nullable=False)
     """Email of the user"""
 
     phone_number: Mapped[str]
     """phone number of the user"""
 
-    password: Mapped[str]
+    password: Mapped[bytes]
     """password of the user"""
 
-    salt: Mapped[str]
+    salt: Mapped[bytes]
     """hashed password of the user"""
