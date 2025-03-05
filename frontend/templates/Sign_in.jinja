@@ -37,7 +37,7 @@
                     url: '/api/login',  // Your login endpoint
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({email: email, password: password}),
+                    headers: {email: email, password: password},
                     success: function (response) {
                         if (response.success) {
                             // Redirect to peer dashboard if login is successful
