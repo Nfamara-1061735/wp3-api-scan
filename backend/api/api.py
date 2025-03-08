@@ -21,6 +21,8 @@ research_args.add_argument('target_max_age', type=int)
 research_args.add_argument('status_id', type=int, required=True, help="Status ID is required")
 research_args.add_argument('research_type_id', type=int, required=True, help="Research Type ID is required")
 
+research_args.add_argument('limitation_ids', type=int, action='append', required=False, help="List of limitations ID's (like this for example [1, 2, 3])")
+
 researchFields = {
    'research_id': fields.Integer,
    'title': fields.String,
@@ -34,7 +36,11 @@ researchFields = {
    'target_min_age': fields.Integer,
    'target_max_age': fields.Integer,
    'status_id': fields.Integer,
-   'research_type_id': fields.Integer
+   'research_type_id': fields.Integer,
+   'limitations': fields.List(fields.Nested({
+      'limitation_id': fields.Integer,
+      'limitation': fields.String
+   }))
 }
 
 limitationFields = {
@@ -79,6 +85,10 @@ class Researches(Resource):
          status_id = args['status_id'],
          research_type_id = args['research_type_id']
       )
+
+      if args['limitation_ids']:
+         limitations = LimitationsModel.query.filter(LimitationsModel.limitation_id.in_(args['limitation_ids'])).all()
+         new_research.limitations.extend(limitations)
 
       db.session.add(new_research)
       db.session.commit()
@@ -134,7 +144,6 @@ class SingleResearch(Resource):
          single_research.research_type_id = args['research_type_id']
 
       db.session.commit()
-
       return single_research, 200
    
    @marshal_with(researchFields)
@@ -146,7 +155,7 @@ class SingleResearch(Resource):
       db.session.delete(single_research)
       db.session.commit()
       researches = Research.query.all()
-      return researches, 200
+      return {"message": "Research deleted succesfully"}, researches, 200
    
 class Limitations(Resource):
    @marshal_with(limitationFields)
