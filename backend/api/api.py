@@ -46,6 +46,11 @@ def api_data():
    except Exception as e:
       db.session.rollback()
       return jsonify({"error": "Databasefout", "details": str(e)}), 500
+ 
+def method_not_allowed():
+   response = jsonify({"error": "Methode niet toegestaan"})
+   response.status_code = 405
+   return response
 
 research_args = reqparse.RequestParser()
 research_args.add_argument('title', type=str, required=True, help="Title is verplicht (naam van je organisatie)")
@@ -128,6 +133,15 @@ class Researches(Resource):
       db.session.commit()
  
       return new_research, 201
+   
+   def put(self):
+      method_not_allowed()
+
+   def patch(self):
+      method_not_allowed()
+
+   def delete(self):
+      method_not_allowed()
 
 class SingleResearch(Resource):
    @marshal_with(researchFields)
@@ -193,12 +207,32 @@ class SingleResearch(Resource):
       db.session.delete(single_research)
       db.session.commit()
       return {"message": "Onderzoek succesvol verwijderd."}, 200
+   
+   def post(self):
+      method_not_allowed()
+
+   def put(self):
+      method_not_allowed()
+   
+
 
 class Limitations(Resource):
    @marshal_with(limitationFields)
    def get(self):
       limitations = LimitationsModel.query.all()
       return limitations, 200
+   
+   def post(self):
+      method_not_allowed()
+
+   def put(self):
+      method_not_allowed()
+
+   def patch(self):
+      method_not_allowed()
+
+   def delete(self):
+      method_not_allowed()
 
 api.add_resource(Researches, '/api/researches/')
 api.add_resource(SingleResearch, '/api/researches/<int:research_id>/')
