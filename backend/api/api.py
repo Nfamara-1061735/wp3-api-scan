@@ -137,10 +137,14 @@ class SingleResearch(Resource):
       if args.get('research_type_id'):
          single_research.research_type_id = args['research_type_id']
 
+      if args.get('limitation_ids') is not None:
+         single_research.limitations.clear()
+         limitations = LimitationsModel.query.filter(LimitationsModel.limitation_id.in_(args['limitation_ids'])).all()
+         single_research.limitations.extend(limitations)
+
       db.session.commit()
       return single_research, 200
    
-   @marshal_with(researchFields)
    def delete(self, research_id):
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
@@ -148,8 +152,7 @@ class SingleResearch(Resource):
 
       db.session.delete(single_research)
       db.session.commit()
-      researches = Research.query.all()
-      return {"message": "Research deleted succesfully"}, researches, 200
+      return {"message": "Research deleted succesfully"}, 200
    
 class Limitations(Resource):
    @marshal_with(limitationFields)
