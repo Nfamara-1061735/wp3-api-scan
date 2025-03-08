@@ -1,8 +1,7 @@
-# data_generation.py
 import json
-import os
 import random
 from datetime import datetime, timedelta
+
 import click
 
 from backend.database.models import Users, Organizations, UserOrganization, OrganizationType, LimitationsModel, \
@@ -149,13 +148,14 @@ def generate_contact_preferences():
 
 
 def generate_peer_experts(fake: Faker, user_organizations: list[UserOrganization], fake_users: list[Users],
-                          contact_preferences: list[ContactPreferences]):
+                          contact_preferences: list[ContactPreferences], default_users: list[Users]):
     print_message("Generating dummy peer experts data...")
     peer_experts = []
 
-    for user in fake_users:
+    for user in [*fake_users, *default_users]:
         # Only assign to users not in any organization for now
-        if not any(user_organization.user_id == user.user_id for user_organization in user_organizations):
+        if user in default_users or (
+        not any(user_organization.user_id == user.user_id for user_organization in user_organizations)):
             date_of_birth = fake.date_of_birth(minimum_age=1, maximum_age=65)
 
             # Enable supervisor if expert is under 18 years old, else randomly enable supervisor
@@ -370,12 +370,27 @@ def init_db_data(amount_multiplier=1):
     db.session.bulk_save_objects(fake_users, return_defaults=True)
 
     random.shuffle(fake_users)
-    credential_users = fake_users[0:10]
-    fake_users = fake_users[10:]
+
+    # Move the first 5 elements to 'peers' and remove them from 'fake_users'
+    peers = fake_users[:5]
+    fake_users = fake_users[5:]
+
+    # Move the next 5 elements to 'company' and remove them from 'fake_users'
+    company = fake_users[:5]
+    fake_users = fake_users[5:]
 
     with open('credentials.json', 'w') as f:
         json.dump(add_credentials(fake, credential_users), f, indent=4)
     db.session.bulk_save_objects(credential_users)
+        credentials_peers = add_credentials(fake, peers)
+        for credential in credentials_peers:
+            credential["role"] = "peer"
+
+        credentials_company = add_credentials(fake, company)
+        for credential in credentials_company:
+            credential["role"] = "company"
+
+        json.dump([*credentials_peers, *credentials_company], f, indent=4)
 
     organization_types = generate_organization_types()
     db.session.bulk_save_objects(organization_types, return_defaults=True)
@@ -383,7 +398,7 @@ def init_db_data(amount_multiplier=1):
     fake_organizations = generate_dummy_organizations(fake, organization_types, amount_multiplier)
     db.session.bulk_save_objects(fake_organizations, return_defaults=True)
 
-    user_organizations = generate_user_organization_relationships(fake_users, fake_organizations, credential_users[:5])
+    user_organizations = generate_user_organization_relationships(fake_users, fake_organizations, company)
     db.session.bulk_save_objects(user_organizations, return_defaults=True)
 
     limitations = generate_limitations()
@@ -392,7 +407,7 @@ def init_db_data(amount_multiplier=1):
     contact_preferences = generate_contact_preferences()
     db.session.bulk_save_objects(contact_preferences, return_defaults=True)
 
-    peer_experts = generate_peer_experts(fake, user_organizations, fake_users, contact_preferences)
+    peer_experts = generate_peer_experts(fake, user_organizations, fake_users, contact_preferences, peers)
     db.session.bulk_save_objects(peer_experts, return_defaults=True)
 
     peer_experts_limitations = generate_peer_experts_limitations(peer_experts, limitations)
