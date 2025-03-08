@@ -37,6 +37,11 @@ researchFields = {
    'research_type_id': fields.Integer
 }
 
+limitationFields = {
+   'limitation_id': fields.Integer,
+   'limitation': fields.String
+}
+
 class Researches(Resource):
    @marshal_with(researchFields)
    def get(self):
@@ -144,6 +149,7 @@ class SingleResearch(Resource):
       return researches, 200
    
 class Limitations(Resource):
+   @marshal_with(limitationFields)
    def get(self):
       limitations = LimitationsModel.query.all()
       return limitations, 200
