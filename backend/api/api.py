@@ -8,20 +8,20 @@ from backend import db
 api = Api()
 
 research_args = reqparse.RequestParser()
-research_args.add_argument('title', type=str, required=True, help="Title is required (name of the organisation)")
-research_args.add_argument('is_available', type=bool, required=True, help="Availibility status is required.")
-research_args.add_argument('description', type=str, required=True, help="Description is required")
-research_args.add_argument('start_date', type=str, required=True, help="Valid input is dd-mm-yyyy")
-research_args.add_argument('end_date', type=str, required=True, help="Valid input is dd-mm-yyyy")
-research_args.add_argument('location', type=str, required=True, help="Location is required")
-research_args.add_argument('has_reward', type=bool, required=True, help="Reward status is required")
+research_args.add_argument('title', type=str, required=True, help="Title is verplicht (naam van je organisatie)")
+research_args.add_argument('is_available', type=bool, required=True, help="is_available is verplicht.")
+research_args.add_argument('description', type=str, required=True, help="description is verplicht")
+research_args.add_argument('start_date', type=str, required=True, help="Geldige invoer is dd-mm-yyyy")
+research_args.add_argument('end_date', type=str, required=True, help="Geldige invoer is dd-mm-yyyy")
+research_args.add_argument('location', type=str, required=True, help="location is verplicht")
+research_args.add_argument('has_reward', type=bool, required=True, help="has_reward is verplicht")
 research_args.add_argument('reward', type=str)
 research_args.add_argument('target_min_age', type=int)
 research_args.add_argument('target_max_age', type=int)
-research_args.add_argument('status_id', type=int, required=True, help="Status ID is required")
-research_args.add_argument('research_type_id', type=int, required=True, help="Research Type ID is required")
+research_args.add_argument('status_id', type=int, required=True, help="Status ID is verplicht")
+research_args.add_argument('research_type_id', type=int, required=True, help="Research Type ID is verplicht")
 
-research_args.add_argument('limitation_ids', type=int, action='append', required=False, help="List of limitations ID's (like this for example [1, 2, 3])")
+research_args.add_argument('limitation_ids', type=int, action='append', required=False, help="Een list van limitations ID's (voorbeeld [1, 2, 3])")
 
 researchFields = {
    'research_id': fields.Integer,
@@ -63,7 +63,7 @@ class Researches(Resource):
          start_date = datetime.datetime.strptime(args['start_date'], '%d-%m-%Y').date()
          end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
       except ValueError:
-         abort(400, message="Invalid date. Use DD-MM-YYYY.")
+         abort(400, message="Ongeldige datum. Gebruik DD-MM-YYYY.")
          
       new_research = Research(
          title = args['title'],
@@ -94,7 +94,7 @@ class SingleResearch(Resource):
    def get(self, research_id):
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
-         abort(404, message="Research not found")
+         abort(404, message="Onderzoek niet gevonden.")
       return single_research, 200
    
    @marshal_with(researchFields)
@@ -105,11 +105,11 @@ class SingleResearch(Resource):
          start_date = datetime.datetime.strptime(args['start_date'], '%d-%m-%Y').date()
          end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
       except ValueError:
-         abort(400, message="Invalid date. Use DD-MM-YYYY.")
+         abort(400, message="Ongeldige datum. Gebruik DD-MM-YYYY.")
 
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
-         abort(404, message="Research not found")
+         abort(404, message="Onderzoek niet gevonden")
 
       #gets the info that is already thare and then changes it with what you provide 
       if args.get('title'):
@@ -148,11 +148,11 @@ class SingleResearch(Resource):
    def delete(self, research_id):
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
-         abort(404, message="Research not found")
+         abort(404, message="Onderzoek niet gevonden.")
 
       db.session.delete(single_research)
       db.session.commit()
-      return {"message": "Research deleted succesfully"}, 200
+      return {"message": "Onderzoek succesvol verwijderd."}, 200
    
 class Limitations(Resource):
    @marshal_with(limitationFields)
