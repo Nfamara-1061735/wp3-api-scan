@@ -5,7 +5,6 @@ from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
 from backend import db
 from functools import wraps
-# from backend.database import db_session
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -38,13 +37,13 @@ def api_data():
 
    try:
       # Voorbeeld query (SQLAlchemy)
-      result = db_session.execute("SELECT * FROM some_table WHERE some_column = :val", {"val": data["key"]})
-      db_session.commit()
+      result = db.session.execute("SELECT * FROM some_table WHERE some_column = :val", {"val": data["key"]})
+      db.session.commit()
 
       return jsonify({"message": "Data opgehaald", "result": [dict(row) for row in result]})
 
    except Exception as e:
-      db_session.rollback()
+      db.session.rollback()
       return jsonify({"error": "Databasefout", "details": str(e)}), 500
 
 research_args = reqparse.RequestParser()
