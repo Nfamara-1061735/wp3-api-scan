@@ -52,12 +52,6 @@ class Researches(Resource):
    @marshal_with(researchFields)
    def get(self):
       researches = Research.query.all()
-
-      #this loops sets the dates to DD-MM-YYYY before returning 
-      for research in researches:
-         research.start_date = research.start_date.strftime('%d-%m-%Y')
-         research.end_date = research.end_date.strftime('%d-%m-%Y')
-
       return researches, 200 
    
    @marshal_with(researchFields)
