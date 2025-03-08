@@ -24,7 +24,8 @@ class Login(Resource):
         else:
             return {"success": False, "message": "Incorrect email or password"}
 
-    def verify_role(self, user: Users, target_role: str):
+    @staticmethod
+    def verify_role(user: Users, target_role: str):
         if not user:
             return
 
