@@ -3,6 +3,7 @@ import datetime
 from flask import Blueprint, request, jsonify
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
+from backend.database.models.limitations_model import LimitationsModel
 from backend import db
 from functools import wraps
 
@@ -47,18 +48,20 @@ def api_data():
       return jsonify({"error": "Databasefout", "details": str(e)}), 500
 
 research_args = reqparse.RequestParser()
-research_args.add_argument('title', type=str, required=True, help="Title is required (name of the organisation)")
-research_args.add_argument('is_available', type=bool, required=True, help="Availability status is required.")
-research_args.add_argument('description', type=str, required=True, help="Description is required")
-research_args.add_argument('start_date', type=str, required=True, help="Valid input is dd-mm-yyyy")
-research_args.add_argument('end_date', type=str, required=True, help="Valid input is dd-mm-yyyy")
-research_args.add_argument('location', type=str, required=True, help="Location is required")
-research_args.add_argument('has_reward', type=bool, required=True, help="Reward status is required")
+research_args.add_argument('title', type=str, required=True, help="Title is verplicht (naam van je organisatie)")
+research_args.add_argument('is_available', type=bool, required=True, help="is_available is verplicht.")
+research_args.add_argument('description', type=str, required=True, help="description is verplicht")
+research_args.add_argument('start_date', type=str, required=True, help="Geldige invoer is dd-mm-yyyy")
+research_args.add_argument('end_date', type=str, required=True, help="Geldige invoer is dd-mm-yyyy")
+research_args.add_argument('location', type=str, required=True, help="location is verplicht")
+research_args.add_argument('has_reward', type=bool, required=True, help="has_reward is verplicht")
 research_args.add_argument('reward', type=str)
 research_args.add_argument('target_min_age', type=int)
 research_args.add_argument('target_max_age', type=int)
-research_args.add_argument('status_id', type=int, required=True, help="Status ID is required")
-research_args.add_argument('research_type_id', type=int, required=True, help="Research Type ID is required")
+research_args.add_argument('status_id', type=int, required=True, help="Status ID is verplicht")
+research_args.add_argument('research_type_id', type=int, required=True, help="Research Type ID is verplicht")
+
+research_args.add_argument('limitation_ids', type=int, action='append', required=False, help="Een list van limitations ID's (voorbeeld [1, 2, 3])")
 
 researchFields = {
    'research_id': fields.Integer,
@@ -73,19 +76,22 @@ researchFields = {
    'target_min_age': fields.Integer,
    'target_max_age': fields.Integer,
    'status_id': fields.Integer,
-   'research_type_id': fields.Integer
+   'research_type_id': fields.Integer,
+   'limitations': fields.List(fields.Nested({
+      'limitation_id': fields.Integer,
+      'limitation': fields.String
+   }))
+}
+
+limitationFields = {
+   'limitation_id': fields.Integer,
+   'limitation': fields.String
 }
 
 class Researches(Resource):
    @marshal_with(researchFields)
    def get(self):
       researches = Research.query.all()
-
-      #this loops sets the dates to DD-MM-YYYY before returning 
-      for research in researches:
-         research.start_date = research.start_date.strftime('%d-%m-%Y')
-         research.end_date = research.end_date.strftime('%d-%m-%Y')
-
       return researches, 200
    
    @marshal_with(researchFields)
@@ -97,9 +103,8 @@ class Researches(Resource):
          start_date = datetime.datetime.strptime(args['start_date'], '%d-%m-%Y').date()
          end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
       except ValueError:
-         abort(400, message="Invalid date. Use DD-MM-YYYY.")
-         return
-
+         abort(400, message="Ongeldige datum. Gebruik DD-MM-YYYY.")
+         
       new_research = Research(
          title = args['title'],
          is_available = args['is_available'],
@@ -115,9 +120,13 @@ class Researches(Resource):
          research_type_id = args['research_type_id']
       )
 
+      if args['limitation_ids']:
+         limitations = LimitationsModel.query.filter(LimitationsModel.limitation_id.in_(args['limitation_ids'])).all()
+         new_research.limitations.extend(limitations)
+
       db.session.add(new_research)
       db.session.commit()
-
+ 
       return new_research, 201
 
 class SingleResearch(Resource):
@@ -125,9 +134,9 @@ class SingleResearch(Resource):
    def get(self, research_id):
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
-         abort(404, message="Research not found")
+         abort(404, message="Onderzoek niet gevonden.")
       return single_research, 200
-
+   
    @marshal_with(researchFields)
    def patch(self, research_id):
       args = research_args.parse_args()
@@ -136,14 +145,13 @@ class SingleResearch(Resource):
          start_date = datetime.datetime.strptime(args['start_date'], '%d-%m-%Y').date()
          end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
       except ValueError:
-         abort(400, message="Invalid date. Use DD-MM-YYYY.")
-         return
+         abort(400, message="Ongeldige datum. Gebruik DD-MM-YYYY.")
 
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
-         abort(404, message="Research not found")
+         abort(404, message="Onderzoek niet gevonden")
 
-      #gets the info that is already thare and then changes it with what you provide
+      #gets the info that is already there and then changes it with what you provide
       if args.get('title'):
          single_research.title = args['title']
       if args.get('is_available') is not None:
@@ -169,21 +177,29 @@ class SingleResearch(Resource):
       if args.get('research_type_id'):
          single_research.research_type_id = args['research_type_id']
 
-      db.session.commit()
+      if args.get('limitation_ids') is not None:
+         single_research.limitations.clear()
+         limitations = LimitationsModel.query.filter(LimitationsModel.limitation_id.in_(args['limitation_ids'])).all()
+         single_research.limitations.extend(limitations)
 
+      db.session.commit()
       return single_research, 200
 
-   @marshal_with(researchFields)
    def delete(self, research_id):
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
-         abort(404, message="Research not found")
+         abort(404, message="Onderzoek niet gevonden.")
 
       db.session.delete(single_research)
       db.session.commit()
-      researches = Research.query.all()
-      return researches, 200
+      return {"message": "Onderzoek succesvol verwijderd."}, 200
 
+class Limitations(Resource):
+   @marshal_with(limitationFields)
+   def get(self):
+      limitations = LimitationsModel.query.all()
+      return limitations, 200
 
-api.add_resource(Researches, '/researches')
-api.add_resource(SingleResearch, '/researches/<int:research_id>')
+api.add_resource(Researches, '/api/researches/')
+api.add_resource(SingleResearch, '/api/researches/<int:research_id>/')
+api.add_resource(Limitations, '/api/limitations/')
