@@ -1,6 +1,6 @@
-from sqlalchemy.orm import Mapped
-from sqlalchemy.testing.schema import mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from backend.database.models.research_model import Research
 from backend import db
 
 class LimitationsModel(db.Model):
@@ -12,3 +12,5 @@ class LimitationsModel(db.Model):
 
     limitation: Mapped[str]
     """limitation"""
+
+    researches: Mapped[list["Research"]] = relationship(secondary="research_limitations", back_populates="limitations")

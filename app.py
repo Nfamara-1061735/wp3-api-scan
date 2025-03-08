@@ -22,7 +22,7 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(frontend_bp)
-    app.register_blueprint(api_bp, url_prefix='/api')  # API routes with '/api' prefix
+    app.register_blueprint(api_bp)#, url_prefix='/api')  # API routes with '/api' prefix
 
     return app
 
