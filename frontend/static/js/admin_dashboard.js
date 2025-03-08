@@ -14,18 +14,27 @@ function removeElement(sender) {
         accordionContent.appendChild(p);
     }
 }
-
-function addElement() {
-
+function fetchItems() {
+    fetch("/admin/dashboard")
+        .then(response => response.json())
+        .then(data => createColumns(data))
+        .then(error => console.error("Error fetching data:", error))
 }
 
-function updateElement(type, variableName, newValue) {
-    fetch("/admin/dashboard", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({type: type, id: variableName, value: newValue})
-    })
-        .then(response => response.json())
+function createColumns(data) {
+    const container = document.getElementById("researchContainer");
+
+    data.forEach(item => {
+        let div = document.createElement("div");
+        div.classList.add("research-card");
+
+        switch(data.json("research-type-id")){
+
+        }
+        container.appendChild(div);
+    });
+}
+
+function testWrite(data) {
+    document.write(data)
 }
