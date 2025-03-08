@@ -9,7 +9,7 @@
 {% block content %}
 
 <div class="registration-container">
-    <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon">
+    <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon" class="register-icon">
     <h1 class="title">Ervaringsdeskundige Registratie</h1>
     <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}">
         <div class="input-group">

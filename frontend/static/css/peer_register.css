@@ -93,3 +93,10 @@
 #supervisor-name-group {
     display: none; /* standaard verborgen */
 }
+
+.register-icon {
+    width: 200px;
+    height: auto;
+    padding: 15px;
+    border-radius: 15%;
+}
