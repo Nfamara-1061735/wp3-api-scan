@@ -380,8 +380,6 @@ def init_db_data(amount_multiplier=1):
     fake_users = fake_users[5:]
 
     with open('credentials.json', 'w') as f:
-        json.dump(add_credentials(fake, credential_users), f, indent=4)
-    db.session.bulk_save_objects(credential_users)
         credentials_peers = add_credentials(fake, peers)
         for credential in credentials_peers:
             credential["role"] = "peer"
@@ -391,6 +389,10 @@ def init_db_data(amount_multiplier=1):
             credential["role"] = "company"
 
         json.dump([*credentials_peers, *credentials_company], f, indent=4)
+
+    # Save the edited users to the database
+    db.session.add_all(peers)  # Add the peers to the session
+    db.session.add_all(company)  # Add the company users to the session
 
     organization_types = generate_organization_types()
     db.session.bulk_save_objects(organization_types, return_defaults=True)
