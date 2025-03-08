@@ -1,4 +1,21 @@
 document.addEventListener("DOMContentLoaded", function() {
+    const supervisorCheckbox = document.getElementById('has_supervisor_checkbox');
+    const supervisorGroup = document.getElementById('supervisor-name-group');
+
+    // Functie om veld te tonen of verbergen
+    function toggleSupervisorField() {
+        if (supervisorCheckbox.checked) {
+            supervisorGroup.style.display = "block";
+        } else {
+            supervisorGroup.style.display = "none";
+        }
+    }
+
+    // Bij laden direct controleren
+    toggleSupervisorField();
+
+    // Luister naar veranderingen op de checkbox
+    supervisorCheckbox.addEventListener('change', toggleSupervisorField);
 
     // Leeftijdscontrole (je bestaande functie blijft behouden)
     const birthDateInput = document.querySelector('input[name="birth_date"]');
