@@ -4,7 +4,7 @@ import sqlalchemy as sa
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend import db
-from backend.database.models.limitations_model import LimitationsModel
+
 
 class Research(db.Model):
     """Researches Table"""
@@ -51,7 +51,7 @@ class Research(db.Model):
     """Foreign key to the type of research."""
 
     """relationship between researchmodel and limitationsmodel trough research_limiations model"""
-    limitations: Mapped[list["LimitationsModel"]] = relationship(secondary= "research_limitations", back_populates="researches")
+    limitations: Mapped[list["LimitationsModel"]] = relationship("LimitationsModel", secondary= "research_limitations", back_populates="researches")
 
     def __init__(self, title, is_available, description, start_date, end_date, location, has_reward, reward, target_min_age, target_max_age, status_id, research_type_id, limitations):
         self.title = title
