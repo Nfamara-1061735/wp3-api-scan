@@ -1,6 +1,7 @@
 import datetime
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
+from backend.database.models.limitations_model import LimitationsModel
 from backend import db
 
 
@@ -141,9 +142,12 @@ class SingleResearch(Resource):
       db.session.commit()
       researches = Research.query.all()
       return researches, 200
+   
+class Limitations(Resource):
+   def get(self):
+      limitations = LimitationsModel.query.all()
+      return limitations, 200
        
-api.add_resource(Researches, '/api/researches')
-api.add_resource(SingleResearch, '/api/researches/<int:research_id>')
-
-
-
+api.add_resource(Researches, '/api/researches/')
+api.add_resource(SingleResearch, '/api/researches/<int:research_id>/')
+api.add_resource(Limitations, '/api/limitations/')
