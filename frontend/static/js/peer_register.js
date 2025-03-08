@@ -1,21 +1,23 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     const birthDateInput = document.querySelector('input[name="birth_date"]');
-//     const supervisorCheckbox = document.querySelector('input[name="has_supervisor"]');
-//
-//     if (birthDateInput) {
-//         birthDateInput.addEventListener("change", function () {
-//             const birthDate = new Date(birthDateInput.value);
-//             const today = new Date();
-//             const age = today.getFullYear() - birthDate.getFullYear();
-//             const monthDiff = today.getMonth() - birthDate.getMonth();
-//             const dayDiff = today.getDate() - birthDate.getDate();
-//
-//             // Controleer of de gebruiker jonger dan 18 is
-//             if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
-//                 supervisorCheckbox.checked = true;
-//             } else {
-//                 supervisorCheckbox.checked = false;
-//             }
-//         });
-//     }
-// });
+document.addEventListener("DOMContentLoaded", function() {
+
+    // Leeftijdscontrole (je bestaande functie blijft behouden)
+    const birthDateInput = document.querySelector('input[name="birth_date"]');
+    if (birthDateInput) {
+        birthDateInput.addEventListener("change", function() {
+            const birthDate = new Date(birthDateInput.value);
+            const today = new Date();
+            const age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            const dayDiff = today.getDate() - birthDate.getDate();
+
+            // Zet checkbox automatisch aan als jonger dan 18
+            if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
+                supervisorCheckbox.checked = true;
+                toggleSupervisorField();
+            }
+        });
+    }
+
+    // Initialiseer weergave bij pagina laden
+    toggleSupervisorField();
+});
