@@ -135,13 +135,13 @@ class Researches(Resource):
       return new_research, 201
    
    def put(self):
-      method_not_allowed()
+      return method_not_allowed()
 
    def patch(self):
-      method_not_allowed()
+      return method_not_allowed()
 
    def delete(self):
-      method_not_allowed()
+      return method_not_allowed()
 
 class SingleResearch(Resource):
    @marshal_with(researchFields)
@@ -209,10 +209,10 @@ class SingleResearch(Resource):
       return {"message": "Onderzoek succesvol verwijderd."}, 200
    
    def post(self):
-      method_not_allowed()
+      return method_not_allowed()
 
    def put(self):
-      method_not_allowed()
+      return method_not_allowed()
    
 
 
@@ -223,16 +223,16 @@ class Limitations(Resource):
       return limitations, 200
    
    def post(self):
-      method_not_allowed()
+      return method_not_allowed()
 
    def put(self):
-      method_not_allowed()
+      return method_not_allowed()
 
    def patch(self):
-      method_not_allowed()
+      return method_not_allowed()
 
    def delete(self):
-      method_not_allowed()
+      return method_not_allowed()
 
 api.add_resource(Researches, '/api/researches/')
 api.add_resource(SingleResearch, '/api/researches/<int:research_id>/')
