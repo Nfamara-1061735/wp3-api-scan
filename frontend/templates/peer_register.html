@@ -5,11 +5,11 @@
       rel="stylesheet"
       href="{{ url_for('.static', filename='css/peer_register.css') }}"
     />
-{#    <link rel="stylesheet" href="{{ url_for('static', filename='css/peer_register.css') }}">#}
 {% endblock %}
 {% block content %}
 
 <div class="registration-container">
+    <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon">
     <h1 class="title">Ervaringsdeskundige Registratie</h1>
     <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}">
         <div class="input-group">
