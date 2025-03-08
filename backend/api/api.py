@@ -1,51 +1,14 @@
 import datetime
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
 from backend.database.models.limitations_model import LimitationsModel
 from backend import db
-from functools import wraps
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
-VALID_API_KEYS = {"jouw-api-key", "andere-geldige-key"}
 
-
-def require_api_key(f):
-
-   @wraps(f)
-   def decorated_function(*args, **kwargs):
-      api_key = request.headers.get("Authorization")
-
-      if not api_key or not api_key.startswith("Bearer "):
-         return jsonify({"error": "API-key ontbreekt of onjuist formaat"}), 401
-
-      api_key = api_key.split("Bearer ")[1]
-
-      if api_key not in VALID_API_KEYS:
-         return jsonify({"error": "Ongeldige API-key"}), 403
-
-      return f(*args, **kwargs)
-
-   return decorated_function
-
-
-@api_bp.route("/api/data", methods=["POST"])
-@require_api_key
-def api_data():
-   data = request.json
-
-   try:
-      # Voorbeeld query (SQLAlchemy)
-      result = db.session.execute("SELECT * FROM some_table WHERE some_column = :val", {"val": data["key"]})
-      db.session.commit()
-
-      return jsonify({"message": "Data opgehaald", "result": [dict(row) for row in result]})
-
-   except Exception as e:
-      db.session.rollback()
-      return jsonify({"error": "Databasefout", "details": str(e)}), 500
  
 def method_not_allowed():
    response = jsonify({"error": "Methode niet toegestaan"})
