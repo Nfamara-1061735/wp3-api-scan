@@ -89,3 +89,7 @@
         max-width: 90%;
     }
 }
+
+#supervisor-name-group {
+    display: none; /* standaard verborgen */
+}
