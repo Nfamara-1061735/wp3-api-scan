@@ -253,7 +253,8 @@ def generate_researches(fake: Faker, research_statuses: list[ResearchStatus], re
             target_min_age=target_min_age,
             target_max_age=target_max_age,
             status_id=random.choice(research_statuses).research_status_id,
-            research_type_id=random.choice(research_types).research_type_id
+            research_type_id=random.choice(research_types).research_type_id,
+            limitations=[]
         )
 
         fake_researches.append(fake_research)
