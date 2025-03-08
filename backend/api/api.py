@@ -2,6 +2,8 @@ import datetime
 
 from flask import Blueprint, jsonify
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
+
+from backend.api.login import Login
 from backend.database.models.research_model import Research
 from backend.database.models.limitations_model import LimitationsModel
 from backend import db
@@ -9,7 +11,7 @@ from backend import db
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
- 
+
 def method_not_allowed():
    response = jsonify({"error": "Methode niet toegestaan"})
    response.status_code = 405
@@ -72,7 +74,7 @@ class Researches(Resource):
          end_date = datetime.datetime.strptime(args['end_date'], '%d-%m-%Y').date()
       except ValueError:
          abort(400, message="Ongeldige datum. Gebruik DD-MM-YYYY.")
-         
+
       new_research = Research(
          title = args['title'],
          is_available = args['is_available'],
@@ -94,9 +96,9 @@ class Researches(Resource):
 
       db.session.add(new_research)
       db.session.commit()
- 
+
       return new_research, 201
-   
+
    def put(self):
       return method_not_allowed()
 
@@ -113,7 +115,7 @@ class SingleResearch(Resource):
       if not single_research:
          abort(404, message="Onderzoek niet gevonden.")
       return single_research, 200
-   
+
    @marshal_with(researchFields)
    def patch(self, research_id):
       args = research_args.parse_args()
@@ -170,13 +172,13 @@ class SingleResearch(Resource):
       db.session.delete(single_research)
       db.session.commit()
       return {"message": "Onderzoek succesvol verwijderd."}, 200
-   
+
    def post(self):
       return method_not_allowed()
 
    def put(self):
       return method_not_allowed()
-   
+
 
 
 class Limitations(Resource):
@@ -184,7 +186,7 @@ class Limitations(Resource):
    def get(self):
       limitations = LimitationsModel.query.all()
       return limitations, 200
-   
+
    def post(self):
       return method_not_allowed()
 
@@ -197,6 +199,7 @@ class Limitations(Resource):
    def delete(self):
       return method_not_allowed()
 
-api.add_resource(Researches, '/api/researches/')
-api.add_resource(SingleResearch, '/api/researches/<int:research_id>/')
-api.add_resource(Limitations, '/api/limitations/')
+api.add_resource(Researches, '/researches/')
+api.add_resource(SingleResearch, '/researches/<int:research_id>/')
+api.add_resource(Limitations, '/limitations/')
+api.add_resource(Login, '/login')

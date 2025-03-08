@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash
+from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, session
 from backend.database.models.register_expert import ExpertRegistrationModule
 
 template_dir = os.path.abspath('./frontend/templates/')
@@ -43,10 +43,21 @@ def register():
             return render_template('peer_register.html')
 
 
+@frontend_bp.route('/logout')
+def logout():
+    if "user" in session:
+        del session["user"]
+    return redirect(url_for('frontend.home'))
+
 @frontend_bp.route('/peer/signin')
 def signup():
-    return render_template("sign_in.jinja", theme=g.theme)
+    return render_template("sign_in.jinja", role='peer', target_redirect=url_for("frontend.peer_dashboard"),
+                           theme=g.theme)
 
+
+@frontend_bp.route('/admin/signin')
+def login_admin():
+    return render_template("sign_in.jinja", role='admin', target_redirect=url_for("frontend.dashboard"), theme=g.theme)
 
 @frontend_bp.route('/admin/dashboard')
 def dashboard():

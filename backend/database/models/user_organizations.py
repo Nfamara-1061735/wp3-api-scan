@@ -1,7 +1,7 @@
 from typing import Optional
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.testing.schema import mapped_column
 
 from backend import db
@@ -21,3 +21,5 @@ class UserOrganization(db.Model):
 
     organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.organization_id'))
     """Foreign key to the employing company."""
+
+    user: Mapped["Users"] = relationship(back_populates="organizations")
