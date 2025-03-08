@@ -44,7 +44,7 @@ def init_db_command():
     click.echo("✅ Initialized database.")
 
 @click.command("init-db-data")
-@click.argument('amount_multiplier', default=100)
+@click.argument('amount_multiplier', default=1)
 @with_appcontext
 def init_db_data_command(amount_multiplier: int = 1):
     from .database.dummy_data import init_db_data
