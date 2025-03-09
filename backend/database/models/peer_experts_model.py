@@ -2,11 +2,10 @@ import datetime
 from typing import Optional
 from sqlalchemy import ForeignKey
 import sqlalchemy as sa
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.orm import mapped_column
 
 from backend import db
-
 
 class PeerExperts(db.Model):
     __tablename__ = "peer_experts"
@@ -26,5 +25,4 @@ class PeerExperts(db.Model):
     contact_preference_id: Mapped[int] = mapped_column(ForeignKey('contact_preferences.contact_preference_id'))
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
 
-    
-
+    user: Mapped["Users"] = relationship(back_populates="peer_expert_info")

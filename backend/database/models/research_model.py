@@ -2,8 +2,9 @@ import datetime
 from typing import Optional
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend import db
+
 
 class Research(db.Model):
     """Researches Table"""
@@ -49,7 +50,10 @@ class Research(db.Model):
     research_type_id: Mapped[int] = mapped_column(ForeignKey('research_types.research_type_id'))
     """Foreign key to the type of research."""
 
-    def __init__(self, title, is_available, description, start_date, end_date, location, has_reward, reward, target_min_age, target_max_age, status_id, research_type_id):
+    """relationship between researchmodel and limitationsmodel trough research_limiations model"""
+    limitations: Mapped[list["LimitationsModel"]] = relationship("LimitationsModel", secondary= "research_limitations", back_populates="researches")
+
+    def __init__(self, title, is_available, description, start_date, end_date, location, has_reward, reward, target_min_age, target_max_age, status_id, research_type_id, limitations=None):
         self.title = title
         self.is_available = is_available
         self.description = description
@@ -62,6 +66,7 @@ class Research(db.Model):
         self.target_max_age = target_max_age
         self.status_id = status_id
         self.research_type_id = research_type_id
+        self.limitations = limitations if limitations is not None else []
 
     def __repr__(self):
         return f"Onderzoek(title = {self.title}, is_availeble = {self.is_available}, description = {self.description}, start_date = {self.start_date}, end_date = {self.end_date}, location = {self.location}, has_reward = {self.has_reward}, reward = {self.reward}, target_min_age = {self.target_min_age}, target_max_age = {self.target_max_age})"

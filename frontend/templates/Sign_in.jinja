@@ -2,18 +2,60 @@
 {% block title %} Sign-in page {% endblock %}
 {% block logout %} {% endblock %}
 {% block content %}
-    <h1 class="sign-in-title center">Log in:</h1>
-    <form action="{{ url_for('frontend.peer_dashboard') }}" method="post">
-        <div class="input-area center">
+    <h1 class="my-5 center">Log in:</h1>
+    <form id="login-form" class="login-card" method="dialog">
+        <div class="input-area bg-light-subtle center w-100 shadow">
+            <div id="error-message" class="alert alert-danger" style="display: none;" role="alert"></div>
             <div>
-                <input type="text" class="input-fields" id="email-adres" placeholder="email-adres" required>
+                <input type="text" class="input-field form-control" id="email-adres" placeholder="E-Mailadres" required>
                 <label for="email-adres"></label>
             </div>
             <div>
-                <input type="text" class="input-fields" id="password" placeholder="wachtwoord" required>
+                <input type="password" class="input-field form-control" id="password" placeholder="Wachtwoord" required>
                 <label for="password"></label>
             </div>
-            <button class="submit-button">Inloggen</button>
+            <button class="w-100 btn btn-primary">Inloggen</button>
         </div>
     </form>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            // Handle form submission with jQuery
+            $('#login-form').submit(function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Clear any previous error message
+                $('#error-message').hide();
+
+                // Get the form data
+                const email = $('#email-adres').val();
+                const password = $('#password').val();
+
+                // Send AJAX request to validate credentials
+                $.ajax({
+                    url: '/api/login?role={{ role }}',
+                    type: 'POST',
+                    headers: {
+                        email: email,
+                        password: password
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Redirect to peer dashboard if login is successful
+                            window.location.href = '{{ target_redirect }}';
+                        } else {
+                            // Show error message if login fails
+                            $('#error-message').text(response.message).show();
+                        }
+                    },
+                    error: function (x) {
+                        console.log(x)
+                        // Show error message for any server issues
+                        $('#error-message').text('An error occurred. Please try again.').show();
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
