@@ -6,7 +6,7 @@ import click
 
 from backend.database.models import Users, Organizations, UserOrganization, OrganizationType, LimitationsModel, \
     PeerExperts, PeerExpertsLimitations, ContactPreferences, ResearchStatus, ResearchTypesModel, Research, \
-    PeerExpertsResearchTypes, ResearchLimitations, UsersStichtingAccessibility
+    PeerExpertsResearchTypes, ResearchLimitations, UsersStichtingAccessibility, PeerExpertStatus, RegistrationStatus
 from backend import db
 from faker import Faker
 
@@ -148,7 +148,8 @@ def generate_contact_preferences():
 
 
 def generate_peer_experts(fake: Faker, user_organizations: list[UserOrganization], fake_users: list[Users],
-                          contact_preferences: list[ContactPreferences], default_users: list[Users]):
+                          contact_preferences: list[ContactPreferences], peer_expert_statuses: list[PeerExpertStatus],
+                          default_users: list[Users]):
     print_message("Generating dummy peer experts data...")
     peer_experts = []
 
@@ -174,6 +175,7 @@ def generate_peer_experts(fake: Faker, user_organizations: list[UserOrganization
                 supervisor_or_guardian_name=fake.name() if has_supervisor else None,
                 availability_notes=fake.text(max_nb_chars=100),
                 contact_preference_id=random.choice(contact_preferences).contact_preference_id,
+                peer_expert_status_id=random.choice(peer_expert_statuses).peer_expert_status_id,
                 user_id=user.user_id
             )
             peer_experts.append(peer_expert)
@@ -212,6 +214,33 @@ def generate_research_statuses():
 
     return research_statuses
 
+
+def generate_peer_expert_statuses():
+    print_message("Importing peer expert statuses...")
+
+    research_status_data = [
+        "nieuw",
+        "goedgekeurd",
+        "afgekeurd",
+        "gesloten"
+    ]
+    research_statuses = [PeerExpertStatus(status=research_status) for research_status in research_status_data]
+
+    return research_statuses
+
+
+def generate_registration_statuses():
+    print_message("Importing registration statuses...")
+
+    research_status_data = [
+        "nieuw",
+        "goedgekeurd",
+        "afgekeurd",
+        "gesloten"
+    ]
+    research_statuses = [RegistrationStatus(status=research_status) for research_status in research_status_data]
+
+    return research_statuses
 
 def generate_research_types():
     print_message("Importing research types...")
@@ -410,7 +439,11 @@ def init_db_data(amount_multiplier=1):
     contact_preferences = generate_contact_preferences()
     db.session.bulk_save_objects(contact_preferences, return_defaults=True)
 
-    peer_experts = generate_peer_experts(fake, user_organizations, fake_users, contact_preferences, peers)
+    peer_expert_statuses = generate_peer_expert_statuses()
+    db.session.bulk_save_objects(peer_expert_statuses, return_defaults=True)
+
+    peer_experts = generate_peer_experts(fake, user_organizations, fake_users, contact_preferences,
+                                         peer_expert_statuses, peers)
     db.session.bulk_save_objects(peer_experts, return_defaults=True)
 
     peer_experts_limitations = generate_peer_experts_limitations(peer_experts, limitations)
@@ -428,6 +461,11 @@ def init_db_data(amount_multiplier=1):
 
     peer_experts_research_types = generate_peer_expert_research_types(research_types, peer_experts)
     db.session.bulk_save_objects(peer_experts_research_types)
+
+    registration_statuses = generate_registration_statuses()
+    db.session.bulk_save_objects(registration_statuses, return_defaults=True)
+
+    # TODO: Generate some registrations
 
     db.session.commit()  # Save data
 
