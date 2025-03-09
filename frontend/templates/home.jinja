@@ -1,5 +1,5 @@
 {% extends "base.jinja" %}
-{% block title %} Admin {% endblock %}
+{% block title %} Home {% endblock %}
 {% block head %}
     <link
       rel="stylesheet"
@@ -8,7 +8,7 @@
 {% endblock %}
 {% block logout %} {% endblock %}
 {% block content %}
-    <h1 class="text-center mt-5">Welkom Bij Stichting Accesibility HUB!</h1>
+    <h1 class="text-center mt-5">Welkom Bij Stichting Accessibility HUB!</h1>
     <section class="p-5">
       <div class="container">
         <h2 class="text-center mb-5">Kies uw rol:</h2>
@@ -29,14 +29,14 @@
           </div>
           <div class="col">
               <a href="{{ url_for('frontend.login_admin') }}" class="text-decoration-none">
-              <!--link naar inlogpagina voor stichting accesibility-->
+                  <!--link naar inlogpagina voor stichting accessibility-->
                 <div class="card bg-light-subtle border-dark-subtle rounded">
                 <div class="card-body text-center">
                     <img src="{{ url_for('.static', filename='img/beheer.png') }}"
                     class="login-card-img rounded-circle mb-3"
                     alt="stichting Accesibility"
                   />
-                  <h3 class="card-title">Stichting Accesibility</h3>
+                    <h3 class="card-title">Stichting Accessibility</h3>
                 </div>
               </div>
             </a>
