@@ -184,6 +184,20 @@ class SingleResearch(Resource):
       researches = Research.query.all()
       return researches, 200
 
+class FilteredResearch(Resource):
+   @marshal_with(researchFields)
+   def get(self, status_id):
+      filtered_researches = Research.query.filter_by(status_id=status_id).all()
+
+      if not filtered_researches:
+         abort(404, message="Research(es) not found")
+
+      for research in filtered_researches:
+         research.start_date = research.start_date.strftime('%d-%m-%Y') if research.start_date else None
+         research.end_date = research.end_date.strftime('%d-%m-%Y') if research.end_date else None
+
+      return filtered_researches, 200
+
 
 api.add_resource(Researches, '/researches')
 api.add_resource(SingleResearch, '/researches/<int:research_id>')
