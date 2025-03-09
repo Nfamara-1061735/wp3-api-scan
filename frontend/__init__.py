@@ -69,7 +69,7 @@ def login_admin():
 @frontend_bp.route('/admin/dashboard')
 def dashboard():
     if request.method == 'GET':
-        return render_template("admin_dashboard.jinja", theme=g.theme)
+        return render_template("admin_dashboard.jinja", theme=g.theme), filteredResearch.get(1)
 
 #The route below is a TEST-ROUTE. FOR TESTING PURPOSES ONLY!
 @frontend_bp.route('/admin/dashboard/test')
