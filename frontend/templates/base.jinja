@@ -15,6 +15,7 @@
             rel="stylesheet"
             href="{{ url_for('.static', filename='css/style.css') }}"
     />
+    <link rel="shortcut icon" href="{{ url_for('.static', filename='img/favicon.ico') }}">
     {% block head %} {% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100" data-bs-theme="{{ theme }}">
@@ -32,7 +33,7 @@
                 <img
                         width="256"
                         height="64"
-                        src="https://www.accessibility.nl/themes/sa/images/logo.svg"
+                        src="{{ url_for('.static', filename='img/logo.svg') }}"
                         alt="Homepage, logo Accessibility, onderdeel van Bartimeus"
                 />
             </a>
