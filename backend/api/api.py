@@ -6,6 +6,7 @@ from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.api.login import Login
 from backend.database.models.research_model import Research
 from backend.database.models.limitations_model import LimitationsModel
+from backend.database.models.peer_expert_registration_model import PeerExpertRegistration
 from backend import db
 
 api_bp = Blueprint('api', __name__)
@@ -56,6 +57,19 @@ researchFields = {
 limitationFields = {
    'limitation_id': fields.Integer,
    'limitation': fields.String
+}
+
+registration_args = reqparse.RequestParser()
+registration_args.add_argument('peer_expert_registration_id', type=int, required=True, help="Peer Expert Registration ID is verplicht")
+registration_args.add_argument('registration_status_id', type=int, required=True, help="Registration Status ID is verplicht")
+registration_args.add_argument('peer_expert_id', type=int, required=False)
+registration_args.add_argument('research_id', type=int, required=False)
+
+registrationFields = {
+   'peer_expert_registration_id': fields.Integer,
+   'registration_status_id': fields.Integer,
+   'peer_expert_id': fields.Integer,
+   'research_id': fields.Integer,
 }
 
 class Researches(Resource):
@@ -207,6 +221,28 @@ class FilteredResearch(Resource):
       ]
 
       return jsonify(formatted_researches), 200
+
+class FilteredPeerExpertRegistrations(Resource):
+   @marshal_with(researchFields)
+   def get(self, registration_status_id):
+      registrations = PeerExpertRegistration.query.filter_by(registration_status_id=registration_status_id).all()
+
+      if not registrations:
+         abort(404, message="Registratie(s) niet gevonden.")
+
+      return registrations
+
+   @marshal_with(researchFields)
+   def patch(self, peer_expert_registration_id):
+      args = registration_args.parse_args()
+
+      single_registration = PeerExpertRegistration.query.filter_by(peer_expert_registration_id=peer_expert_registration_id).first()
+      if not single_registration:
+         abort(404, message="Registratie niet gevonden.")
+
+      if args.get('registration_status_id'):
+         single_registration.registration_status_id = args['registration_status_id']
+
 
 class Limitations(Resource):
    @marshal_with(limitationFields)
