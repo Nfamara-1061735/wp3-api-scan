@@ -187,13 +187,26 @@ class FilteredResearch(Resource):
       if not filtered_researches:
          abort(404, message="Research(es) not found")
 
-      for research in filtered_researches:
-         research.start_date = research.start_date.strftime('%d-%m-%Y') if research.start_date else None
-         research.end_date = research.end_date.strftime('%d-%m-%Y') if research.end_date else None
+      formatted_researches = [
+         {
+            "research_id": research.research_id,
+            "title": research.title,
+            "is_available": research.is_available,
+            "description": research.description,
+            "start_date": research.start_date.strftime('%d-%m-%Y') if research.start_date else None,
+            "end_date": research.end_date.strftime('%d-%m-%Y') if research.end_date else None,
+            "location": research.location,
+            "has_reward": research.has_reward,
+            "reward": research.reward,
+            "target_min_age": research.target_min_age,
+            "target_max_age": research.target_max_age,
+            "status_id": research.status_id,
+            "research_type_id": research.research_type_id
+         }
+         for research in filtered_researches
+      ]
 
-      return filtered_researches, 200
-
-
+      return jsonify(formatted_researches), 200
 
 class Limitations(Resource):
    @marshal_with(limitationFields)
