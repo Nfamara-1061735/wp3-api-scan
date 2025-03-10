@@ -243,6 +243,9 @@ class FilteredPeerExpertRegistrations(Resource):
       if args.get('registration_status_id'):
          single_registration.registration_status_id = registration_status_id
 
+      db.session.commit()
+      return single_registration, 200
+
 
 class Limitations(Resource):
    @marshal_with(limitationFields)
