@@ -237,6 +237,20 @@ class FilteredResearch(Resource):
 
       return filtered_researches, 200
 
+   @marshal_with(researchFields)
+   def patch(self, new_status_id, research_id):
+      args = research_args.parse_args()
+
+      single_research = Research.query.filter_by(research_id=research_id).first()
+      if not single_research:
+         abort(404, message="Onderzoek niet gevonden")
+
+      if args.get('status_id'):
+         single_research.status_id = new_status_id
+
+      db.session.commit()
+      return single_research, 200
+
 class FilteredPeerExpertRegistrations(Resource):
    @marshal_with(registrationFields)
    def get(self, registration_status_id):
