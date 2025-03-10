@@ -233,7 +233,7 @@ class FilteredPeerExpertRegistrations(Resource):
       return registrations
 
    @marshal_with(researchFields)
-   def patch(self, peer_expert_registration_id):
+   def patch(self, peer_expert_registration_id, registration_status_id):
       args = registration_args.parse_args()
 
       single_registration = PeerExpertRegistration.query.filter_by(peer_expert_registration_id=peer_expert_registration_id).first()
@@ -241,7 +241,7 @@ class FilteredPeerExpertRegistrations(Resource):
          abort(404, message="Registratie niet gevonden.")
 
       if args.get('registration_status_id'):
-         single_registration.registration_status_id = args['registration_status_id']
+         single_registration.registration_status_id = registration_status_id
 
 
 class Limitations(Resource):
