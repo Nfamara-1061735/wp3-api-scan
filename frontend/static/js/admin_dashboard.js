@@ -14,27 +14,56 @@ function removeElement(sender) {
         accordionContent.appendChild(p);
     }
 }
-function fetchItems() {
-    fetch("/admin/dashboard")
+function fetchResearches() {
+    fetch("/researches")
         .then(response => response.json())
-        .then(data => createColumns(data))
-        .then(error => console.error("Error fetching data:", error))
+        .then(data => {
+            const researches = document.getElementById('researches');
+            researches.innerHTML = '';
+            data.forEach(research => {
+                const div = document.createElement('div');
+                div.className = 'research';
+                div.setAttribute('data-id', research.research_id);
+
+                if (research.data === '') {div.innerHTML = `
+                            <div class="border rounded-3 p-3">
+                                <p>Geen openstaande onderzoeksvragen</p>
+                            </div>`;} else {div.innerHTML = `
+                            <div class="border rounded-3 p-3">
+                                <p>Titel: ${research.title}</p>
+                                <p>Onderzoeksvraag ID: ${research.research_id}</p>
+                                <button onclick="changeStatus(${research.research_id}, 2)" class="btn btn-success me-2"
+                                        aria-label="Approve expert registration 1">Goedkeuren
+                                </button>
+                                <button onclick="changeStatus(${research.research_id}, 3)" class="btn btn-danger"
+                                        aria-label="Reject expert registration 1">Afkeuren
+                                </button>
+                            </div>`}
+
+                researches.appendChild(div);
+            });
+        })
+        .catch(error => console.error("Error fetching data:", error))
 }
 
-function createColumns(data) {
-    const container = document.getElementById("researchContainer");
+async function changeStatus(item_id, updated_status) {
+    try {
+        const response = await fetch('/researches', {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: { "item_id": item_id,
+                    "updated_status": updated_status}
+        });
 
-    data.forEach(item => {
-        let div = document.createElement("div");
-        div.classList.add("research-card");
-
-        switch(data.json("research-type-id")){
-
+        if (!response.ok) {
+            console.log(Error(`${response.status}`))
         }
-        container.appendChild(div);
-    });
-}
 
-function testWrite(data) {
-    document.write(data)
+        const result = await response.json();
+        console.log("Update Successful:", result);
+    } catch(error) {
+        console.error("Error updating item:", error);
+    }
 }
