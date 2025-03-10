@@ -6,13 +6,14 @@ from flask import render_template, request, g, Blueprint, Flask, redirect, url_f
 from backend.api.api import SingleResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
 from backend.database.models.research_status_model import ResearchStatus
-from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations
+from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 
 template_dir = os.path.abspath('./frontend/templates/')
 static_dir = os.path.abspath('./frontend/static/')
 singleResearch = SingleResearch()
 filteredResearch = FilteredResearch()
 filteredPeerExpertRegistrations = FilteredPeerExpertRegistrations()
+filteredPeerExperts = FilteredPeerExperts()
 
 # Define the frontend blueprint
 frontend_bp = Blueprint('frontend', __name__, template_folder=template_dir, static_folder=static_dir,
@@ -70,15 +71,13 @@ def login_admin():
 @frontend_bp.route('/admin/dashboard')
 def dashboard():
     if request.method == 'GET':
-        return render_template("admin_dashboard.jinja", theme=g.theme), filteredResearch.get(1)
+        return render_template("admin_dashboard.jinja", theme=g.theme)
 
 #The route below is a TEST-ROUTE. FOR TESTING PURPOSES ONLY!
 @frontend_bp.route('/admin/dashboard/test')
 def dashboard_test():
     if request.method == 'GET':
-        return filteredResearch.get(1)
-    if request.method == 'PATCH':
-        filteredPeerExpertRegistrations.patch(1)
+        return filteredPeerExpertRegistrations.get(1)
 
 @frontend_bp.route('/peer/dashboard', methods=['GET', 'POST'])
 def peer_dashboard():
