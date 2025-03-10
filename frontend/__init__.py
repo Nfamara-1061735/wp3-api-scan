@@ -73,11 +73,31 @@ def dashboard():
     if request.method == 'GET':
         return render_template("admin_dashboard.jinja", theme=g.theme)
 
-#The route below is a TEST-ROUTE. FOR TESTING PURPOSES ONLY!
-@frontend_bp.route('/admin/dashboard/test')
-def dashboard_test():
+#The routes below is a TEST-ROUTE. FOR TESTING PURPOSES ONLY!
+@frontend_bp.route('/peer_experts')
+def peer_experts():
+    if request.method == 'GET':
+        return filteredPeerExperts.get(1)
+
+@frontend_bp.route('/peer_expert_registrations')
+def peer_expert_registrations():
     if request.method == 'GET':
         return filteredPeerExpertRegistrations.get(1)
+
+@frontend_bp.route('/researches')
+def researches():
+    if request.method == 'GET':
+        return filteredResearch.get(1)
+    if request.method == 'PATCH':
+        item_id = request.json.get('item_id')
+        updated_status = request.json.get('updated_status')
+
+        if not item_id:
+            return {"message": "Item not found"}, 404
+        if not updated_status:
+            return {"message": "Update id invalid"}, 404
+
+        return filteredResearch.patch(updated_status, item_id), 200
 
 @frontend_bp.route('/peer/dashboard', methods=['GET', 'POST'])
 def peer_dashboard():
