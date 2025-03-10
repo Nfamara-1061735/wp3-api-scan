@@ -7,6 +7,7 @@ from backend.api.login import Login
 from backend.database.models.research_model import Research
 from backend.database.models.limitations_model import LimitationsModel
 from backend.database.models.peer_expert_registration_model import PeerExpertRegistration
+from backend.database.models.peer_experts_model import PeerExperts
 from backend import db
 
 api_bp = Blueprint('api', __name__)
@@ -70,6 +71,39 @@ registrationFields = {
    'registration_status_id': fields.Integer,
    'peer_expert_id': fields.Integer,
    'research_id': fields.Integer,
+}
+
+peer_expert_args = reqparse.RequestParser()
+peer_expert_args.add_argument('peer_expert_id', type=int, required=True)
+peer_expert_args.add_argument('postal_code', type=str)
+peer_expert_args.add_argument('gender', type=str)
+peer_expert_args.add_argument('birth_date', type=str)
+peer_expert_args.add_argument('tools_used', type=str)
+peer_expert_args.add_argument('short_bio', type=str)
+peer_expert_args.add_argument('special_notes', type=str)
+peer_expert_args.add_argument('accepted_terms', type=bool)
+peer_expert_args.add_argument('has_supervisor', type=bool)
+peer_expert_args.add_argument('supervisor_or_guardian_name')
+peer_expert_args.add_argument('availability_notes', type=str)
+peer_expert_args.add_argument('contact_preference_id', type=int)
+peer_expert_args.add_argument('user_id', type=int)
+peer_expert_args.add_argument('peer_expert_status_id', type=int)
+
+peerExpertFields = {
+   'peer_expert_id': fields.Integer,
+   'postal_code': fields.String,
+   'gender': fields.String,
+   'birth_date': fields.String,
+   'tools_used': fields.String,
+   'short_bio': fields.String,
+   'special_notes': fields.String,
+   'accepted_terms': fields.Boolean,
+   'has_supervisor': fields.Boolean,
+   'supervisor_or_guardian_name': fields.String,
+   'availability_notes': fields.String,
+   'contact_preference_id': fields.Integer,
+   'user_id': fields.Integer,
+   'peer_expert_status_id': fields.Integer
 }
 
 class Researches(Resource):
@@ -201,38 +235,19 @@ class FilteredResearch(Resource):
       if not filtered_researches:
          abort(404, message="Research(es) not found")
 
-      formatted_researches = [
-         {
-            "research_id": research.research_id,
-            "title": research.title,
-            "is_available": research.is_available,
-            "description": research.description,
-            "start_date": research.start_date.strftime('%d-%m-%Y') if research.start_date else None,
-            "end_date": research.end_date.strftime('%d-%m-%Y') if research.end_date else None,
-            "location": research.location,
-            "has_reward": research.has_reward,
-            "reward": research.reward,
-            "target_min_age": research.target_min_age,
-            "target_max_age": research.target_max_age,
-            "status_id": research.status_id,
-            "research_type_id": research.research_type_id
-         }
-         for research in filtered_researches
-      ]
-
-      return jsonify(formatted_researches), 200
+      return filtered_researches, 200
 
 class FilteredPeerExpertRegistrations(Resource):
-   @marshal_with(researchFields)
+   @marshal_with(registrationFields)
    def get(self, registration_status_id):
       registrations = PeerExpertRegistration.query.filter_by(registration_status_id=registration_status_id).all()
 
       if not registrations:
          abort(404, message="Registratie(s) niet gevonden.")
 
-      return registrations
+      return registrations, 200
 
-   @marshal_with(researchFields)
+   @marshal_with(registrationFields)
    def patch(self, peer_expert_registration_id, registration_status_id):
       args = registration_args.parse_args()
 
@@ -246,6 +261,15 @@ class FilteredPeerExpertRegistrations(Resource):
       db.session.commit()
       return single_registration, 200
 
+class FilteredPeerExperts(Resource):
+   @marshal_with(peerExpertFields)
+   def get(self, peer_expert_status_id):
+      peer_experts = PeerExperts.query.filter_by(peer_expert_status_id=peer_expert_status_id).all()
+
+      if not peer_experts:
+         abort(404, message="Registratie(s) niet gevonden.")
+
+      return peer_experts, 200
 
 class Limitations(Resource):
    @marshal_with(limitationFields)
