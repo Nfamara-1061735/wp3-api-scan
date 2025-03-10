@@ -6,7 +6,8 @@ import click
 
 from backend.database.models import Users, Organizations, UserOrganization, OrganizationType, LimitationsModel, \
     PeerExperts, PeerExpertsLimitations, ContactPreferences, ResearchStatus, ResearchTypesModel, Research, \
-    PeerExpertsResearchTypes, ResearchLimitations, UsersStichtingAccessibility, PeerExpertStatus, RegistrationStatus
+    PeerExpertsResearchTypes, ResearchLimitations, UsersStichtingAccessibility, PeerExpertStatus, RegistrationStatus, \
+    PeerExpertRegistration
 from backend import db
 from faker import Faker
 
@@ -378,6 +379,27 @@ def add_credentials(fake: Faker, users: list[Users]):
     return credentials
 
 
+def generate_registrations(peer_experts: list[PeerExperts], fake_researches: list[Research],
+                           registration_statuses: list[RegistrationStatus]):
+    print_message("Generating research registrations...")
+    registrations = []
+
+    for expert in peer_experts:
+        if random.random() < 0.5:  # 50% chance the user will have any registration
+            registration_count = 1 if random.random() < 0.9 else 2
+            researches_registered = random.sample(fake_researches, registration_count)
+
+            for research in researches_registered:
+                registration = PeerExpertRegistration(
+                    registration_status_id=random.choice(registration_statuses).registration_status_id,
+                    peer_expert_id=expert.peer_expert_id,
+                    research_id=research.research_id
+                )
+                registrations.append(registration)
+
+    return registrations
+
+
 def init_db_data(amount_multiplier=1):
     # Drop all tables and create new ones
     print_message("Dropping existing tables...")
@@ -465,7 +487,8 @@ def init_db_data(amount_multiplier=1):
     registration_statuses = generate_registration_statuses()
     db.session.bulk_save_objects(registration_statuses, return_defaults=True)
 
-    # TODO: Generate some registrations
+    registrations = generate_registrations(peer_experts, fake_researches, registration_statuses)
+    db.session.bulk_save_objects(registrations)
 
     db.session.commit()  # Save data
 
