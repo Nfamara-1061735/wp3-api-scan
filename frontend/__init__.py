@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, session
 from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, jsonify
@@ -89,8 +90,11 @@ def researches():
     if request.method == 'GET':
         return filteredResearch.get(1)
     if request.method == 'PATCH':
-        item_id = request.json.get('item_id')
-        updated_status = request.json.get('updated_status')
+        data = request.get_json()
+        research_data = data['research']
+
+        item_id = research_data['item_id']
+        updated_status = research_data['updated_status']
 
         if not item_id:
             return {"message": "Item not found"}, 404
