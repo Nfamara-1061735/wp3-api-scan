@@ -15,3 +15,5 @@ from .users_stichting_accessibility_model import UsersStichtingAccessibility
 from .peer_expert_registration_model import PeerExpertRegistration
 from .peer_expert_status_model import PeerExpertStatus
 from .registration_status_model import RegistrationStatus
+
+from .api_keys_model import ApiKeys
