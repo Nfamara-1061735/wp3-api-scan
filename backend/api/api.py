@@ -1,34 +1,33 @@
 import datetime
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend.database.models.research_model import Research
 from backend.database.models.limitations_model import LimitationsModel
 from backend.database.models.api_keys_model import ApiKeys
 from backend import db
+from functools import wraps
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
 #api-key validatie
 def require_api_key(f):
+   @wraps(f)
    def decorated_function(*args, **kwargs):
       api_key = request.headers.get("Authorization")
 
       if not api_key or not api_key.startswith("Bearer "):
-         return jsonify({"error": "API-key ontbreekt of onjuist formaat"}), 401
+         return render_template("unauthorized.jinja"), 401  #HTML-foutpagina
 
       api_key = api_key.split("Bearer ")[1]
 
       if not db.session.query(ApiKeys).filter_by(api_key=api_key).first():
-         return jsonify({"error": "Ongeldige API-key"}), 401
+         return render_template("unauthorized.jinja"), 401  #HTML-foutpagina
 
-      return f(*args, **kwargs)
+      return f(*args, **kwargs)  #Als API-key geldig is, render de echte pagina
 
    return decorated_function
-
-
-class ProtectedResource(Resource):
 
 
 def method_not_allowed():
