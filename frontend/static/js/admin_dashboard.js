@@ -68,5 +68,7 @@ async function changeStatus(item_id, updated_status) {
         console.error("Error updating item:", error);
     }
 }
-
-setInterval(fetchResearches, 5000);
+document.addEventListener("DOMContentLoaded", () => {
+    fetchResearches();
+    setInterval(fetchResearches, 5000);
+})
