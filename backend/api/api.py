@@ -18,14 +18,14 @@ def require_api_key(f):
       api_key = request.headers.get("Authorization")
 
       if not api_key or not api_key.startswith("Bearer "):
-         return render_template("unauthorized.jinja"), 401  #HTML-foutpagina
+         return jsonify({"error": "API-key ontbreekt of onjuist formaat"}), 401  # JSON-error
 
       api_key = api_key.split("Bearer ")[1]
 
       if not db.session.query(ApiKeys).filter_by(api_key=api_key).first():
-         return render_template("unauthorized.jinja"), 401  #HTML-foutpagina
+         return jsonify({"error": "Ongeldige API-key"}), 401  # JSON-error
 
-      return f(*args, **kwargs)  #Als API-key geldig is, render de echte pagina
+      return f(*args, **kwargs)  #Als API-key geldig is wordt de functie pas uitgevoerd
 
    return decorated_function
 
