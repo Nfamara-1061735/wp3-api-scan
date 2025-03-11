@@ -8,7 +8,6 @@
         <!-- Section for displaying the approval items -->
         <div class="accordion" id="accordionPanelsStayOpenExample">
 
-            {% for research in researches %}
             <!-- Goed te keuren onderzoeksaanvragen -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -20,11 +19,10 @@
                 </h2>
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
                      aria-labelledby="panelsStayOpen-headingOne">
-                    <div data-id="{{ research.research_id }}" id="researches" class="accordion-body pb-3 d-flex flex-column gap-3">
+                    <div id="researches" class="accordion-body pb-3 d-flex flex-column gap-3">
                     </div>
                 </div>
             </div>
-            {% endfor %}
 
             <!-- Goed te keuren inschrijvingen -->
             <div class="accordion-item">
