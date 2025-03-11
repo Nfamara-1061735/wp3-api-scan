@@ -18,6 +18,7 @@ function fetchResearches() {
     fetch("/researches")
         .then(response => response.json())
         .then(data => {
+            console.log("adwd")
             const researches = document.getElementById('researches');
             researches.innerHTML = '';
             data.forEach(research => {
@@ -67,3 +68,5 @@ async function changeStatus(item_id, updated_status) {
         console.error("Error updating item:", error);
     }
 }
+
+setInterval(fetchResearches, 5000);
