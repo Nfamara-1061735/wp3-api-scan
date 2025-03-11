@@ -2,6 +2,7 @@ import click
 from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
+from flask import Flask
 
 
 class BaseModel(DeclarativeBase):
@@ -24,12 +25,12 @@ def create_app():
     app.cli.add_command(init_db_command)
     app.cli.add_command(init_db_data_command)
 
-    from backend.database import models
-
-    from backend.api import api
-    api.init_app(app)
-
-    return app
+    # from backend.database import models
+    #
+    # from backend.api import api
+    # api.init_app(app)
+    #
+    # return app
 
 @click.command("init-db")
 @with_appcontext

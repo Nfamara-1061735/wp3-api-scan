@@ -7,9 +7,9 @@
     max-width: 500px;
     width: 100%;
     text-align: center;
-        margin-left: 30%;
-        margin-bottom: 50px;
-        margin-top: 50px;
+    margin: 0 auto;
+    margin-bottom: 50px;
+    margin-top: 50px;
 }
 
 /* Titel */
@@ -88,4 +88,15 @@
     .registration-container {
         max-width: 90%;
     }
+}
+
+#supervisor-name-group {
+    display: none; /* standaard verborgen */
+}
+
+.register-icon {
+    width: 200px;
+    height: auto;
+    padding: 15px;
+    border-radius: 15%;
 }
