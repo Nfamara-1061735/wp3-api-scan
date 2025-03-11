@@ -22,7 +22,7 @@ class Login(Resource):
             session["user"] = email  # Storing authentication using a session
             return {"success": True}
         else:
-            return {"success": False, "message": "Incorrect email or password"}
+            return {"success": False, "message": "Verkeerde gebruikersnaam of wachtwoord"}
 
     @staticmethod
     def verify_role(user: Users, target_role: str):
