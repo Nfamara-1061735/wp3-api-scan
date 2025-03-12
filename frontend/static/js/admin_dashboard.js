@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     fetchResearches();
+
+    setInterval(fetchResearches, 1000);
 });
 
 function fetchResearches() {

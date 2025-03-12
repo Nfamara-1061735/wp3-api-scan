@@ -53,7 +53,6 @@ research_args.add_argument('target_min_age', type=int)
 research_args.add_argument('target_max_age', type=int)
 research_args.add_argument('status_id', type=int, required=True, help="Status ID is verplicht")
 research_args.add_argument('research_type_id', type=int, required=True, help="Research Type ID is verplicht")
-
 research_args.add_argument('limitation_ids', type=int, action='append', required=False, help="Een list van limitations ID's (voorbeeld [1, 2, 3])")
 
 patch_research_args = reqparse.RequestParser()
