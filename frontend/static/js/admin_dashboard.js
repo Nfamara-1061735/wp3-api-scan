@@ -75,3 +75,28 @@ function openModal(research) {
     modal.show();
 }
 
+function approveResearch(research_id) {
+    fetch(`/api/researches/${research_id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({status_id: 2})
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Goedkeuren niet gelukt.");
+            return response.json();
+        })
+        .then(() => {
+            alert("Onderzoek is goedgekeurd!");
+            const modal = bootstrap.Modal.getInstance(document.getElementById("researchModal"));
+            modal.hide();
+            fetchResearches();
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Goedkeuren mislukt.");
+        });
+}
+
+
