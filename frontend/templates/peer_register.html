@@ -5,12 +5,12 @@
       rel="stylesheet"
       href="{{ url_for('.static', filename='css/peer_register.css') }}"
     />
-{#    <link rel="stylesheet" href="{{ url_for('static', filename='css/peer_register.css') }}">#}
 {% endblock %}
 {% block logout %} {% endblock %}
 {% block content %}
 <div class="registration-container">
-    <h1 class="title">Peer Expert Registratie</h1>
+    <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon" class="register-icon">
+    <h1 class="title">Ervaringsdeskundige Registratie</h1>
     <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}">
         <div class="input-group">
             <label>Postcode</label>
@@ -53,14 +53,15 @@
         </div>
 
         <div class="checkbox-group">
-            <input type="checkbox" name="has_supervisor">
-            <label>Is Begeleider</label>
+            <input type="checkbox" name="has_supervisor" id="has_supervisor_checkbox">
+            <label for="has_supervisor_checkbox">Is Begeleider</label>
         </div>
 
-        <div class="input-group">
+        <div class="input-group" id="supervisor-name-group">
             <label>Naam Begeleider/Voogd</label>
             <input type="text" name="supervisor_or_guardian_name">
         </div>
+
 
         <div class="input-group">
             <label>Beschikbaarheid</label>

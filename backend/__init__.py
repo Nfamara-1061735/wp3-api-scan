@@ -2,34 +2,13 @@ import click
 from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
+from flask import Flask
 
 
 class BaseModel(DeclarativeBase):
     pass
 
 db:SQLAlchemy = SQLAlchemy(model_class=BaseModel)
-
-def create_app():
-    """Create and configure an instance of the Flask application"""
-    # Create flask instance
-    app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static',static_url_path='/')
-
-
-    # Config flask application
-    app.config['SECRET_KEY'] = "dev"
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-
-    db.init_app(app)
-
-    app.cli.add_command(init_db_command)
-    app.cli.add_command(init_db_data_command)
-
-    from backend.database import models
-
-    from backend.api import api
-    api.init_app(app)
-
-    return app
 
 @click.command("init-db")
 @with_appcontext

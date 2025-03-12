@@ -1,12 +1,23 @@
 import os
+import json
 
 from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, session
 
 from backend.api.login import Login
+from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, jsonify
+
+from backend.api.api import SingleResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
+from backend.api.api import require_api_key
+from backend.database.models.research_status_model import ResearchStatus
+from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 
 template_dir = os.path.abspath('./frontend/templates/')
 static_dir = os.path.abspath('./frontend/static/')
+singleResearch = SingleResearch()
+filteredResearch = FilteredResearch()
+filteredPeerExpertRegistrations = FilteredPeerExpertRegistrations()
+filteredPeerExperts = FilteredPeerExperts()
 
 # Define the frontend blueprint
 frontend_bp = Blueprint('frontend', __name__, template_folder=template_dir, static_folder=static_dir,
@@ -67,8 +78,37 @@ def login_admin():
 
 @frontend_bp.route('/admin/dashboard')
 def dashboard():
-    return render_template("admin_dashboard.jinja", theme=g.theme)
+    if request.method == 'GET':
+        return render_template("admin_dashboard.jinja", theme=g.theme, researches=filteredResearch.get(1))
 
+#The routes below is a TEST-ROUTE. FOR TESTING PURPOSES ONLY!
+@frontend_bp.route('/peer_experts')
+def peer_experts():
+    if request.method == 'GET':
+        return filteredPeerExperts.get(1)
+
+@frontend_bp.route('/peer_expert_registrations')
+def peer_expert_registrations():
+    if request.method == 'GET':
+        return filteredPeerExpertRegistrations.get(1)
+
+@frontend_bp.route('/dashboard_data')
+def researches():
+    if request.method == 'GET':
+        return filteredResearch.get(1)
+    if request.method == 'PATCH':
+        data = request.get_json()
+        research_data = data['research']
+
+        item_id = research_data['item_id']
+        updated_status = research_data['updated_status']
+
+        if not item_id:
+            return {"message": "Item not found"}, 404
+        if not updated_status:
+            return {"message": "Update id invalid"}, 404
+
+        return filteredResearch.patch(updated_status, item_id), 200
 
 @frontend_bp.route('/peer/dashboard', methods=['GET', 'POST'])
 def peer_dashboard():
@@ -76,5 +116,7 @@ def peer_dashboard():
 
 
 @frontend_bp.route('/docs')
+@require_api_key  # API-key validatie toepassen
 def documentation():
+    """Toon de API-documentatie, alleen als de API-key geldig is"""
     return render_template("api_documentation.jinja", theme=g.theme)
