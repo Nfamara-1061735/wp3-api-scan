@@ -12,7 +12,7 @@ function fetchResearches() {
             const newResearches = data.filter(research => research.status_id === 1);
 
             if (newResearches.length === 0) {
-                approvalContainer.innerHTML = "<p class='text muted'>Geen nieuwe onderzoeken om weer te geven.</p>";
+                approvalContainer.innerHTML = "<p class='text-muted'>Geen nieuwe onderzoeken om weer te geven.</p>";
                 return;
             }
 
@@ -21,6 +21,7 @@ function fetchResearches() {
                 item.classList.add("border", "rounded-3", "p-3", "d-flex", "justify-content-between", "align-items-center");
 
                 const title = document.createElement("p");
+                title.classList.add("mb-0");
                 title.textContent = research.title;
 
                 const detailsButton = document.createElement("button");
@@ -63,9 +64,14 @@ function openModal(research) {
         limitationsList.appendChild(li);
     }
 
+    const approveButton = document.getElementById("modalApproveButton");
+    approveButton.onclick = () => approveResearch(research.research_id);
+
+    const rejectButton = document.getElementById("modalRejectButton");
+    rejectButton.onclick = () => rejectResearch(research.research_id);
+
     const modalElement = document.getElementById("researchModal");
     const modal = new bootstrap.Modal(modalElement)
     modal.show();
-
 }
 
