@@ -6,34 +6,76 @@
         <h1 class="">Dashboard</h1>
         <hr class="pb-3">
 
+        <div id="alertContainer" class="my-3"></div>
+
         <!-- Section for displaying the approval items -->
-        <div class="accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion" id="headAccordion">
 
             <!-- Goed te keuren onderzoeksaanvragen -->
             <div class="accordion-item">
-                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <h2 class="accordion-header" id="researchApprovalHeader">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                            aria-controls="panelsStayOpen-collapseOne">
+                            data-bs-target="#researchApproval" aria-expanded="true"
+                            aria-controls="researchApproval">
                         Goed te keuren onderzoeksaanvragen
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
-                     aria-labelledby="panelsStayOpen-headingOne">
-                    <div class="accordion-body pb-3 d-flex flex-column gap-3">
-                        <div class="border rounded-3 p-3">
-                            <p>Onderzoeksaanvraag 1</p>
-                            <button onclick="removeElement(this)" class="btn btn-success me-2"
-                                    aria-label="Approve expert registration 1">Goedkeuren
-                            </button>
-                            <button onclick="removeElement(this)" class="btn btn-danger"
-                                    aria-label="Reject expert registration 1">Afkeuren
-                            </button>
+                <div id="researchApproval" class="accordion-collapse collapse show"
+                     aria-labelledby="researchApprovalHeader">
+                    <div class="accordion-body pb-3 d-flex flex-column gap-3" id="approvalContainer">
+                        <p class="text-muted">Geen nieuwe onderzoeken om weer te geven.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-----modal for research details----->
+            <div class="modal fade" id="researchModal" tabindex="-1" aria-labelledby="researchModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="researchModalTitle"></h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="border rounded-3 p-3">
-                            <p>Onderzoeksaanvraag 2</p>
-                            <button onclick="removeElement(this)" class="btn btn-success me-2">Goedkeuren</button>
-                            <button onclick="removeElement(this)" class="btn btn-danger">Afkeuren</button>
+                        <div class="modal-body">
+                            <p id="researchModalBody"></p>
+                            <div class="px-2 row">
+                                <table class="col table table-bordered table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Startdatum:</th>
+                                        <td class="w-100" id="researchStartDate"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Einddatum:</th>
+                                        <td class="w-100" id="researchEndDate"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Locatie:</th>
+                                        <td class="w-100" id="researchLocation"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Doelgroep Leeftijd:</th>
+                                        <td class="w-100" id="researchAgeRange"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Beloning:</th>
+                                        <td class="w-100" id="researchReward"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Beperkingen:</th>
+                                        <td class="w-100" colspan="2">
+                                            <ul id="researchLimitations"></ul>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-auto px-2"></div>
+                                <div id="map" class="col-auto" style="width: 500px"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" id="modalApproveButton" class="btn btn-success me-3">Goedkeuren</button>
+                             <button type="button" id="modalRejectButton" class="btn btn-danger">Afkeuren</button>
                         </div>
                     </div>
                 </div>
@@ -93,6 +135,5 @@
 
         </div>
     </div>
-
     <script src="{{ url_for('.static', filename='js/admin_dashboard.js') }}"></script>
 {% endblock %}

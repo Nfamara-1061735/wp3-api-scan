@@ -1,8 +1,205 @@
 {% extends "base.jinja" %}
 {% block title %} Ervaringsdeskundige dashboard {% endblock %}
+{% block head %}
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link
+            rel="stylesheet"
+            href="{{ url_for('.static', filename='css/peer_dashboard.css') }}"
+    />
+{% endblock %}
 {% block content %}
     <div class="p-5">
         <h1 class="">Dashboard</h1>
         <hr class="pb-3">
+        <h2>Open onderzoeken</h2>
+        <div class="container-fluid py-4 overflow-x-auto">
+            <div id="card-container" class="d-flex flex-row flex-nowrap">
+                <div id="error-message" class="alert alert-danger" style="display: none;" role="alert"></div>
+            </div>
+        </div>
     </div>
+    <div class="modal fade" id="researchModal" tabindex="-1" aria-labelledby="researchModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="researchModalTitle"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="researchModalBody"></p>
+                    <div class="px-2 row">
+                        <table class="col table table-bordered table-hover">
+                            <tbody>
+                            <tr>
+                                <th class="w-auto" scope="row">Startdatum:</th>
+                                <td class="w-100" id="researchStartDate"></td>
+                            </tr>
+                            <tr>
+                                <th class="w-auto" scope="row">Einddatum:</th>
+                                <td class="w-100" id="researchEndDate"></td>
+                            </tr>
+                            <tr>
+                                <th class="w-auto" scope="row">Locatie:</th>
+                                <td class="w-100" id="researchLocation"></td>
+                            </tr>
+                            <tr>
+                                <th class="w-auto" scope="row">Doelgroep Leeftijd:</th>
+                                <td class="w-100" id="researchAgeRange"></td>
+                            </tr>
+                            <tr>
+                                <th class="w-auto" scope="row">Beloning:</th>
+                                <td class="w-100" id="researchReward"></td>
+                            </tr>
+                            <tr>
+                                <th class="w-auto" scope="row">Beperkingen:</th>
+                                <td class="w-100" colspan="2">
+                                    <ul id="researchLimitations"></ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="col-auto px-2"></div>
+                        <div id="map" class="col-auto" style="width: 500px"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Geïnteresseerd</button>
+                    <div class="mx-auto"></div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        function formatDate(dateString) {
+            // Create a date from the provided date string
+            const date = new Date(dateString);
+
+            // Options for formatting the date
+            const options = {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            };
+
+            // Convert the date to the desired format
+            const formattedDateString = date.toLocaleDateString('nl-NL', options) + ` ${String(date.getHours())}:${String(date.getMinutes()).padStart(2, '0')}`;
+
+            // Capitalize the first letter and return it
+            return formattedDateString.charAt(0).toUpperCase() + formattedDateString.slice(1);
+        }
+
+        let map = null
+
+        function initializeMap() {
+            if (map != null)
+                return;
+
+            map = L.map('map');
+
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+
+        function getRandomRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function getRandomCoordinates(location) {
+            // Randomly generate coordinates within the bounds of the Netherlands
+            const latMin = 50.75, latMax = 53.75;
+            const lonMin = 3.25, lonMax = 7.25;
+
+            // Create a random value within the latitude and longitude range
+            const latitude = getRandomRange(latMin, latMax)
+            const longitude = getRandomRange(lonMin, lonMax)
+
+            return [latitude, longitude];
+        }
+
+        $(document).ready(function () {
+            // Fetch the research data
+            $.ajax({
+                url: '/api/researches/',
+                type: 'GET',
+                success: function (data) {
+                    data.forEach(function (research) {
+                        // Create a new card for each research item
+                        var cardClone = $('<div class="card card-body d-flex flex-column"></div>');
+                        var cardTitle = $('<h5 class="card-title"></h5>').text(research.title);
+                        var cardDescription = $('<p class="card-text"></p>').text(research.description);
+                        var cardButton = $('<button class="btn btn-primary mt-auto">Meer informatie</button>')
+
+                        // Append the title and description to the card
+                        cardClone.append(cardTitle, $('<hr>'), cardDescription, cardButton);
+
+                        // Append the card to the container
+                        $('#card-container').append(cardClone);
+
+                        // TEMP: Add random lat and long
+                        research.latLon = getRandomCoordinates()
+
+                        // Attach the data to the button
+                        cardButton.data('research', research);
+
+                        // Add click event listener to the button
+                        cardButton.on('click', function () {
+                            const research = $(this).data('research');
+                            $('#researchModalTitle').text(research.title);
+                            $('#researchModalBody').text(research.description);
+
+                            $('#researchStartDate').text(formatDate(research.start_date));
+                            $('#researchEndDate').text(formatDate(research.end_date));
+
+                            $('#researchLocation').text(research.location);
+
+                            var ageRange = research.target_min_age + ' - ' + research.target_max_age;
+                            $('#researchAgeRange').text(ageRange);
+
+                            if (research.has_reward) {
+                                $('#researchReward').text(research.reward || 'Beloningsdetails niet beschikbaar');
+                            } else {
+                                $('#researchReward').text('Geen beloning beschikbaar');
+                            }
+
+                            var limitationsList = $('#researchLimitations');
+                            limitationsList.empty();
+                            if (research.limitations.length > 0) {
+                                research.limitations.forEach(function (limitation) {
+                                    limitationsList.append('<li>' + limitation.limitation + '</li>');
+                                });
+                            } else {
+                                limitationsList.append('<li>Geen specifieke beperkingen</li>');
+                            }
+
+                            initializeMap();
+
+                            map.setView(research.latLon, 13);
+
+                            $('#researchModal').modal('show');
+                        });
+                    });
+                },
+                error: function (x) {
+                    console.log(x)
+                    // Show error message for any server issues
+                    $('#error-message').text('Er is een fout opgetreden. Probeer het opnieuw.').show();
+                }
+            });
+        });
+
+        $('#researchModal').on('show.bs.modal', function () {
+            setTimeout(function () {
+                map.invalidateSize();
+            }, 500);
+        });
+    </script>
 {% endblock %}
