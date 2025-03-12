@@ -1,17 +1,38 @@
 import datetime
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request, render_template
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 
 from backend.api.login import Login
 from backend.database.models.research_model import Research
 from backend.database.models.limitations_model import LimitationsModel
+from backend.database.models.api_keys_model import ApiKeys
 from backend.database.models.peer_expert_registration_model import PeerExpertRegistration
 from backend.database.models.peer_experts_model import PeerExperts
 from backend import db
+from functools import wraps
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
+
+
+#api-key validatie
+def require_api_key(f):
+   @wraps(f)
+   def decorated_function(*args, **kwargs):
+      api_key = request.headers.get("Authorization")
+
+      if not api_key or not api_key.startswith("Bearer "):
+         return jsonify({"error": "API-key ontbreekt of onjuist formaat"}), 401  # JSON-error
+
+      api_key = api_key.split("Bearer ")[1]
+
+      if not db.session.query(ApiKeys).filter_by(api_key=api_key).first():
+         return jsonify({"error": "Ongeldige API-key"}), 401  # JSON-error
+
+      return f(*args, **kwargs)  #Als API-key geldig is wordt de functie pas uitgevoerd
+
+   return decorated_function
 
 
 def method_not_allowed():

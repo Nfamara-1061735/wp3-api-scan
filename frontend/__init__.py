@@ -6,6 +6,7 @@ from flask import render_template, request, g, Blueprint, Flask, redirect, url_f
 
 from backend.api.api import SingleResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
+from backend.api.api import require_api_key
 from backend.database.models.research_status_model import ResearchStatus
 from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 
@@ -108,6 +109,12 @@ def peer_dashboard():
     return render_template("peer_dashboard.jinja", theme=g.theme)
 
 
+# @frontend_bp.route('/docs')
+# def documentation():
+#     return render_template("api_documentation.jinja", theme=g.theme)
+
 @frontend_bp.route('/docs')
+@require_api_key  # API-key validatie toepassen
 def documentation():
+    """Toon de API-documentatie, alleen als de API-key geldig is"""
     return render_template("api_documentation.jinja", theme=g.theme)
