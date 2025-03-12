@@ -88,12 +88,7 @@ def peer_expert_registrations():
 @frontend_bp.route('/dashboard_data')
 def researches():
     if request.method == 'GET':
-        return [{"title": "researches",
-                 "data": filteredResearch.get(1),},
-                {"title": "peer_experts",
-                 "data": filteredPeerExperts.get(1),},
-                {"title": "peer_expert_registrations",
-                 "data": filteredPeerExpertRegistrations.get(1)}]
+        return filteredResearch.get(1)
     if request.method == 'PATCH':
         data = request.get_json()
         research_data = data['research']
