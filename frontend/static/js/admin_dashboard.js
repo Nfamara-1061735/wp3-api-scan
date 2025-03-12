@@ -88,7 +88,7 @@ function approveResearch(research_id) {
             return response.json();
         })
         .then(() => {
-            alert("Onderzoek is goedgekeurd!");
+            alert("Onderzoek is goedgekeurd.");
             const modal = bootstrap.Modal.getInstance(document.getElementById("researchModal"));
             modal.hide();
             fetchResearches();
@@ -99,4 +99,26 @@ function approveResearch(research_id) {
         });
 }
 
-
+function rejectResearch(research_id) {
+    fetch(`/api/researches/${research_id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({status_id: 3})
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Afkeuren niet gelukt.");
+            return response.json();
+        })
+        .then(() => {
+            alert("Onderzoek is afgekeurd.");
+            const modal = bootstrap.Modal.getInstance(document.getElementById("researchModal"));
+            modal.hide();
+            fetchResearches();
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Afkeuren mislukt.");
+        });
+}
