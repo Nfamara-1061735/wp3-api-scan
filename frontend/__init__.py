@@ -2,6 +2,8 @@ import os
 import json
 
 from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, session
+
+from backend.api.login import Login
 from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, jsonify
 
 from backend.api.api import SingleResearch
@@ -62,12 +64,16 @@ def logout():
 
 @frontend_bp.route('/peer/signin')
 def signup():
+    if "user" in session:
+        redirect(url_for("frontend.peer_dashboard"))
     return render_template("sign_in.jinja", role='peer', target_redirect=url_for("frontend.peer_dashboard"),
                            theme=g.theme)
 
 
 @frontend_bp.route('/admin/signin')
 def login_admin():
+    if "user" in session:
+        redirect(url_for("frontend.dashboard"))
     return render_template("sign_in.jinja", role='admin', target_redirect=url_for("frontend.dashboard"), theme=g.theme)
 
 @frontend_bp.route('/admin/dashboard')
@@ -108,10 +114,6 @@ def researches():
 def peer_dashboard():
     return render_template("peer_dashboard.jinja", theme=g.theme)
 
-
-# @frontend_bp.route('/docs')
-# def documentation():
-#     return render_template("api_documentation.jinja", theme=g.theme)
 
 @frontend_bp.route('/docs')
 @require_api_key  # API-key validatie toepassen
