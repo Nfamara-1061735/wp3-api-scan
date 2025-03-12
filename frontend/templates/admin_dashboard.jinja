@@ -26,6 +26,59 @@
                 </div>
             </div>
 
+            <!-----modal for research details----->
+            <div class="modal fade" id="researchModal" tabindex="-1" aria-labelledby="researchModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="researchModalTitle"></h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="researchModalBody"></p>
+                            <div class="px-2 row">
+                                <table class="col table table-bordered table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Startdatum:</th>
+                                        <td class="w-100" id="researchStartDate"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Einddatum:</th>
+                                        <td class="w-100" id="researchEndDate"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Locatie:</th>
+                                        <td class="w-100" id="researchLocation"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Doelgroep Leeftijd:</th>
+                                        <td class="w-100" id="researchAgeRange"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Beloning:</th>
+                                        <td class="w-100" id="researchReward"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="w-auto" scope="row">Beperkingen:</th>
+                                        <td class="w-100" colspan="2">
+                                            <ul id="researchLimitations"></ul>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-auto px-2"></div>
+                                <div id="map" class="col-auto" style="width: 500px"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-success me-3">Goedkeuren</button>
+                             <button type="button" class="btn btn-danger">Afkeuren</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Goed te keuren inschrijvingen -->
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">

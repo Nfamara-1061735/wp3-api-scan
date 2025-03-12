@@ -18,7 +18,7 @@ function fetchResearches() {
 
             newResearches.forEach(research => {
                 const item = document.createElement("div");
-                item.classList.add("border", "rounded-3", "p-3");
+                item.classList.add("border", "rounded-3", "p-3", "d-flex", "justify-content-between", "align-items-center");
 
                 const title = document.createElement("p");
                 title.textContent = research.title;
@@ -49,6 +49,23 @@ function openModal(research) {
     document.getElementById("researchAgeRange").textContent = `${research.target_min_age} - ${research.target_max_age}`;
     document.getElementById("researchReward").textContent = research.has_reward ? research.reward : "Geen beloning";
 
+    const limitationsList = document.getElementById("researchLimitations");
+    limitationsList.innerHTML = ""; // Clear existing
+    if (research.limitations && research.limitations.length > 0) {
+        research.limitations.forEach(limit => {
+            const li = document.createElement("li");
+            li.textContent = limit.limitation;
+            limitationsList.appendChild(li);
+        });
+    } else {
+        const li = document.createElement("li");
+        li.textContent = "Geen beperkingen";
+        limitationsList.appendChild(li);
+    }
+
+    const modalElement = document.getElementById("researchModal");
+    const modal = new bootstrap.Modal(modalElement)
+    modal.show();
 
 }
 
