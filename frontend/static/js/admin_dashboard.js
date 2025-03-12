@@ -88,14 +88,14 @@ function approveResearch(research_id) {
             return response.json();
         })
         .then(() => {
-            alert("Onderzoek is goedgekeurd.");
+            showAlert("Onderzoek is goedgekeurd.", "success");
             const modal = bootstrap.Modal.getInstance(document.getElementById("researchModal"));
             modal.hide();
             fetchResearches();
         })
         .catch(error => {
             console.error(error);
-            alert("Goedkeuren mislukt.");
+            showAlert("Goedkeuren mislukt.", "danger");
         });
 }
 
@@ -112,13 +112,32 @@ function rejectResearch(research_id) {
             return response.json();
         })
         .then(() => {
-            alert("Onderzoek is afgekeurd.");
+            showAlert("Onderzoek is afgekeurd.", "success");
             const modal = bootstrap.Modal.getInstance(document.getElementById("researchModal"));
             modal.hide();
             fetchResearches();
         })
         .catch(error => {
             console.error(error);
-            alert("Afkeuren mislukt.");
+            showAlert("Afkeuren mislukt.", "danger");
         });
+}
+
+function showAlert(message, type = "succes") {
+    const alertContainer = document.getElementById("alertContainer");
+
+    alertContainer.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Sluiten"></button>
+        </div>
+    `;
+    setTimeout(() => {
+        const alert = alertContainer.querySelector('.alert');
+        if (alert) {
+            alert.classList.remove("show");
+            alert.classList.add("fade");
+            setTimeout(() => alert.remove(), 500);
+        }
+    }, 3000);
 }
