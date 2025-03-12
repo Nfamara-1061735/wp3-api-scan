@@ -273,9 +273,6 @@ class FilteredResearch(Resource):
    def get(self, status_id):
       filtered_researches = Research.query.filter_by(status_id=status_id).all()
 
-      if not filtered_researches:
-         abort(404, message="Research(es) not found")
-
       return filtered_researches, 200
 
    @marshal_with(researchFields)
