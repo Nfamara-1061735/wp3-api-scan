@@ -41,7 +41,11 @@ python -m venv .venv
 Activeer de virtuele omgeving die zojuist is aangemaakt:
 
 ```shell
+#Windows
 .\.venv\Scripts\activate
+
+#macOS/Linux:
+source .venv/bin/activate
 ```
 
 ### Stap 6: Installeer de vereiste pakketten.
@@ -94,3 +98,9 @@ Wanneer u zich in de virtuele omgeving bevindt, kunt u de applicatie starten met
 ```shell
 flask run
 ```
+Open de browser en ga naar: http://127.0.0.1:5000 om de applicatie te openen.
+
+Om de appliocatie af te sluiten gebruik je `Ctrl+C`
+
+En om je virtual environment te deactiveren gebruik je `deactivate`
+
