@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.testing.schema import mapped_column
 
 from backend import db
@@ -13,3 +13,5 @@ class UsersStichtingAccessibility(db.Model):
 
     admin: Mapped[bool] = mapped_column(nullable=False, default=False)
     """defines if user is admin or not"""
+
+    user: Mapped["Users"] = relationship(back_populates="admin_info")

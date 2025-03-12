@@ -11,14 +11,12 @@
     margin-right: auto;
 }
 
-.input-fields{
+.login-card {
+    min-width: 100px;
+}
+
+.input-field {
     width: 400px;
-    color: black;
-    border-radius: 14px;
-    border-color: dimgrey;
-    border-width: 3px;
-    padding: 2px;
-    margin: 15px;
 }
 
 .input-area{
