@@ -1,16 +1,11 @@
 import os
-import json
 
-from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, session
+from flask import render_template, request, g, Blueprint, redirect, url_for, flash
+from flask import session
 
-from backend.api.login import Login
-from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, jsonify
-
-from backend.api.api import SingleResearch
-from backend.database.models.register_expert import ExpertRegistrationModule
-from backend.api.api import require_api_key
-from backend.database.models.research_status_model import ResearchStatus
 from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
+from backend.api.api import require_api_key
+from backend.database.models.register_expert import ExpertRegistrationModule
 
 template_dir = os.path.abspath('./frontend/templates/')
 static_dir = os.path.abspath('./frontend/static/')

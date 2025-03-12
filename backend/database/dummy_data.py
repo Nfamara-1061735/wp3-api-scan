@@ -10,9 +10,32 @@ from backend.database.models import Users, Organizations, UserOrganization, Orga
     PeerExpertRegistration
 from backend import db
 from faker import Faker
+from backend.database.models.api_keys_model import ApiKeys
+import secrets
 
 from backend.utils.password import hash_password, generate_salt
 
+
+def generate_api_keys():
+    print_message("API-keys worden gegenereerd en toegevoegd...")
+
+    api_keys_data = [
+        "api_key",
+        secrets.token_hex(16)
+    ]
+
+    existing_keys = {key.api_key for key in ApiKeys.query.all()}
+
+    new_api_keys = [ApiKeys(api_key=key) for key in api_keys_data if key not in existing_keys]
+
+    if new_api_keys:
+        db.session.add_all(new_api_keys)
+        db.session.commit()
+        print_message(f"{len(new_api_keys)} nieuwe API-key toegevoegd.")
+    else:
+        print_message("Geen nieuwe API-key toegevoegd, deze key bestaat al.")
+
+    return new_api_keys
 
 # Very simple wrapper for message logging
 def print_message(message):
@@ -489,6 +512,8 @@ def init_db_data(amount_multiplier=1):
 
     registrations = generate_registrations(peer_experts, fake_researches, registration_statuses)
     db.session.bulk_save_objects(registrations)
+
+    generate_api_keys()
 
     db.session.commit()  # Save data
 
