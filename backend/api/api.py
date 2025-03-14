@@ -16,23 +16,52 @@ api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
 
-#api-key validatie
+# api-key validatie
 def require_api_key(f):
    @wraps(f)
    def decorated_function(*args, **kwargs):
+      print("🔍 API-key validatie gestart")  # Debug-print
+
       api_key = request.headers.get("Authorization")
 
       if not api_key or not api_key.startswith("Bearer "):
-         return jsonify({"error": "API-key ontbreekt of onjuist formaat"}), 401  # JSON-error
+         print("❌ Geen API-key of onjuist formaat")  # Debug-print
+         return {"error": "API-key ontbreekt of onjuist formaat"}, 401
 
       api_key = api_key.split("Bearer ")[1]
 
       if not db.session.query(ApiKeys).filter_by(api_key=api_key).first():
-         return jsonify({"error": "Ongeldige API-key"}), 401  # JSON-error
+         print("❌ Ongeldige API-key!")  # Debug-print
+         return {"error": "Ongeldige API-key"}, 401
 
-      return f(*args, **kwargs)  #Als API-key geldig is wordt de functie pas uitgevoerd
+      print("✅ API-key gevalideerd!")  # Debug-print
+      return f(*args, **kwargs)
 
    return decorated_function
+
+
+researchFields1 = {
+    'research_id': fields.Integer,
+    'title': fields.String,
+    'is_available': fields.Boolean,
+    'description': fields.String,
+    'start_date': fields.String,
+    'end_date': fields.String,
+    'location': fields.String,
+    'has_reward': fields.Boolean,
+    'reward': fields.String,
+    'target_min_age': fields.Integer,
+    'target_max_age': fields.Integer,
+    'status_id': fields.Integer,
+    'research_type_id': fields.Integer
+}
+
+class Researches1(Resource):
+   @require_api_key
+   @marshal_with(researchFields1)
+   def get(self):
+      print("🔍 Researches1.get() wordt uitgevoerd!")
+      return Research.query.all(), 200
 
 
 def method_not_allowed():
@@ -341,7 +370,8 @@ class Limitations(Resource):
    def delete(self):
       return method_not_allowed()
 
-api.add_resource(Researches, '/researches/')
+api.add_resource(Researches1, '/researches/')
+# api.add_resource(Researches, '/researches/')
 api.add_resource(SingleResearch, '/researches/<int:research_id>/')
 api.add_resource(Limitations, '/limitations/')
 api.add_resource(Login, '/login')

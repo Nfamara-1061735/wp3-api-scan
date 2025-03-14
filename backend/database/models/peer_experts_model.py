@@ -24,6 +24,7 @@ class PeerExperts(db.Model):
 
     contact_preference_id: Mapped[int] = mapped_column(ForeignKey('contact_preferences.contact_preference_id'))
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
-    peer_expert_status_id: Mapped[int] = mapped_column(ForeignKey('peer_expert_statuses.peer_expert_status_id'))
+    # peer_expert_status_id: Mapped[int] = mapped_column(ForeignKey('peer_expert_statuses.peer_expert_status_id'))
+    peer_expert_status_id: Mapped[int] = mapped_column(ForeignKey('peer_expert_statuses.peer_expert_status_id'),nullable=False, default=1)
 
     user: Mapped["Users"] = relationship(back_populates="peer_expert_info")
