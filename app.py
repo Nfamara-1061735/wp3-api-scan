@@ -3,12 +3,14 @@ from flask import Flask
 from backend.api import api_bp
 from frontend import frontend_bp
 from backend import db, init_db_command, init_db_data_command
+from flask_cors import CORS
 
 
 def create_app():
     """Create and configure an instance of the Flask application"""
     # Create flask instance
     app = Flask(__name__)
+    CORS(app)
 
     # Config flask application
     app.config['SECRET_KEY'] = "dev"
@@ -23,6 +25,10 @@ def create_app():
     # Register blueprints
     app.register_blueprint(frontend_bp)
     app.register_blueprint(api_bp, url_prefix='/api')  # API routes with '/api' prefix
+
+    print("🔍 Geregistreerde routes:") # Debugging
+    for rule in app.url_map.iter_rules():
+        print(rule)
 
     return app
 
