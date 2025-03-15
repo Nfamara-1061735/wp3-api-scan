@@ -1,6 +1,6 @@
 import datetime
 
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, session
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 
 from backend.api.login import Login
@@ -21,6 +21,10 @@ def require_api_key(f):
    @wraps(f)
    def decorated_function(*args, **kwargs):
       print("🔍 API-key validatie gestart")  # Debug-print
+
+      if session.get('user'):
+         print("✅ Actieve sessie gevonden, API-key validatie overgeslagen")  # Debug-print
+         return f(*args, **kwargs)
 
       api_key = request.headers.get("Authorization")
 
