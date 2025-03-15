@@ -20,13 +20,16 @@ def generate_api_keys():
     print_message("API-keys worden gegenereerd en toegevoegd...")
 
     api_keys_data = [
-        "api_key",
-        secrets.token_hex(16)
+        ("organisatie_1", secrets.token_hex(8)),
+        ("organisatie_2", secrets.token_hex(8))
     ]
 
     existing_keys = {key.api_key for key in ApiKeys.query.all()}
 
-    new_api_keys = [ApiKeys(api_key=key) for key in api_keys_data if key not in existing_keys]
+    new_api_keys = [
+        ApiKeys(api_key=key, organization_name=org_name)
+        for org_name, key in api_keys_data if key not in existing_keys
+    ]
 
     if new_api_keys:
         db.session.add_all(new_api_keys)

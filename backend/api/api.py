@@ -20,25 +20,30 @@ api = Api(api_bp)
 def require_api_key(f):
    @wraps(f)
    def decorated_function(*args, **kwargs):
-      print("🔍 API-key validatie gestart")  # Debug-print
+      print("🔍 Validatie gestart")  # Debug-print
 
       if session.get('user'):
          print("✅ Actieve sessie gevonden, API-key validatie overgeslagen")  # Debug-print
          return f(*args, **kwargs)
 
-      api_key = request.headers.get("Authorization")
+      print("❌ Geen actieve sessie gevonden, API-key validatie vereist\n")  # Debug-print
+      print("🔍 Er wordt nu een API-key gezocht")  # Debug-print
+      api_key_header = request.headers.get("Authorization")
+      organization_name = request.headers.get("Organization-Name")
 
-      if not api_key or not api_key.startswith("Bearer "):
-         print("❌ Geen API-key of onjuist formaat")  # Debug-print
-         return {"error": "API-key ontbreekt of onjuist formaat"}, 401
+      if not api_key_header or not api_key_header.startswith("Bearer ") or not organization_name:
+         print("❌ API-key of organisatie onjuist, validatie mislukt")  # Debug-print
+         return {"error": "API-key of organisatie onjuist, validatie mislukt"}, 401
 
-      api_key = api_key.split("Bearer ")[1]
+      api_key = api_key_header.split("Bearer ")[1]
 
-      if not db.session.query(ApiKeys).filter_by(api_key=api_key).first():
-         print("❌ Ongeldige API-key!")  # Debug-print
-         return {"error": "Ongeldige API-key"}, 401
+      key_record = db.session.query(ApiKeys).filter_by(api_key=api_key).first()
 
-      print("✅ API-key gevalideerd!")  # Debug-print
+      if not key_record or key_record.organization_name != organization_name:
+         print(f"❌ Ongeldige API-key! voor organisatie: {organization_name}, validatie mislukt")  # Debug-print
+         return {"error": "Ongeldige API-key voor deze organisatie, validatie mislukt"}, 401
+
+      print(f"✅ API-key gevalideerd voor organisatie: {organization_name}")  # Debug-print
       return f(*args, **kwargs)
 
    return decorated_function
