@@ -327,11 +327,6 @@ def generate_researches(limitations_lookup):
             status_id=data["status_id"],
             research_type_id=data["research_type_id"],
         )
-
-        if data["limitation_ids"]:
-            matched_limitations = [limitations_lookup[lid] for lid in data["limitation_ids"]]
-            fake_research.limitations.extend(matched_limitations)
-
         researches.append(fake_research)
 
     return researches
@@ -494,6 +489,7 @@ def init_db_data(amount_multiplier=1):
 
     limitations = generate_limitations()
     db.session.bulk_save_objects(limitations, return_defaults=True)
+    db.session.flush()
 
     limitations_lookup = {limitation.limitation_id: limitation for limitation in limitations}
 
@@ -516,6 +512,12 @@ def init_db_data(amount_multiplier=1):
 
     fake_researches = generate_researches(limitations_lookup)
     db.session.bulk_save_objects(fake_researches, return_defaults=True)
+
+    for research in fake_researches:
+        if research.title == "Albert Heijn":
+            research.limitations.extend([limitations_lookup[1], limitations_lookup[2]])
+        elif research.title == "Jumbo":
+            research.limitations.extend([limitations_lookup[3], limitations_lookup[4]])
 
     peer_experts_research_types = generate_peer_expert_research_types(research_types, peer_experts)
     db.session.bulk_save_objects(peer_experts_research_types)

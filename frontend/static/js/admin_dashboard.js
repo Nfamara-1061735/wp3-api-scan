@@ -61,9 +61,9 @@ function openModal(research) {
             limitationsList.appendChild(li);
         });
     } else {
-        const li = document.createElement("li");
-        li.textContent = "Geen beperkingen";
-        limitationsList.appendChild(li);
+        const list = document.createElement("li");
+        list.textContent = "Geen beperkingen";
+        limitationsList.appendChild(list);
     }
 
     const approveButton = document.getElementById("modalApproveButton");
