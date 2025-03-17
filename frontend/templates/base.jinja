@@ -39,10 +39,21 @@
             </a>
             <ul class="navbar-nav gap-3">
                 {% block logout %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('frontend.logout') }}" class="btn btn-primary" style="cursor: pointer;">Uitloggen</a>
-                        <!--bij deze hashtag komt de link naar de login pagina-->
-                    </li>
+                   <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Opties
+                      </button>
+                      <ul class="dropdown-menu text-center">
+                        <li>
+                          <a class="dropdown-item" href="#">Mijn Profiel</a>
+                        </li>
+                        <li>
+                          <a href="{{ url_for('frontend.logout') }}" class="btn btn-primary d-block mx-auto w-75" style="cursor: pointer;">
+                            Uitloggen
+                          </a>
+                        </li>
+                      </ul>
+                   </div>
                 {% endblock %}
                 <li class="nav-item">
                     <button id="themeToggle" class="btn btn-primary" title="Selecteer donkere thema">🌙</button>
