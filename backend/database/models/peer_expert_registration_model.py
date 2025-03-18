@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend import db
 
@@ -18,3 +18,7 @@ class PeerExpertRegistration(db.Model):
 
     research_id: Mapped[int] = mapped_column(ForeignKey('researches.research_id'))
     """Foreign key to the target research."""
+
+    registration_status: Mapped["RegistrationStatus"] = relationship("RegistrationStatus",
+                                                                     backref="peer_expert_registrations")
+    """Relationship to the RegistrationStatus model"""

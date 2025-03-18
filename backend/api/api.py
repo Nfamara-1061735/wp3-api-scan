@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request, render_template
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 
 from backend.api.login import Login
-from backend.api.registrations import Registrations
+from backend.api.registrations import Registrations, Registration
 from backend.database.models.research_model import Research
 from backend.database.models.limitations_model import LimitationsModel
 from backend.database.models.api_keys_model import ApiKeys
@@ -346,3 +346,4 @@ api.add_resource(SingleResearch, '/researches/<int:research_id>/')
 api.add_resource(Limitations, '/limitations/')
 api.add_resource(Login, '/login')
 api.add_resource(Registrations, '/peers/registrations/')
+api.add_resource(Registration, '/peers/registrations/<int:registration_id>/')
