@@ -38,3 +38,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialiseer weergave bij pagina laden
     toggleSupervisorField();
 });
+
+const form = document.querySelector(".registration-form");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault(); // Voorkom standaard verzenden van het formulier
+
+    let valid = true;
