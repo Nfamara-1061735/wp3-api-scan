@@ -74,6 +74,30 @@ form.addEventListener("submit", function(e) {
     const postalPattern = /^[0-9]{4}[A-Za-z]{2}$/;
     showError('postal_code', postalPattern.test(postalCode.value) ? '' : 'Vul een geldige postcode in (bijvoorbeeld 1234AB).');
 
+    // Valideer geslacht
+    const gender = document.getElementById('gender');
+    showError('gender', gender.value ? '' : 'Selecteer je geslacht.');
+
+    // Valideer geboortedatum
+    const birthDate = document.getElementById('birth_date');
+    showError('birth_date', birthDate.value ? '' : 'Vul je geboortedatum in.');
+
+    // Valideer korte bio
+    const shortBio = document.getElementById('short_bio');
+    showError('short_bio', shortBio.value.trim() ? '' : 'Geef een korte bio.');
+
+    // Valideer beschikbaarheid
+    const availabilityNotes = document.getElementById('availability_notes');
+    showError('availability_notes', availabilityNotes.value.trim() ? '' : 'Vul je beschikbaarheid in.');
+
+    // Valideer contactvoorkeur
+    const contactPreference = document.getElementById('contact_preference_id');
+    showError('contact_preference_id', contactPreference.value ? '' : 'Geef je contactvoorkeur op.');
+
+    // Valideer gebruikers ID
+    const userId = document.getElementById('user_id');
+    showError('user_id', userId.value ? '' : 'Kies een gebruikersid.');
+
     // Als alles correct is ingevuld versturen we het formulier
     if (valid) {
         form.submit();
