@@ -60,12 +60,14 @@ researchFields = {
 
 
 class Researches(Resource):
+    @require_api_key
     @marshal_with(researchFields)
     def get(self):
         researches = Research.query.all()
         return researches, 200
 
     @marshal_with(researchFields)
+    @require_api_key
     def post(self):
         args = research_args.parse_args()
 
@@ -112,6 +114,7 @@ class Researches(Resource):
 
 
 class SingleResearch(Resource):
+    @require_api_key
     @marshal_with(researchFields)
     def get(self, research_id):
         single_research = Research.query.filter_by(research_id=research_id).first()
@@ -119,6 +122,7 @@ class SingleResearch(Resource):
             abort(404, message="Onderzoek niet gevonden.")
         return single_research, 200
 
+    @require_api_key
     @marshal_with(researchFields)
     def patch(self, research_id):
         args = patch_research_args.parse_args()
@@ -171,6 +175,7 @@ class SingleResearch(Resource):
         db.session.commit()
         return single_research, 200
 
+    @require_api_key
     def delete(self, research_id):
         single_research = Research.query.filter_by(research_id=research_id).first()
         if not single_research:
@@ -188,12 +193,14 @@ class SingleResearch(Resource):
 
 
 class FilteredResearch(Resource):
+    @require_api_key
     @marshal_with(researchFields)
     def get(self, status_id):
         filtered_researches = Research.query.filter_by(status_id=status_id).all()
 
         return filtered_researches, 200
 
+    @require_api_key
     @marshal_with(researchFields)
     def patch(self, new_status_id, research_id):
         args = research_args.parse_args()
