@@ -62,3 +62,14 @@ form.addEventListener("submit", function(e) {
             errorElement.style.display = 'none';
         }
     }
+
+    // Valideer postcode
+    const postalCode = document.getElementById('postal_code');
+    const postalPattern = /^[0-9]{4}[A-Za-z]{2}$/;
+    showError('postal_code', postalPattern.test(postalCode.value) ? '' : 'Vul een geldige postcode in (bijvoorbeeld 1234AB).');
+
+    // Als alles correct is ingevuld versturen we het formulier
+    if (valid) {
+        form.submit();
+    }
+});
