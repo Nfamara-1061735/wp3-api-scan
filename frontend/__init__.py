@@ -46,7 +46,7 @@ def register():
     if "user" in session and session['user'].peer_expert_info:
         redirect(url_for("frontend.peer_dashboard"))
     if request.method == 'GET':
-        return render_template('peer_register.html', theme=g.theme)
+        return render_template('peer_register.jinja', theme=g.theme)
     elif request.method == 'POST':
         form_data = request.form  # Haalt alle gegevens op uit het HTML-formulier
         registration = ExpertRegistrationModule()
@@ -55,7 +55,7 @@ def register():
             return redirect(url_for('frontend.peer_home'))
         else:
             flash('Er is een fout opgetreden tijdens de registratie.', 'danger')
-            return render_template('peer_register.html')
+            return render_template('peer_register.jinja')
 
 
 @frontend_bp.route('/logout')
