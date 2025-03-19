@@ -3,8 +3,9 @@ import os
 from flask import render_template, request, g, Blueprint, redirect, url_for, flash
 from flask import session
 
-from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
+from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 from backend.api.api import require_api_key
+from backend.api.researches import FilteredResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
 from backend.utils.check_permissions import check_permission
 

@@ -2,7 +2,8 @@ from flask import session, g, request
 from flask_restful import Resource, abort, fields, marshal_with
 
 from backend import db
-from backend.database.models import PeerExpertRegistration, Users
+from backend.api.researches import researchFields
+from backend.database.models import PeerExpertRegistration, Users, Research
 from backend.utils.check_permissions import check_permission_rest
 
 peer_expert_registration_fields = {
@@ -22,44 +23,53 @@ class Registrations(Resource):
     def get(self):
         registrations: list[PeerExpertRegistration] = []
 
-        # Get the status filter from the query parameters (if provided)
-        registration_status_id = request.args.get('registration_status_id', type=int)
+        # Get the filter parameters from the query string
+        filters = {
+            'registration_status_id': request.args.get('registration_status_id', type=int),
+            'research_id': request.args.get('research_id', type=int)
+        }
+
+        # Remove filters that are None (optional filters that were not provided)
+        filters = {key: value for key, value in filters.items() if value is not None}
 
         if g.user.admin_info:
-            if registration_status_id:
-                # If a status filter is provided, filter by registration_status_id
-                registrations = PeerExpertRegistration.query.filter_by(
-                    registration_status_id=registration_status_id).all()
-            else:
-                # No filter provided, get all registrations
-                registrations = PeerExpertRegistration.query.all()
+            # Start with the base query
+            registrations_query = PeerExpertRegistration.query
+
+            # Dynamically apply filters to the query
+            for key, value in filters.items():
+                registrations_query = registrations_query.filter_by(**{key: value})
+
+            registrations = registrations_query.all()
 
         elif g.user.peer_expert_info:
             peer_id = g.user.peer_expert_info.peer_expert_id
             registrations_query = PeerExpertRegistration.query.filter_by(peer_expert_id=peer_id)
 
-            if registration_status_id:
-                # Apply status filter for peer expert as well
-                registrations_query = registrations_query.filter_by(registration_status_id=registration_status_id)
+            # Dynamically apply filters for peer expert
+            for key, value in filters.items():
+                registrations_query = registrations_query.filter_by(**{key: value})
 
             registrations = registrations_query.all()
+
         return registrations, 200
 
     @check_permission_rest()
     @marshal_with(peer_expert_registration_fields)
     def post(self):
-        # Only admin can create new registrations
-        if not g.user.admin_info:
-            abort(403, message="Forbidden: Only admins can create registrations.")
-
-        # Assuming you are receiving data in the request
         data = request.get_json()
+
+        peer_expert_id = None
+        if g.user.peer_expert_info:
+            peer_expert_id = g.user.peer_expert_info.peer_expert_id
+
+        print(data)
 
         # Create new registration from the provided data
         new_registration = PeerExpertRegistration(
-            peer_expert_id=data['peer_expert_id'],
+            peer_expert_id=peer_expert_id if peer_expert_id else data['peer_expert_id'],
             research_id=data['research_id'],
-            registration_status_id=data['registration_status_id']
+            registration_status_id=1  # 'nieuw' status by default
         )
 
         # Add to the database
@@ -123,15 +133,55 @@ class Registration(Resource):
 
         # Peer experts can only delete the registration if registration_status_id is 1 ('nieuw')
         if g.user.peer_expert_info:
+            print(registration_id)
             if registration.registration_status_id != 1:
                 abort(403, message="Forbidden: You can only delete registrations with status ID 1.")
             if registration.peer_expert_id != g.user.peer_expert_info.peer_expert_id:
                 abort(403, message="Forbidden: You can only delete your own registration.")
 
         # Admin can delete any registration
-        if g.user.admin_info:
+        if g.user.peer_expert_info or g.user.admin_info:
             db.session.delete(registration)
             db.session.commit()
             return '', 204  # No content to return, successfully deleted
 
         abort(403, message="Forbidden: You don't have permission to delete this registration.")
+
+
+class ResearchesRegistrationState(Resource):
+    @check_permission_rest('peer')
+    @marshal_with(researchFields)
+    def get(self):
+        # Get the peer expert ID for the currently logged-in user
+        peer_id = g.user.peer_expert_info.peer_expert_id
+
+        # Get the 'state' query parameter to specify which type of research to fetch
+        state = request.args.get('state', type=str)  # 'not_registered' or 'registered'
+
+        # Get the list of research IDs the current peer expert is registered for
+        registered_research_ids = db.session.query(PeerExpertRegistration.research_id).filter_by(
+            peer_expert_id=peer_id).all()
+        registered_research_ids = [research_id[0] for research_id in
+                                   registered_research_ids]  # Flatten the list of tuples
+
+        # Initialize the research query
+        researches_query = Research.query
+
+        # Apply filter based on the state
+        if state == 'registered':
+            if registered_research_ids:
+                researches_query = researches_query.filter(Research.research_id.in_(registered_research_ids))
+            else:
+                # If the peer expert is not registered for anything, return an empty result
+                researches_query = researches_query.filter(Research.research_id == None)  # No match found
+        elif state == 'unregistered':
+            if registered_research_ids:
+                researches_query = researches_query.filter(Research.research_id.notin_(registered_research_ids))
+        else:
+            # If no valid state is provided, you can either return an error or all researches.
+            return abort(400, message='Invalid state parameter. Use "registered" or "not_registered".')
+
+        # Fetch the results
+        researches = researches_query.all()
+
+        return researches, 200
