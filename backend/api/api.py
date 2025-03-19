@@ -49,30 +49,6 @@ def require_api_key(f):
    return decorated_function
 
 
-researchFields1 = {
-    'research_id': fields.Integer,
-    'title': fields.String,
-    'is_available': fields.Boolean,
-    'description': fields.String,
-    'start_date': fields.String,
-    'end_date': fields.String,
-    'location': fields.String,
-    'has_reward': fields.Boolean,
-    'reward': fields.String,
-    'target_min_age': fields.Integer,
-    'target_max_age': fields.Integer,
-    'status_id': fields.Integer,
-    'research_type_id': fields.Integer
-}
-
-class Researches1(Resource):
-   @require_api_key
-   @marshal_with(researchFields1)
-   def get(self):
-      print("🔍 Researches1.get() wordt uitgevoerd!")
-      return Research.query.all(), 200
-
-
 def method_not_allowed():
    response = jsonify({"error": "Methode niet toegestaan"})
    response.status_code = 405
@@ -181,11 +157,13 @@ peerExpertFields = {
 }
 
 class Researches(Resource):
+   @require_api_key
    @marshal_with(researchFields)
    def get(self):
       researches = Research.query.all()
       return researches, 200
-   
+
+   @require_api_key
    @marshal_with(researchFields)
    def post(self):
       args = research_args.parse_args()
@@ -231,6 +209,7 @@ class Researches(Resource):
       return method_not_allowed()
 
 class SingleResearch(Resource):
+   @require_api_key
    @marshal_with(researchFields)
    def get(self, research_id):
       single_research = Research.query.filter_by(research_id=research_id).first()
@@ -238,6 +217,7 @@ class SingleResearch(Resource):
          abort(404, message="Onderzoek niet gevonden.")
       return single_research, 200
 
+   @require_api_key
    @marshal_with(researchFields)
    def patch(self, research_id):
       args = patch_research_args.parse_args()
@@ -290,7 +270,7 @@ class SingleResearch(Resource):
       db.session.commit()
       return single_research, 200
 
-
+   @require_api_key
    def delete(self, research_id):
       single_research = Research.query.filter_by(research_id=research_id).first()
       if not single_research:
@@ -307,12 +287,14 @@ class SingleResearch(Resource):
       return method_not_allowed()
 
 class FilteredResearch(Resource):
+   @require_api_key
    @marshal_with(researchFields)
    def get(self, status_id):
       filtered_researches = Research.query.filter_by(status_id=status_id).all()
 
       return filtered_researches, 200
 
+   @require_api_key
    @marshal_with(researchFields)
    def patch(self, new_status_id, research_id):
       args = research_args.parse_args()
@@ -379,8 +361,7 @@ class Limitations(Resource):
    def delete(self):
       return method_not_allowed()
 
-api.add_resource(Researches1, '/researches/')
-# api.add_resource(Researches, '/researches/')
+api.add_resource(Researches, '/researches/')
 api.add_resource(SingleResearch, '/researches/<int:research_id>/')
 api.add_resource(Limitations, '/limitations/')
 api.add_resource(Login, '/login')

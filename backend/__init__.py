@@ -2,7 +2,6 @@ import click
 from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from flask import Flask
 
 
 class BaseModel(DeclarativeBase):
