@@ -98,6 +98,19 @@ form.addEventListener("submit", function(e) {
     const userId = document.getElementById('user_id');
     showError('user_id', userId.value ? '' : 'Kies een gebruikersid.');
 
+    // Valideer akkoord voorwaarden
+    const acceptedTerms = document.getElementById('accepted_terms');
+    if (!acceptedTerms.checked) {
+        const acceptedTermsError = document.getElementById('accepted_terms_error');
+        acceptedTermsError.textContent = "Je moet akkoord gaan met de voorwaarden.";
+        acceptedTermsError.style.display = "block";
+        valid = false;
+    } else {
+        const acceptedTermsError = document.getElementById('accepted_terms_error');
+        acceptedTermsError.textContent = "";
+        acceptedTermsError.style.display = "none";
+    }
+
     // Als alles correct is ingevuld versturen we het formulier
     if (valid) {
         form.submit();
