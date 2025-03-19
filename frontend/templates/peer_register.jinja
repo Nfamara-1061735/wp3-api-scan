@@ -1,0 +1,91 @@
+{% extends "base.jinja" %}
+{% block title %}Peer Register{% endblock %}
+{% block head %}
+    <link
+      rel="stylesheet"
+      href="{{ url_for('.static', filename='css/peer_register.css') }}"
+    />
+{% endblock %}
+{% block logout %} {% endblock %}
+{% block content %}
+    <div class="container col-lg-5 py-4 px-4 my-5 shadow rounded-4">
+        <div class="text-center">
+            <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon"
+                 class="register-icon mb-3">
+            <h1>Ervaringsdeskundige Registratie</h1>
+        </div>
+        <form method="POST" action="{{ url_for('frontend.register') }}" class="mt-4">
+            <div class="mb-3">
+                <label for="postal_code" class="form-label">Postcode</label>
+                <input id="postal_code" type="text" name="postal_code" class="form-control" required>
+        </div>
+
+            <div class="mb-3">
+                <label for="gender" class="form-label">Geslacht</label>
+                <select id="gender" name="gender" class="form-select" required>
+                <option value="">Selecteer</option>
+                <option value="male">Man</option>
+                <option value="female">Vrouw</option>
+                <option value="other">Anders</option>
+            </select>
+        </div>
+
+            <div class="mb-3">
+                <label for="birth_date" class="form-label">Geboortedatum</label>
+                <input id="birth_date" type="date" name="birth_date" class="form-control" required>
+        </div>
+
+            <div class="mb-3">
+                <label for="tools_used" class="form-label">Hulpmiddelen</label>
+                <input id="tools_used" type="text" name="tools_used" class="form-control">
+        </div>
+
+            <div class="mb-3">
+                <label for="short_bio" class="form-label">Korte Bio</label>
+                <textarea id="short_bio" name="short_bio" class="form-control" required></textarea>
+        </div>
+
+            <div class="mb-3">
+                <label for="special_notes" class="form-label">Speciale Opmerkingen</label>
+                <textarea id="special_notes" name="special_notes" class="form-control"></textarea>
+        </div>
+
+            <div class="mb-3 form-check">
+                <input id="accepted_terms" type="checkbox" name="accepted_terms" class="form-check-input" required>
+                <label for="accepted_terms" class="form-check-label">Ik ga akkoord met de voorwaarden</label>
+        </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="has_supervisor" id="has_supervisor_checkbox" class="form-check-input">
+                <label for="has_supervisor_checkbox" class="form-check-label">Heeft Begeleider</label>
+        </div>
+
+            <div id="supervisor-name-group" class="mb-3">
+                <label for="supervisor_or_guardian_name" class="form-label">Naam Begeleider/Voogd</label>
+                <input id="supervisor_or_guardian_name" type="text" name="supervisor_or_guardian_name"
+                       class="form-control">
+        </div>
+
+            <div class="mb-3">
+                <label for="availability_notes" class="form-label">Beschikbaarheid</label>
+                <textarea id="availability_notes" name="availability_notes" class="form-control" required></textarea>
+        </div>
+
+            <div class="mb-3">
+                <label for="contact_preference_id" class="form-label">Contactvoorkeur ID</label>
+                <input id="contact_preference_id" type="number" name="contact_preference_id" class="form-control"
+                       required>
+        </div>
+
+            <div class="mb-3">
+                <label for="user_id" class="form-label">Gebruikers ID</label>
+                <input id="user_id" type="number" name="user_id" class="form-control" required>
+        </div>
+
+            <button type="submit" class="btn register-btn mt-4 w-100">Registreer</button>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('.static', filename='js/peer_register.js') }}"></script>
+{% endblock %}
