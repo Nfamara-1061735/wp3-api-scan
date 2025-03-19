@@ -3,9 +3,10 @@ import datetime
 from flask_restful import Resource, reqparse, fields, marshal_with, abort
 
 from backend import db
-from backend.api.utils import method_not_allowed
+from backend.api.utils import method_not_allowed, require_api_key
 from backend.database.models import Research
 from backend.database.models.limitations_model import LimitationsModel
+
 
 research_args = reqparse.RequestParser()
 research_args.add_argument('title', type=str, required=True, help="Title is verplicht (naam van je organisatie)")
