@@ -105,6 +105,15 @@ form.addEventListener("submit", function(e) {
         acceptedTermsError.style.display = "none";
     }
 
+    // Valideer naam van de begeleider alleen wanneer de checkbox is aangevinkt
+    const hasSupervisor = document.getElementById('has_supervisor_checkbox');
+    const supervisorName = document.getElementById('supervisor_or_guardian_name');
+    if (hasSupervisor.checked && !supervisorName.value.trim()) {
+        showError('supervisor_or_guardian_name', 'Geef de naam van de begeleider of voogd op.');
+    } else {
+        showError('supervisor_or_guardian_name', '');
+    }
+
     // Als alles correct is ingevuld versturen we het formulier
     if (valid) {
         form.submit();
