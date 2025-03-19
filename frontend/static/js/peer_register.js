@@ -51,3 +51,20 @@ form.addEventListener("submit", function(e) {
     e.preventDefault(); // Voorkom standaard verzenden van het formulier
 
     let valid = true;
+
+    // Functie om foutmeldingen te tonen/verbergen
+    function showError(inputId, errorMessage) {
+        const errorElement = document.getElementById(inputId + "_error");
+        const inputElement = document.getElementById(inputId);
+
+        if (errorMessage) {
+            inputElement.classList.add('invalid');
+            errorElement.textContent = errorMessage;
+            errorElement.style.display = 'block';
+            valid = false;
+        } else {
+            inputElement.classList.remove('invalid');
+            errorElement.textContent = '';
+            errorElement.style.display = 'none';
+        }
+    }
