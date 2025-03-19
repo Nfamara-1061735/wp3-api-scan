@@ -3,14 +3,12 @@ from flask import Flask
 from backend.api import api_bp
 from frontend import frontend_bp
 from backend import db, init_db_command, init_db_data_command
-from flask_cors import CORS
 
 
 def create_app():
     """Create and configure an instance of the Flask application"""
     # Create flask instance
     app = Flask(__name__)
-    CORS(app)
 
     # Config flask application
     app.config['SECRET_KEY'] = "dev"
