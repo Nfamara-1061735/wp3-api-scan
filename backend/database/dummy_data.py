@@ -688,7 +688,8 @@ def init_db_data(amount_multiplier=1):
     registrations = generate_registrations(peer_experts, fake_researches, registration_statuses)
     db.session.bulk_save_objects(registrations)
 
-    generate_api_keys()
+    api_keys = generate_api_keys()
+    db.session.bulk_save_objects(api_keys)
 
     db.session.commit()  # Save data
 
