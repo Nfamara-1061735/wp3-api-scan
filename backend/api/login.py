@@ -19,7 +19,7 @@ class Login(Resource):
 
         # Verify credentials
         if user and self.verify_role(user, target_role) and verify_password(password, user.password, user.salt):
-            session["user"] = email  # Storing authentication using a session
+            session["user"] = user.user_id  # Storing authentication using a session
             return {"success": True}
         else:
             return {"success": False, "message": "Verkeerde gebruikersnaam of wachtwoord"}

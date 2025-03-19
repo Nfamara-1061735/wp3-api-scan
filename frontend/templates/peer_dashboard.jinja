@@ -9,13 +9,48 @@
     />
 {% endblock %}
 {% block content %}
-    <div class="p-5">
-        <h1 class="">Dashboard</h1>
-        <hr class="pb-3">
-        <h2>Open onderzoeken</h2>
-        <div class="container-fluid py-4 overflow-x-auto">
-            <div id="card-container" class="d-flex flex-row flex-nowrap">
-                <div id="error-message" class="alert alert-danger" style="display: none;" role="alert"></div>
+    <div class="pt-5 px-5 pb-4">
+        <h1>Ervaringsdeskundige dashboard</h1>
+        <div id="error-message" class="alert alert-danger mt-4" style="display: none;" role="alert"></div>
+    </div>
+
+    <!-- Tab navigation -->
+    <ul class="nav nav-tabs px-5" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="open-tab" data-bs-toggle="tab" href="#open" role="tab"
+               aria-controls="open onderzoeken" aria-selected="true">Open onderzoeken <span id="open-card-count"
+                                                                                            class="ms-2 badge text-bg-primary"></span></a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ingeschreven-tab" data-bs-toggle="tab" href="#ingeschreven" role="tab"
+               aria-controls="ter beoordeelde onderzoeken" aria-selected="false">Ter beoordeelde onderzoeken <span
+                    id="registered-card-count" class="ms-2 badge text-bg-primary"></span></a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="gekeurd-tab" data-bs-toggle="tab" href="#gekeurd" role="tab"
+               aria-controls="beoordeelde onderzoeken" aria-selected="false">Beoordeelde onderzoeken <span
+                    id="rated-card-count" class="ms-2 badge text-bg-primary"></span></a>
+        </li>
+    </ul>
+
+    <!-- Tab content -->
+    <div class="tab-content mx-5" id="myTabContent">
+        <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open-tab">
+            <div class="container-fluid py-4">
+                <div id="open-card-container" class="d-flex flex-row flex-wrap gap-2">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="ingeschreven" role="tabpanel" aria-labelledby="ingeschreven-tab">
+            <div class="container-fluid py-4">
+                <div id="registered-card-container" class="d-flex flex-row flex-wrap">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="gekeurd" role="tabpanel" aria-labelledby="gekeurd-tab">
+            <div class="container-fluid py-4">
+                <div id="rated-card-container" class="d-flex flex-row flex-wrap">
+                </div>
             </div>
         </div>
     </div>
@@ -64,7 +99,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Geïnteresseerd</button>
+                    <button id="interest-button" type="button" class="btn btn-primary">Geïnteresseerd</button>
                     <div class="mx-auto"></div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
                 </div>
@@ -75,131 +110,5 @@
 {% block scripts %}
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-        function formatDate(dateString) {
-            // Create a date from the provided date string
-            const date = new Date(dateString);
-
-            // Options for formatting the date
-            const options = {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            };
-
-            // Convert the date to the desired format
-            const formattedDateString = date.toLocaleDateString('nl-NL', options) + ` ${String(date.getHours())}:${String(date.getMinutes()).padStart(2, '0')}`;
-
-            // Capitalize the first letter and return it
-            return formattedDateString.charAt(0).toUpperCase() + formattedDateString.slice(1);
-        }
-
-        let map = null
-
-        function initializeMap() {
-            if (map != null)
-                return;
-
-            map = L.map('map');
-
-            // Add OpenStreetMap tile layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-        }
-
-        function getRandomRange(min, max) {
-            return Math.random() * (max - min) + min;
-        }
-
-        function getRandomCoordinates(location) {
-            // Randomly generate coordinates within the bounds of the Netherlands
-            const latMin = 50.75, latMax = 53.75;
-            const lonMin = 3.25, lonMax = 7.25;
-
-            // Create a random value within the latitude and longitude range
-            const latitude = getRandomRange(latMin, latMax)
-            const longitude = getRandomRange(lonMin, lonMax)
-
-            return [latitude, longitude];
-        }
-
-        $(document).ready(function () {
-            // Fetch the research data
-            $.ajax({
-                url: '/api/researches/',
-                type: 'GET',
-                success: function (data) {
-                    data.forEach(function (research) {
-                        // Create a new card for each research item
-                        var cardClone = $('<div class="card card-body d-flex flex-column"></div>');
-                        var cardTitle = $('<h5 class="card-title"></h5>').text(research.title);
-                        var cardDescription = $('<p class="card-text"></p>').text(research.description);
-                        var cardButton = $('<button class="btn btn-primary mt-auto">Meer informatie</button>')
-
-                        // Append the title and description to the card
-                        cardClone.append(cardTitle, $('<hr>'), cardDescription, cardButton);
-
-                        // Append the card to the container
-                        $('#card-container').append(cardClone);
-
-                        // TEMP: Add random lat and long
-                        research.latLon = getRandomCoordinates()
-
-                        // Attach the data to the button
-                        cardButton.data('research', research);
-
-                        // Add click event listener to the button
-                        cardButton.on('click', function () {
-                            const research = $(this).data('research');
-                            $('#researchModalTitle').text(research.title);
-                            $('#researchModalBody').text(research.description);
-
-                            $('#researchStartDate').text(formatDate(research.start_date));
-                            $('#researchEndDate').text(formatDate(research.end_date));
-
-                            $('#researchLocation').text(research.location);
-
-                            var ageRange = research.target_min_age + ' - ' + research.target_max_age;
-                            $('#researchAgeRange').text(ageRange);
-
-                            if (research.has_reward) {
-                                $('#researchReward').text(research.reward || 'Beloningsdetails niet beschikbaar');
-                            } else {
-                                $('#researchReward').text('Geen beloning beschikbaar');
-                            }
-
-                            var limitationsList = $('#researchLimitations');
-                            limitationsList.empty();
-                            if (research.limitations.length > 0) {
-                                research.limitations.forEach(function (limitation) {
-                                    limitationsList.append('<li>' + limitation.limitation + '</li>');
-                                });
-                            } else {
-                                limitationsList.append('<li>Geen specifieke beperkingen</li>');
-                            }
-
-                            initializeMap();
-
-                            map.setView(research.latLon, 13);
-
-                            $('#researchModal').modal('show');
-                        });
-                    });
-                },
-                error: function (x) {
-                    console.log(x)
-                    // Show error message for any server issues
-                    $('#error-message').text('Er is een fout opgetreden. Probeer het opnieuw.').show();
-                }
-            });
-        });
-
-        $('#researchModal').on('show.bs.modal', function () {
-            setTimeout(function () {
-                map.invalidateSize();
-            }, 500);
-        });
-    </script>
+    <script src="{{ url_for('.static', filename='js/peer_dashboard.js') }}"></script>
 {% endblock %}

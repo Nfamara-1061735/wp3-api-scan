@@ -3,6 +3,11 @@ import os
 from flask import render_template, request, g, Blueprint, redirect, url_for, flash
 from flask import session
 
+from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
+from backend.api.api import require_api_key
+from backend.api.researches import FilteredResearch
+from backend.database.models.register_expert import ExpertRegistrationModule
+from backend.utils.check_permissions import check_permission
 from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 from backend.database.models.register_expert import ExpertRegistrationModule
 
@@ -31,12 +36,18 @@ def home():
 
 
 @frontend_bp.route('/peer/home')
+@check_permission('peer')
 def peer_home():
+    if g.get('user', None):
+        return redirect(url_for("frontend.peer_dashboard"))
     return render_template("peer_home.jinja", theme=g.theme)
 
 
 @frontend_bp.route('/peer/register', methods=['GET', 'POST'])
+@check_permission('peer')
 def register():
+    if g.get('user', None):
+        return redirect(url_for("frontend.peer_dashboard"))
     if request.method == 'GET':
         return render_template('peer_register.html', theme=g.theme)
     elif request.method == 'POST':
@@ -57,21 +68,26 @@ def logout():
     return redirect(url_for('frontend.home'))
 
 @frontend_bp.route('/peer/signin')
+@check_permission('peer')
 def signup():
-    if "user" in session:
-        redirect(url_for("frontend.peer_dashboard"))
+    if g.get('user', None):
+        return redirect(url_for("frontend.peer_dashboard"))
     return render_template("sign_in.jinja", role='peer', target_redirect=url_for("frontend.peer_dashboard"),
                            theme=g.theme)
 
 
 @frontend_bp.route('/admin/signin')
+@check_permission('admin')
 def login_admin():
-    if "user" in session:
-        redirect(url_for("frontend.dashboard"))
+    if g.get('user', None):
+        return redirect(url_for("frontend.dashboard"))
     return render_template("sign_in.jinja", role='admin', target_redirect=url_for("frontend.dashboard"), theme=g.theme)
 
 @frontend_bp.route('/admin/dashboard')
+@check_permission('admin')
 def dashboard():
+    if not g.get('user', None):
+        return redirect(url_for("frontend.login_admin"))
     if request.method == 'GET':
         return render_template("admin_dashboard.jinja", theme=g.theme, researches=filteredResearch.get(1))
 
@@ -105,7 +121,10 @@ def researches():
         return filteredResearch.patch(updated_status, item_id), 200
 
 @frontend_bp.route('/peer/dashboard', methods=['GET', 'POST'])
+@check_permission('peer')
 def peer_dashboard():
+    if not g.get('user', None):
+        return redirect(url_for("frontend.peer_home"))
     return render_template("peer_dashboard.jinja", theme=g.theme)
 
 

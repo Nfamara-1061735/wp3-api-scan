@@ -326,6 +326,82 @@ def generate_researches(fake: Faker, research_statuses: list[ResearchStatus], re
     return fake_researches
 
 
+def get_researches():
+    print_message("Generating dummy organization data...")
+
+    researches_data = [
+        {
+            "title": "Albert Heijn",
+            "is_available": True,
+            "description": "Dit is een random omschrijving voor dit nieuwe onderzoek voor de Albert Heijn",
+            "start_date": "01-01-2025",
+            "end_date": "02-02-2025",
+            "location": "Rotterdam",
+            "has_reward": True,
+            "reward": "Jaar lang korting",
+            "target_min_age": 18,
+            "target_max_age": 65,
+            "status_id": 1,
+            "research_type_id": 1,
+            "limitation_ids": [1, 2]
+        },
+        {
+            "title": "Jumbo",
+            "is_available": True,
+            "description": "Dit is een random omschrijving voor dit nieuwe onderzoek voor de Jumbo",
+            "start_date": "01-03-2025",
+            "end_date": "02-04-2025",
+            "location": "Amsterdam",
+            "has_reward": False,
+            "reward": "50 euro voucher",
+            "target_min_age": 20,
+            "target_max_age": 70,
+            "status_id": 1,
+            "research_type_id": 2,
+            "limitation_ids": [3, 4]
+        },
+        {
+            "title": "Bol.com",
+            "is_available": True,
+            "description": "Dit is een random omschrijving voor dit nieuwe onderzoek voor bol.com",
+            "start_date": "01-06-2025",
+            "end_date": "31-12-2025",
+            "location": "Nederland",
+            "has_reward": True,
+            "reward": "Een jaar lang geen bezorgkosten",
+            "target_min_age": 16,
+            "target_max_age": 80,
+            "status_id": 1,
+            "research_type_id": 3,
+            "limitation_ids": []
+        }
+    ]
+
+    researches = []
+
+    for data in researches_data:
+        start_date = datetime.strptime(data["start_date"], "%d-%m-%Y").date()
+        end_date = datetime.strptime(data["end_date"], "%d-%m-%Y").date()
+
+        fake_research = Research(
+            title=data["title"],
+            is_available=data["is_available"],
+            description=data["description"],
+            start_date=start_date,
+            end_date=end_date,
+            location=data["location"],
+            has_reward=data["has_reward"],
+            reward=data["reward"],
+            target_min_age=data["target_min_age"],
+            target_max_age=data["target_max_age"],
+            status_id=data["status_id"],
+            research_type_id=data["research_type_id"],
+        )
+        researches.append(fake_research)
+
+    return researches
+
+
 def generate_research_limitations(researches: list[Research], limitations: list[LimitationsModel]):
     print_message("Assigning limitations to peer researches...")
     research_limitations = []
@@ -483,6 +559,9 @@ def init_db_data(amount_multiplier=1):
 
     limitations = generate_limitations()
     db.session.bulk_save_objects(limitations, return_defaults=True)
+    db.session.flush()
+
+    limitations_lookup = {limitation.limitation_id: limitation for limitation in limitations}
 
     contact_preferences = generate_contact_preferences()
     db.session.bulk_save_objects(contact_preferences, return_defaults=True)
@@ -502,10 +581,14 @@ def init_db_data(amount_multiplier=1):
     db.session.bulk_save_objects([*research_statuses, *research_types], return_defaults=True)
 
     fake_researches = generate_researches(fake, research_statuses, research_types, amount_multiplier)
+    fake_researches = [*get_researches(), *fake_researches]
     db.session.bulk_save_objects(fake_researches, return_defaults=True)
 
-    research_limitations = generate_research_limitations(fake_researches, limitations)
-    db.session.bulk_save_objects(research_limitations)
+    for research in fake_researches:
+        if research.title == "Albert Heijn":
+            research.limitations.extend([limitations_lookup[1], limitations_lookup[2]])
+        elif research.title == "Jumbo":
+            research.limitations.extend([limitations_lookup[3], limitations_lookup[4]])
 
     peer_experts_research_types = generate_peer_expert_research_types(research_types, peer_experts)
     db.session.bulk_save_objects(peer_experts_research_types)
