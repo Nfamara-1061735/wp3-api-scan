@@ -12,7 +12,7 @@
 <div class="registration-container">
     <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon" class="register-icon">
     <h1 class="title">Ervaringsdeskundige Registratie</h1>
-    <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}">
+    <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}" novalidate>
         <div class="input-group">
             <label for="postal_code">Postcode</label>
             <input type="text" id="postal_code" name="postal_code" required pattern="^[0-9]{4}[A-Za-z]{2}$">
