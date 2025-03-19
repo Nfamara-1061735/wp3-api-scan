@@ -1,0 +1,98 @@
+
+{% extends "base.jinja" %}
+{% block title %}Peer Register{% endblock %}
+{% block head %}
+    <link
+      rel="stylesheet"
+      href="{{ url_for('.static', filename='css/peer_register.css') }}"
+    />
+{% endblock %}
+{% block logout %} {% endblock %}
+{% block content %}
+<div class="registration-container">
+    <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon" class="register-icon">
+    <h1 class="title">Ervaringsdeskundige Registratie</h1>
+    <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}">
+        <div class="input-group">
+            <label for="postal_code">Postcode</label>
+            <input type="text" id="postal_code" name="postal_code" required pattern="^[0-9]{4}[A-Za-z]{2}$">
+            <small class="error-message" id="postal_code_error">Vul een geldige postcode in (bijvoorbeeld 1234AB).</small>
+        </div>
+
+        <div class="input-group">
+            <label for="gender">Geslacht</label>
+            <select name="gender" id="gender" required>
+                <option value="">Selecteer</option>
+                <option value="male">Man</option>
+                <option value="female">Vrouw</option>
+                <option value="other">Anders</option>
+            </select>
+            <small class="error-message" id="gender_error">Selecteer je geslacht.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="birth_date">Geboortedatum</label>
+            <input type="date" id="birth_date" name="birth_date" required>
+            <small class="error-message" id="birth_date_error">Vul je geboortedatum in.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="tools_used">Hulpmiddelen</label>
+            <input type="text" id="tools_used" name="tools_used">
+            <small class="error-message" id="tools_used_error">Vul je hulpmiddelen in.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="short_bio">Korte Bio</label>
+            <textarea id="short_bio" name="short_bio" required></textarea>
+            <small class="error-message" id="short_bio_error">Geef een korte bio.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="special_notes">Speciale Opmerkingen</label>
+            <textarea id="special_notes" name="special_notes"></textarea>
+            <small class="error-message" id="special_notes_error">Geef een speciale opmerking.</small>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="accepted_terms" name="accepted_terms" required>
+            <label for="accepted_terms">Ik ga akkoord met de voorwaarden</label>
+            <small class="error-message" id="accepted_terms_error">Je moet akkoord gaan met de voorwaarden.</small>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" name="has_supervisor" id="has_supervisor_checkbox">
+            <label for="has_supervisor_checkbox">Is Begeleider</label>
+        </div>
+
+        <div class="input-group" id="supervisor-name-group" style="display:none;">
+            <label for="supervisor_or_guardian_name">Naam Begeleider/Voogd</label>
+            <input type="text" id="supervisor_or_guardian_name" name="supervisor_or_guardian_name">
+            <small class="error-message" id="supervisor_or_guardian_name_error">Geef de naam van de Voogd/Begeleider.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="availability_notes">Beschikbaarheid</label>
+            <textarea id="availability_notes" name="availability_notes" required></textarea>
+            <small class="error-message" id="availability_notes_error">Vul je beschikbaarheid in.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="contact_preference_id" >Contactvoorkeur ID</label>
+            <input type="number" id="contact_preference_id" name="contact_preference_id" required>
+            <small class="error-message" id="contact_preference_id_error">Geef je contactvoorkeur op.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="user_id">Gebruikers ID</label>
+            <input type="number" id="user_id" name="user_id" required>
+            <small class="error-message" id="user_id_error">Kies een gebruikersid.</small>
+        </div>
+
+        <button type="submit" class="register-btn">Registreer</button>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('.static', filename='js/peer_register.js') }}"></script>
+{% endblock %}

@@ -44,3 +44,10 @@ document.addEventListener("DOMContentLoaded", function() {
     checkDate();
     toggleSupervisorField();
 });
+
+const form = document.querySelector(".registration-form");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault(); // Voorkom standaard verzenden van het formulier
+
+    let valid = true;

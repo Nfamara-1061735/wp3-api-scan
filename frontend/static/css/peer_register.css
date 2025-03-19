@@ -49,6 +49,13 @@
     border-radius: 15%;
 }
 
+.error-message {
+    color: red;
+    font-size: 0.85em;
+    display: none;  /* Verborgen totdat fout optreedt */
+}
+
+
 .visually-hidden {
     position: absolute !important;
     height: 1px; width: 1px;
