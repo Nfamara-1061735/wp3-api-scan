@@ -37,7 +37,7 @@
                         alt="Homepage, logo Accessibility, onderdeel van Bartimeus"
                 />
             </a>
-            {% if session.get('user') and request.path == url_for('frontend.dashboard') %}
+            {% if session.get('user') %}
                 <ul class="navbar-nav gap-4">
                     <li class="nav-item active">
                         <a href="{{ url_for('frontend.onderzoeken') }}" class="nav-link active">

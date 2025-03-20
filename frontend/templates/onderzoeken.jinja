@@ -7,6 +7,10 @@
 
     <div class="mb-4">
         <div class="mb-2">
+            <span class="badge bg-warning rounded-circle" style="width: 15px; height: 15px; display: inline-block;"></span>
+            = Nieuw
+        </div>
+        <div class="mb-2">
             <span class="badge bg-success rounded-circle" style="width: 15px; height: 15px; display: inline-block;"></span>
             = Goedgekeurd
         </div>
@@ -37,7 +41,9 @@
                 {% for onderzoek in alle_onderzoeken %}
                     <tr>
                         <td class="text-center">
-                            {% if onderzoek.status_id == 2 %}
+                            {% if onderzoek.status_id == 1 %}
+                                <span class="badge bg-warning rounded-circle" style="width: 15px; height: 15px; display: inline-block;" title="Goedgekeurd"></span>
+                            {% elif onderzoek.status_id == 2 %}
                                 <span class="badge bg-success rounded-circle" style="width: 15px; height: 15px; display: inline-block;" title="Goedgekeurd"></span>
                             {% elif onderzoek.status_id == 3 %}
                                 <span class="badge bg-danger rounded-circle" style="width: 15px; height: 15px; display: inline-block;" title="Afgekeurd"></span>
