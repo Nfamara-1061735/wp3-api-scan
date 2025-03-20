@@ -41,9 +41,10 @@ def peer_home():
 
 
 @frontend_bp.route('/peer/register', methods=['GET', 'POST'])
+@check_permission('peer')
 def register():
-    if "user" in session and session['user'].peer_expert_info:
-        redirect(url_for("frontend.peer_dashboard"))
+    if g.get('user', None):
+        return redirect(url_for("frontend.peer_dashboard"))
     if request.method == 'GET':
         return render_template('peer_register.jinja', theme=g.theme)
     elif request.method == 'POST':
