@@ -10,6 +10,7 @@ from backend.api.api import SingleResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
 from backend.api.api import require_api_key
 from backend.database.models.research_status_model import ResearchStatus
+from backend.database.models.research_model import Research
 from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 
 template_dir = os.path.abspath('./frontend/templates/')
@@ -123,7 +124,8 @@ def documentation():
 
 @frontend_bp.route('/onderzoeken')
 def onderzoeken():
-    return render_template("onderzoeken.jinja", theme=g.theme)
+    alle_onderzoeken = Research.query.all()
+    return render_template("onderzoeken.jinja", theme=g.theme, alle_onderzoeken=alle_onderzoeken)
 
 @frontend_bp.route('/beheerders')
 def beheerders():
