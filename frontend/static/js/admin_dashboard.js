@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     fetchResearches();
 
-    setInterval(fetchResearches, 1000);
+    setInterval(fetchResearches, 10000);
 });
 
 function fetchResearches() {
     fetch("/api/researches")
         .then(response => response.json())
         .then(data => {
-            const approvalContainer = document.getElementById("approvalContainer");
+            const approvalContainer = document.getElementById("researchApprovalContainer");
             approvalContainer.innerHTML = "";
 
             const newResearches = data.filter(research => research.status_id === 1);

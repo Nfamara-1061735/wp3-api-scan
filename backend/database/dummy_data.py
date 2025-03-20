@@ -174,6 +174,7 @@ def generate_peer_experts(fake: Faker, user_organizations: list[UserOrganization
                 accepted_terms=random.choice([True, False]),
                 has_supervisor=has_supervisor,
                 supervisor_or_guardian_name=fake.name() if has_supervisor else None,
+                supervisor_or_guardian_email=fake.email() if has_supervisor else None,
                 availability_notes=fake.text(max_nb_chars=100),
                 contact_preference_id=random.choice(contact_preferences).contact_preference_id,
                 peer_expert_status_id=random.choice(peer_expert_statuses).peer_expert_status_id,

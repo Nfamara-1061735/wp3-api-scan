@@ -1,0 +1,216 @@
+function formatDate(dateString) {
+    // Create a date from the provided date string
+    const date = new Date(dateString);
+
+    // Options for formatting the date
+    const options = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    };
+
+    // Convert the date to the desired format
+    return date.toLocaleDateString('nl-NL', options);
+}
+
+$(document).ready(function () {
+    // Add event listener to the 'Details' button
+    $('#peerTable').on('click', '.btn-primary', function () {
+        const peerExpertId = $(this).closest('tr').find('td').first().text();
+        openPeerDetailsModal(peerExpertId);
+    });
+
+    // Function to open the modal and fetch peer details
+    function openPeerDetailsModal(peerExpertId) {
+        $.ajax({
+            url: `/api/peers/${peerExpertId}`,
+            method: 'GET',
+            success: function (response) {
+                console.log(response);
+
+                // Fill the modal form with the data
+                $('#peerExpertId').val(response.peer_expert_id);
+                $('#firstName').val(response.user.first_name);
+                $('#lastName').val(response.user.last_name);
+                $('#postalCode').val(response.postal_code);
+                $('#gender').val(response.gender);
+                $('#birthDate').val(response.birth_date);
+
+                // Open the modal
+                $('#peerDetailsModal').modal('show');
+            },
+            error: function (error) {
+                console.error("Error fetching peer expert details:", error);
+                $('#alertContainer').text('Failed to load peer expert details');
+            }
+        });
+    }
+
+    // Add event listener to update URL when tab is clicked
+    $('.nav-link').on('click', function () {
+        var tabId = $(this).attr('id').replace('-tab', ''); // Extract tab ID from clicked tab
+        // Update the URL with the selected tab
+        var url = new URL(window.location);
+        url.searchParams.set('tab', tabId);
+        history.pushState(null, '', url); // Update the URL without reloading
+    });
+
+    let currentPage = 0;
+    let maxPages = 0;
+
+    // Function to fetch and populate the table
+    function fetchData(sortBy = 'peer_expert_id', sortOrder = 'asc', page = 1) {
+        $.ajax({
+            url: '/api/peers',
+            method: 'GET',
+            data: {
+                sort_by: sortBy,
+                sort_order: sortOrder,
+                max_entries: 30,
+                page: page
+            },
+            success: function (response) {
+                // Clear the table body
+                $('#peerTable tbody').empty();
+
+                $('#currentPage').val(response.pagination.current_page);
+
+                currentPage = response.pagination.current_page;
+                maxPages = response.pagination.total_pages;
+
+                if (response.pagination.current_page <= 1) {
+                    // Disable previous page buttons
+                    $('#firstPage').prop("disabled", true);
+                    $('#previousPage').prop("disabled", true);
+                } else {
+                    // Enable previous page buttons
+                    $('#firstPage').prop("disabled", false);
+                    $('#previousPage').prop("disabled", false);
+
+                }
+
+                if (response.pagination.current_page >= response.pagination.total_pages) {
+                    // Disable next page buttons
+                    $('#lastPage').prop("disabled", true);
+                    $('#nextPage').prop("disabled", true);
+                } else {
+                    // Enable next page buttons
+                    $('#lastPage').prop("disabled", false);
+                    $('#nextPage').prop("disabled", false);
+                }
+
+                // Iterate over the response data and create rows dynamically
+                response.peer_experts.forEach(function (peerExpert) {
+                    var row = $('<tr>');
+                    row.append('<td>' + peerExpert.peer_expert_id + '</td>');
+                    row.append('<td>' + peerExpert.user.first_name + '</td>');
+                    row.append('<td>' + peerExpert.user.last_name + '</td>');
+                    row.append('<td>' + peerExpert.postal_code + '</td>');
+                    row.append('<td>' + peerExpert.gender + '</td>');
+                    row.append('<td>' + formatDate(peerExpert.birth_date) + '</td>');
+                    // row.append('<td class="text-truncate" title="' + peerExpert.tools_used + '">' + peerExpert.tools_used + '</td>');
+                    // row.append('<td class="text-truncate" title="' + peerExpert.short_bio + '">' + peerExpert.short_bio + '</td>');
+                    // row.append('<td class="text-truncate" title="' + peerExpert.special_notes + '">' + peerExpert.special_notes + '</td>');
+                    // row.append('<td class="text-truncate" title="' + peerExpert.availability_notes + '">' + peerExpert.availability_notes + '</td>');
+                    row.append('<td><button class="btn btn-primary">Details</button></td>'); // Example button
+                    $('#peerTable tbody').append(row);
+                });
+            },
+            error: function (error) {
+                console.error("Error fetching data:", error);
+                $('#alertContainer').text('Failed to load data')
+            }
+        });
+    }
+
+    // Call fetchData to initially populate the table
+    fetchData();
+
+    let sortName = 'peer_expert_id';
+    let sortOrder = 'asc';
+
+    // Add event listeners to the page buttons
+    $('#firstPage').on('click', function () {
+        if (currentPage > 1) {
+            fetchData(sortName, sortOrder, 1);  // Fetch the first page
+        }
+    });
+
+    $('#previousPage').on('click', function () {
+        if (currentPage > 1) {
+            fetchData(sortName, sortOrder, currentPage - 1);  // Fetch the previous page
+        }
+    });
+
+    $('#currentPage').on('input', function () {
+        var currentPageParsed = parseInt($(this).val());
+        if (currentPageParsed > 0) {
+            if (currentPageParsed > maxPages) {
+                currentPageParsed = maxPages
+                $(this).val(maxPages)
+            }
+            currentPage = currentPageParsed
+            fetchData(sortName, sortOrder, currentPage);
+        } else {
+            $(this).val(currentPage)
+        }
+    });
+
+    $('#nextPage').on('click', function () {
+        if (currentPage < maxPages) {
+            fetchData(sortName, sortOrder, currentPage + 1);  // Fetch the next page
+        }
+    });
+
+    $('#lastPage').on('click', function () {
+        if (currentPage < maxPages) {
+            fetchData(sortName, sortOrder, maxPages);  // Fetch the last page
+        }
+    });
+
+    // Iterate over each <th> in the table header
+    $('#peerTable thead th').each(function () {
+        // Get the sorting name from the custom attribute 'data-sort-name'
+        var sortName = $(this).attr('data-sort');
+
+        if (sortName) {
+            // Create a new button element with the sorting name
+            var button = $('<button class="p-0 btn btn-link"></button>').text($(this).text());
+
+            // Set the custom sorting name as a data attribute on the button
+            button.attr('data-sort', sortName);
+
+            // Append the button to the <th> cell
+            $(this).html(button);
+        }
+    });
+
+    // Handle the click event on any button in the table header
+    $('#peerTable thead').on('click', 'button', function () {
+        // Remove the 'active' class from all buttons
+        $('#peerTable thead button').not(this).find('i').remove();
+
+        // Get the sorting name from the clicked button's custom attribute
+        sortName = $(this).attr('data-sort');
+
+        // Check if the clicked button already has an icon
+        const currentIcon = $(this).find('i');
+        if (currentIcon.length > 0) {
+            if (currentIcon.hasClass('bi-sort-down')) {
+                // If it has "bi-sort-down", change it to "bi-sort-up"
+                currentIcon.removeClass('bi-sort-down').addClass('bi-sort-up');
+            } else {
+                currentIcon.removeClass('bi-sort-up').addClass('bi-sort-down');
+            }
+        } else {
+            // Otherwise, append "bi-sort-down" icon
+            var icon = $('<i class="ms-1 bi bi-sort-up"></i>');
+            $(this).append(icon);
+        }
+
+        sortOrder = $(this).find('i').hasClass('bi-sort-down') ? 'desc' : 'asc';
+
+        // Fetch data with updated sorting
+        fetchData(sortName, sortOrder);
+    });
+});

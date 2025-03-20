@@ -5,6 +5,7 @@ from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 
 from backend import db
 from backend.api.login import Login
+from backend.api.peer_experts import PeerExpertRest, SinglePeerExpertRest
 from backend.api.registrations import Registrations, Registration, ResearchesRegistrationState
 from backend.api.researches import Researches, SingleResearch
 from backend.api.utils import method_not_allowed
@@ -139,9 +140,13 @@ class Limitations(Resource):
       return method_not_allowed()
 
 api.add_resource(Researches, '/researches/')
+api.add_resource(FilteredPeerExperts, '/peer_experts/')
+api.add_resource(FilteredPeerExpertRegistrations, '/peer_expert_registrations/')
 api.add_resource(SingleResearch, '/researches/<int:research_id>/')
 api.add_resource(ResearchesRegistrationState, '/researches/registration-state')
 api.add_resource(Limitations, '/limitations/')
 api.add_resource(Login, '/login')
+api.add_resource(PeerExpertRest, '/peers')
+api.add_resource(SinglePeerExpertRest, '/peers/<int:peer_expert_id>')
 api.add_resource(Registrations, '/peers/registrations')
 api.add_resource(Registration, '/peers/registrations/<int:registration_id>')

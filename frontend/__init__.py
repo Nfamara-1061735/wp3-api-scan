@@ -29,7 +29,6 @@ def before_request():
 
 @frontend_bp.route('/')
 def home():
-    print(os.listdir(frontend_bp.static_folder))
     return render_template("home.jinja", theme=g.theme)
 
 
@@ -86,18 +85,19 @@ def dashboard():
     if not g.get('user', None):
         return redirect(url_for("frontend.login_admin"))
     if request.method == 'GET':
-        return render_template("admin_dashboard.jinja", theme=g.theme, researches=filteredResearch.get(1))
+        return render_template("admin_dashboard.jinja", theme=g.theme)
 
-#The routes below is a TEST-ROUTE. FOR TESTING PURPOSES ONLY!
-@frontend_bp.route('/peer_experts')
-def peer_experts():
-    if request.method == 'GET':
-        return filteredPeerExperts.get(1)
 
-@frontend_bp.route('/peer_expert_registrations')
-def peer_expert_registrations():
-    if request.method == 'GET':
-        return filteredPeerExpertRegistrations.get(1)
+@frontend_bp.route('/admin/dashboard/admin')
+@check_permission('admin')
+def admin():
+    if not g.get('user', None):
+        return redirect(url_for("frontend.login_admin"))
+
+    # Get the current tab from the URL query parameter
+    current_tab = request.args.get('tab', 'peer-experts')
+
+    return render_template("admin_dashboard_manage.jinja", theme=g.theme, current_tab=current_tab)
 
 @frontend_bp.route('/dashboard_data')
 def researches():

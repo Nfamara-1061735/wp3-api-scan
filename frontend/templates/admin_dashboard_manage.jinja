@@ -1,0 +1,218 @@
+{% extends "base.jinja" %}
+{% block title %} Admin - Beheren {% endblock %}
+{% block head %}
+    <link
+            rel="stylesheet"
+            href="{{ url_for('.static', filename='css/admin_dashboard_manage.css') }}"
+    />
+{% endblock %}
+{% block content %}
+    <div class="px-5 pt-5">
+        <h1 class="">Dashboard - Beheren</h1>
+        <hr class="pb-3">
+        <div id="alertContainer" class="my-3"></div>
+    </div>
+
+    <!-- Tab navigation -->
+    <ul class="nav nav-tabs px-5" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if current_tab == 'peer-experts' %}active{% endif %}" id="peer-experts-tab"
+               data-bs-toggle="tab" href="#peerExperts" role="tab"
+               aria-controls="Ervaringsdeskundigen" aria-selected="true">Ervaringsdeskundigen
+                <span id="rated-card-count" class="ms-2 badge text-bg-primary"></span>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if current_tab == 'researches' %}active{% endif %}" id="researches-tab"
+               data-bs-toggle="tab" href="#researches" role="tab"
+               aria-controls="Onderzoeken" aria-selected="false">Onderzoeken
+                <span id="open-card-count" class="ms-2 badge text-bg-primary"></span>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {% if current_tab == 'admins' %}active{% endif %}" id="admins-tab" data-bs-toggle="tab"
+               href="#admins" role="tab"
+               aria-controls="Beheerders" aria-selected="false">Beheerders
+                <span id="registered-card-count" class="ms-2 badge text-bg-primary"></span>
+            </a>
+        </li>
+        <li class="mx-auto"></li>
+        <li class="nav-item">
+            <a class="btn btn-outline-secondary text-primary-emphasis"
+               href="{{ url_for('frontend.dashboard') }}">Keuren</a>
+        </li>
+    </ul>
+
+    <!-- Tab content -->
+    <div class="tab-content mx-5" id="dashboardTabs">
+        <div class="tab-pane fade {% if current_tab == 'peer-experts' %}show active{% endif %}" id="peerExperts"
+             role="tabpanel" aria-labelledby="peer-experts-tab">
+            <div class="py-4">
+                <table id="peerTable" class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th data-sort="peer_expert_id">#</th>
+                        <th data-sort="first_name">Voornaam</th>
+                        <th data-sort="last_name">Achternaam</th>
+                        <th data-sort="postal_code">Post Code</th>
+                        <th data-sort="gender">Geslacht</th>
+                        <th data-sort="birth_date">Geboorte Datum</th>
+                        <th class="col-1">Admin</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class="row gap-3">
+                    <button id="firstPage" class="col-1 btn btn-primary"><i class="me-2 bi bi-chevron-double-left"></i>Eerste
+                    </button>
+                    <button id="previousPage" class="col-1 btn btn-primary"><i class="me-2 bi bi-chevron-left"></i>Vorige
+                    </button>
+                    <div class="col text-center"><label for="currentPage" class="me-2">Huidige pagina: </label><input
+                            type="number" id="currentPage" class="col-1 text-center" value="1"/></div>
+                    <button id="nextPage" class="col-1 btn btn-primary">Volgende<i class="ms-2 bi bi-chevron-right"></i>
+                    </button>
+                    <button id="lastPage" class="col-1 btn btn-primary">Laatste<i
+                            class="ms-2 bi bi-chevron-double-right"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade {% if current_tab == 'researches' %}show active{% endif %}" id="researches"
+             role="tabpanel" aria-labelledby="researches-tab">
+            <div class="py-4">
+            </div>
+        </div>
+        <div class="tab-pane fade {% if current_tab == 'admins' %}show active{% endif %}" id="admins" role="tabpanel"
+             aria-labelledby="admin-tab">
+            <div class="py-4">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Peer Expert Details -->
+    <div class="modal fade" id="peerDetailsModal" tabindex="-1" aria-labelledby="peerDetailsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="peerDetailsModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="row g-3" id="peerDetailsForm">
+                        <input type="hidden" id="peerExpertId">
+
+                        <!-- User Details -->
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName" class="form-label">Voornaam</label>
+                            <input type="text" class="form-control" id="firstName">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName" class="form-label">Achternaam</label>
+                            <input type="text" class="form-control" id="lastName">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="postalCode" class="form-label">Postcode</label>
+                            <input type="text" class="form-control" id="postalCode">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="gender" class="form-label">Geslacht</label>
+                            <select class="form-control" id="gender">
+                                <option value="male">Man</option>
+                                <option value="female">Vrouw</option>
+                                <option value="other">Overig</option>
+                            </select>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label for="email" class="form-label">Emailadres</label>
+                            <input type="email" class="form-control" id="email">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label for="phoneNumber" class="form-label">Telefoonnummer</label>
+                            <input type="text" class="form-control" id="phoneNumber">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="birthDate" class="form-label">Geboortedatum</label>
+                            <input type="date" class="form-control" id="birthDate">
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="col-12 mb-3">
+                            <label for="disabilityType" class="form-label">Type beperking</label>
+                            <input type="text" class="form-control" id="disabilityType">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="toolsUsed" class="form-label">Gebruikte hulpmiddelen</label>
+                            <input type="text" class="form-control" id="toolsUsed">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="shortBio" class="form-label">Kort voorstellen</label>
+                            <textarea class="form-control" id="shortBio"></textarea>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="specialNotes" class="form-label">Bijzonderheden</label>
+                            <textarea class="form-control" id="specialNotes"></textarea>
+                        </div>
+                        <div class="col-12 mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="acceptedTerms">
+                            <label class="form-check-label" for="acceptedTerms">Akkoord met voorwaarden</label>
+                        </div>
+
+                        <!-- Supervisor / Guardian Information -->
+                        <div class="col-12 mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="hasSupervisor">
+                            <label class="form-check-label" for="hasSupervisor">Toezichthouder</label>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="supervisorOrGuardianName" class="form-label">Naam voogd of
+                                toezichthouder</label>
+                            <input type="text" class="form-control" id="supervisorOrGuardianName">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="supervisorOrGuardianEmail" class="form-label">E-mailadres voogd of
+                                toezichthouder</label>
+                            <input type="email" class="form-control" id="supervisorOrGuardianEmail">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="supervisorOrGuardianPhone" class="form-label">Telefoonnummer voogd of
+                                toezichthouder</label>
+                            <input type="text" class="form-control" id="supervisorOrGuardianPhone">
+                        </div>
+
+                        <!-- Availability & Contact Preferences -->
+                        <div class="col-12 mb-3">
+                            <label for="contactPreference" class="form-label">Voorkeur benadering</label>
+                            <select class="form-control" id="contactPreference">
+                                <option value="email">E-mail</option>
+                                <option value="phone">Telefoon</option>
+                                <option value="both">Beide</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="researchType" class="form-label">Type onderzoek</label>
+                            <select class="form-control" id="researchType">
+                                <option value="1">Telefonisch</option>
+                                <option value="2">Internet</option>
+                                <option value="2">Op locatie</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="availabilityNotes" class="form-label">Bijzonderheden beschikbaarheid</label>
+                            <textarea class="form-control" id="availabilityNotes"></textarea>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Verwijderen</button>
+                            <div class="mx-auto"></div>
+                            <button type="submit" class="btn btn-primary" id="savePeer">Wijzigingen Opslaan</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('.static', filename='js/admin_dashboard_manage.js') }}"></script>
+{% endblock %}

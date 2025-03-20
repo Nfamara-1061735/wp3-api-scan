@@ -63,8 +63,6 @@ class Registrations(Resource):
         if g.user.peer_expert_info:
             peer_expert_id = g.user.peer_expert_info.peer_expert_id
 
-        print(data)
-
         # Create new registration from the provided data
         new_registration = PeerExpertRegistration(
             peer_expert_id=peer_expert_id if peer_expert_id else data['peer_expert_id'],
