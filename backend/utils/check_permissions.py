@@ -10,10 +10,15 @@ def check_permission(role: str):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            user_id = session.get('user')  # Get user ID from session
+            user_session: dict[str, str] = session.get('user')  # Get user ID from session
+
+            if not user_session:
+                return f(*args, **kwargs)  # Return if user not logged in
+
+            user_id = user_session.get('id')
 
             if not user_id:
-                return f(*args, **kwargs)  # Return if user not logged in
+                abort(403, message='Forbidden: Malformed user session')
 
             user = Users.query.get(user_id)
             if not user:
@@ -38,10 +43,15 @@ def check_permission_rest(role: str | None = None):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            user_id = session.get('user')  # Get user ID from session
+            user_session: dict[str, str] = session.get('user')  # Get user ID from session
+
+            if not user_session:
+                abort(403, message='Forbidden: No user logged in')  # No user logged in
+
+            user_id = user_session.get('id')
 
             if not user_id:
-                abort(403, message='Forbidden: No user logged in')  # No user logged in
+                abort(403, message='Forbidden: Malformed user session')
 
             user: Users = Users.query.get(user_id)
             if not user:

@@ -22,7 +22,7 @@
 <body class="d-flex flex-column min-vh-100" data-bs-theme="{{ theme }}">
 <!--header van de html paginas-->
 <header class="header">
-    <nav class="navbar navbar-expand" style="background-color: #334ee6; justify-content: space-between;">
+    <nav class="navbar navbar-expand navbar-dark bg-primary " style="justify-content: space-between;">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <a
                     class="navbar-brand"
@@ -38,12 +38,43 @@
                         alt="Homepage, logo Accessibility, onderdeel van Bartimeus"
                 />
             </a>
+            {% if session.get('user') %}
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item active">
+                        <a href="{{ url_for('frontend.onderzoeken') }}" class="nav-link active">
+                            Onderzoeken
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="{{ url_for('frontend.beheerders') }}" class="nav-link active">
+                            Beheerders
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="{{ url_for('frontend.ervaringsdeskundigen') }}" class="nav-link active">
+                            Ervaringsdeskundigen
+                        </a>
+                    </li>
+                    <li>
+                </ul>
+            {% endif %}
             <ul class="navbar-nav gap-3">
                 {% block logout %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('frontend.logout') }}" class="btn btn-primary" style="cursor: pointer;">Uitloggen</a>
-                        <!--bij deze hashtag komt de link naar de login pagina-->
-                    </li>
+                   <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ session['user']['first_name'] }}
+                      </button>
+                      <ul class="dropdown-menu text-center">
+                        <li>
+                          <a class="dropdown-item" href="#">Bekijk profiel</a>
+                        </li>
+                        <li>
+                          <a href="{{ url_for('frontend.logout') }}" class="btn btn-primary d-block mx-auto w-75" style="cursor: pointer;">
+                            Uitloggen
+                          </a>
+                        </li>
+                      </ul>
+                   </div>
                 {% endblock %}
                 <li class="nav-item">
                     <button id="themeToggle" class="btn btn-primary" title="Selecteer donkere thema">🌙</button>
@@ -52,6 +83,7 @@
         </div>
     </nav>
 </header>
+
 <!--Dit is voor de main content-->
 <main>
     {% block content %} {% endblock %}
