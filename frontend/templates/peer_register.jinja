@@ -8,19 +8,21 @@
 {% endblock %}
 {% block logout %} {% endblock %}
 {% block content %}
-<div class="registration-container">
-    <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon" class="register-icon">
-    <h1 class="title">Ervaringsdeskundige Registratie</h1>
-    <form class="registration-form" method="POST" action="{{ url_for('frontend.register') }}" novalidate>
-        <div class="input-group">
-            <label for="postal_code">Postcode</label>
-            <input type="text" id="postal_code" name="postal_code" required pattern="^[0-9]{4}[A-Za-z]{2}$">
-            <small class="error-message" id="postal_code_error">Vul een geldige postcode in (bijvoorbeeld 1234AB).</small>
+    <div class="container col-lg-5 py-4 px-4 my-5 shadow rounded-4">
+        <div class="text-center">
+            <img src="{{ url_for('.static', filename='img/register-icon.png') }}" alt="Register-icon"
+                 class="register-icon mb-3">
+            <h1>Ervaringsdeskundige Registratie</h1>
+        </div>
+        <form method="POST" action="{{ url_for('frontend.register') }}" class="mt-4">
+            <div class="mb-3">
+                <label for="postal_code" class="form-label">Postcode</label>
+                <input id="postal_code" type="text" name="postal_code" required pattern="^[0-9]{4}[A-Za-z]{2}$" class="form-control" required>
         </div>
 
-        <div class="input-group">
-            <label for="gender">Geslacht</label>
-            <select name="gender" id="gender" required>
+            <div class="mb-3">
+                <label for="gender" class="form-label">Geslacht</label>
+                <select id="gender" name="gender" class="form-select" required>
                 <option value="">Selecteer</option>
                 <option value="male">Man</option>
                 <option value="female">Vrouw</option>
@@ -29,66 +31,59 @@
             <small class="error-message" id="gender_error">Selecteer je geslacht.</small>
         </div>
 
-        <div class="input-group">
-            <label for="birth_date">Geboortedatum</label>
-            <input type="date" id="birth_date" name="birth_date" required>
-            <small class="error-message" id="birth_date_error">Vul je geboortedatum in.</small>
+            <div class="mb-3">
+                <label for="birth_date" class="form-label">Geboortedatum</label>
+                <input id="birth_date" type="date" name="birth_date" class="form-control" required>
         </div>
 
-        <div class="input-group">
-            <label for="tools_used">Hulpmiddelen</label>
-            <input type="text" id="tools_used" name="tools_used">
-            <small class="error-message" id="tools_used_error">Vul je hulpmiddelen in.</small>
+            <div class="mb-3">
+                <label for="tools_used" class="form-label">Hulpmiddelen</label>
+                <input id="tools_used" type="text" name="tools_used" class="form-control">
         </div>
 
-        <div class="input-group">
-            <label for="short_bio">Korte Bio</label>
-            <textarea id="short_bio" name="short_bio" required></textarea>
-            <small class="error-message" id="short_bio_error">Geef een korte bio.</small>
+            <div class="mb-3">
+                <label for="short_bio" class="form-label">Korte Bio</label>
+                <textarea id="short_bio" name="short_bio" class="form-control" required></textarea>
         </div>
 
-        <div class="input-group">
-            <label for="special_notes">Speciale Opmerkingen</label>
-            <textarea id="special_notes" name="special_notes"></textarea>
-            <small class="error-message" id="special_notes_error">Geef een speciale opmerking.</small>
+            <div class="mb-3">
+                <label for="special_notes" class="form-label">Speciale Opmerkingen</label>
+                <textarea id="special_notes" name="special_notes" class="form-control"></textarea>
         </div>
 
-        <div class="checkbox-group">
-            <input type="checkbox" id="accepted_terms" name="accepted_terms" required>
-            <label for="accepted_terms">Ik ga akkoord met de voorwaarden</label>
-            <small class="error-message" id="accepted_terms_error">Je moet akkoord gaan met de voorwaarden.</small>
+            <div class="mb-3 form-check">
+                <input id="accepted_terms" type="checkbox" name="accepted_terms" class="form-check-input" required>
+                <label for="accepted_terms" class="form-check-label">Ik ga akkoord met de voorwaarden</label>
         </div>
 
-        <div class="checkbox-group">
-            <input type="checkbox" name="has_supervisor" id="has_supervisor_checkbox">
-            <label for="has_supervisor_checkbox">Is Begeleider</label>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="has_supervisor" id="has_supervisor_checkbox" class="form-check-input">
+                <label for="has_supervisor_checkbox" class="form-check-label">Heeft Begeleider</label>
         </div>
 
-        <div class="input-group" id="supervisor-name-group" style="display:none;">
-            <label for="supervisor_or_guardian_name">Naam Begeleider/Voogd</label>
-            <input type="text" id="supervisor_or_guardian_name" name="supervisor_or_guardian_name">
-            <small class="error-message" id="supervisor_or_guardian_name_error">Geef de naam van de Voogd/Begeleider.</small>
+            <div id="supervisor-name-group" class="mb-3">
+                <label for="supervisor_or_guardian_name" class="form-label">Naam Begeleider/Voogd</label>
+                <input id="supervisor_or_guardian_name" type="text" name="supervisor_or_guardian_name"
+                       class="form-control">
         </div>
 
-        <div class="input-group">
-            <label for="availability_notes">Beschikbaarheid</label>
-            <textarea id="availability_notes" name="availability_notes" required></textarea>
-            <small class="error-message" id="availability_notes_error">Vul je beschikbaarheid in.</small>
+            <div class="mb-3">
+                <label for="availability_notes" class="form-label">Beschikbaarheid</label>
+                <textarea id="availability_notes" name="availability_notes" class="form-control" required></textarea>
         </div>
 
-        <div class="input-group">
-            <label for="contact_preference_id" >Contactvoorkeur ID</label>
-            <input type="number" id="contact_preference_id" name="contact_preference_id" required>
-            <small class="error-message" id="contact_preference_id_error">Geef je contactvoorkeur op.</small>
+            <div class="mb-3">
+                <label for="contact_preference_id" class="form-label">Contactvoorkeur ID</label>
+                <input id="contact_preference_id" type="number" name="contact_preference_id" class="form-control"
+                       required>
         </div>
 
-        <div class="input-group">
-            <label for="user_id">Gebruikers ID</label>
-            <input type="number" id="user_id" name="user_id" required>
-            <small class="error-message" id="user_id_error">Kies een gebruikersid.</small>
+            <div class="mb-3">
+                <label for="user_id" class="form-label">Gebruikers ID</label>
+                <input id="user_id" type="number" name="user_id" class="form-control" required>
         </div>
 
-        <button type="submit" class="register-btn">Registreer</button>
+            <button type="submit" class="btn register-btn mt-4 w-100">Registreer</button>
     </form>
     <!-- Algemene Voorwaarden Pop-up -->
     <div id="voorwaarden-popup" class="voorwaarden-popup-overlay">
