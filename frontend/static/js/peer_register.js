@@ -38,11 +38,18 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialiseer weergave bij pagina laden
     toggleSupervisorField();
 
+
     // Algemene Voorwaarden pop-up logica
     const acceptedTermsCheckbox = document.getElementById('accepted_terms');
     const voorwaardenPopup = document.getElementById('voorwaarden-popup');
     const voorwaardenCloseBtn = document.querySelector('.voorwaarden-close-btn');
 
+    // Toon pop-up wanneer gebruiker checkbox aanvinkt
+    acceptedTermsCheckbox.addEventListener('change', function() {
+        if (acceptedTermsCheckbox.checked) {
+            voorwaardenPopup.style.display = 'flex';
+        }
+    });
 
 
     const form = document.querySelector(".registration-form");
