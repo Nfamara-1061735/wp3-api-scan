@@ -8,6 +8,7 @@ from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, Fil
 from backend.api.api import require_api_key
 from backend.api.researches import FilteredResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
+from backend.database.models.research_model import Research
 from backend.utils.check_permissions import check_permission
 
 template_dir = os.path.abspath('./frontend/templates/')
