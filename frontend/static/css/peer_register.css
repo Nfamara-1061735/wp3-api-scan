@@ -12,46 +12,6 @@
     margin-top: 50px;
 }
 
-/* Titel */
-.title {
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-}
-
-/* Stijl voor het formulier */
-.registration-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Inputvelden en dropdown */
-.input-group {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    width: 100%;
-}
-
-.input-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-.input-group input,
-.input-group select,
-.input-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    background: #f9f9f9;
-}
-
 /* Checkboxes */
 .checkbox-group {
     display: flex;
@@ -83,21 +43,9 @@
     transform: scale(1.05);
 }
 
-/* Responsief ontwerp voor kleinere schermen */
-@media (max-width: 600px) {
-    .registration-container {
-        max-width: 90%;
-    }
-}
-
-#supervisor-name-group {
-    display: none; /* standaard verborgen */
-}
-
 .register-icon {
     width: 200px;
     height: auto;
-    padding: 15px;
     border-radius: 15%;
 }
 

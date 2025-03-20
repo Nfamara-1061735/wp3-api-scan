@@ -1,17 +1,15 @@
 import os
 import json
 
-from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, session
+from flask import render_template, request, g, Blueprint, redirect, url_for, flash
+from flask import session
 
-from backend.api.login import Login
-from flask import render_template, request, g, Blueprint, Flask, redirect, url_for, flash, jsonify
-
-from backend.api.api import SingleResearch
-from backend.database.models.register_expert import ExpertRegistrationModule
+from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 from backend.api.api import require_api_key
-from backend.database.models.research_status_model import ResearchStatus
+from backend.api.researches import FilteredResearch
+from backend.database.models.register_expert import ExpertRegistrationModule
 from backend.database.models.research_model import Research
-from backend.api.api import SingleResearch, FilteredResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
+from backend.utils.check_permissions import check_permission
 
 template_dir = os.path.abspath('./frontend/templates/')
 static_dir = os.path.abspath('./frontend/static/')
@@ -33,19 +31,24 @@ def before_request():
 
 @frontend_bp.route('/')
 def home():
-    print(os.listdir(frontend_bp.static_folder))
     return render_template("home.jinja", theme=g.theme)
 
 
 @frontend_bp.route('/peer/home')
+@check_permission('peer')
 def peer_home():
+    if g.get('user', None):
+        return redirect(url_for("frontend.peer_dashboard"))
     return render_template("peer_home.jinja", theme=g.theme)
 
 
 @frontend_bp.route('/peer/register', methods=['GET', 'POST'])
+@check_permission('peer')
 def register():
+    if g.get('user', None):
+        return redirect(url_for("frontend.peer_dashboard"))
     if request.method == 'GET':
-        return render_template('peer_register.html', theme=g.theme)
+        return render_template('peer_register.jinja', theme=g.theme)
     elif request.method == 'POST':
         form_data = request.form  # Haalt alle gegevens op uit het HTML-formulier
         registration = ExpertRegistrationModule()
@@ -54,7 +57,7 @@ def register():
             return redirect(url_for('frontend.peer_home'))
         else:
             flash('Er is een fout opgetreden tijdens de registratie.', 'danger')
-            return render_template('peer_register.html')
+            return render_template('peer_register.jinja')
 
 
 @frontend_bp.route('/logout')
@@ -64,34 +67,40 @@ def logout():
     return redirect(url_for('frontend.home'))
 
 @frontend_bp.route('/peer/signin')
+@check_permission('peer')
 def signup():
-    if "user" in session:
+    if g.get('user', None):
         return redirect(url_for("frontend.peer_dashboard"))
     return render_template("sign_in.jinja", role='peer', target_redirect=url_for("frontend.peer_dashboard"),
                            theme=g.theme)
 
 
 @frontend_bp.route('/admin/signin')
+@check_permission('admin')
 def login_admin():
-    if "user" in session:
-        redirect(url_for("frontend.dashboard"))
+    if g.get('user', None):
+        return redirect(url_for("frontend.dashboard"))
     return render_template("sign_in.jinja", role='admin', target_redirect=url_for("frontend.dashboard"), theme=g.theme)
 
 @frontend_bp.route('/admin/dashboard')
+@check_permission('admin')
 def dashboard():
+    if not g.get('user', None):
+        return redirect(url_for("frontend.login_admin"))
     if request.method == 'GET':
-        return render_template("admin_dashboard.jinja", theme=g.theme, researches=filteredResearch.get(1))
+        return render_template("admin_dashboard.jinja", theme=g.theme)
 
-#The routes below is a TEST-ROUTE. FOR TESTING PURPOSES ONLY!
-@frontend_bp.route('/peer_experts')
-def peer_experts():
-    if request.method == 'GET':
-        return filteredPeerExperts.get(1)
 
-@frontend_bp.route('/peer_expert_registrations')
-def peer_expert_registrations():
-    if request.method == 'GET':
-        return filteredPeerExpertRegistrations.get(1)
+@frontend_bp.route('/admin/dashboard/admin')
+@check_permission('admin')
+def admin():
+    if not g.get('user', None):
+        return redirect(url_for("frontend.login_admin"))
+
+    # Get the current tab from the URL query parameter
+    current_tab = request.args.get('tab', 'peer-experts')
+
+    return render_template("admin_dashboard_manage.jinja", theme=g.theme, current_tab=current_tab)
 
 @frontend_bp.route('/dashboard_data')
 def researches():
@@ -112,7 +121,10 @@ def researches():
         return filteredResearch.patch(updated_status, item_id), 200
 
 @frontend_bp.route('/peer/dashboard', methods=['GET', 'POST'])
+@check_permission('peer')
 def peer_dashboard():
+    if not g.get('user', None):
+        return redirect(url_for("frontend.peer_home"))
     return render_template("peer_dashboard.jinja", theme=g.theme)
 
 
