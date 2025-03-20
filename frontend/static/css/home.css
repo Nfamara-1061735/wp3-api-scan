@@ -16,3 +16,19 @@
    transform: translateY(-10px);
    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+}
+.visually-hidden-focusable:active,
+.visually-hidden-focusable:focus {
+    position: static !important;
+    height: auto; width: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}

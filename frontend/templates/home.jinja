@@ -1,61 +1,68 @@
 {% extends "base.jinja" %}
-{% block title %} Home {% endblock %}
+{% block title %}Home{% endblock %}
 {% block head %}
     <link
-      rel="stylesheet"
-      href="{{ url_for('.static', filename='css/home.css') }}"
+        rel="stylesheet"
+        href="{{ url_for('.static', filename='css/home.css') }}"
     />
 {% endblock %}
 {% block logout %} {% endblock %}
 {% block content %}
-    <h1 class="text-center mt-5">Welkom Bij Stichting Accessibility HUB!</h1>
-    <section class="p-5">
-      <div class="container">
-        <h2 class="text-center mb-5">Kies uw rol:</h2>
-        <div class="row">
-          <div class="col">
-              <a href="{{ url_for('frontend.documentation') }}" class="text-decoration-none">
-              <!--link naar inlogpagina voor onderzoeksbureau-->
-                <div class="card bg-light-subtle border-dark-subtle rounded">
-                <div class="card-body text-center">
-                    <img src="{{ url_for('.static', filename='img/onderzoeksbureau.png') }}"
-                    class="login-card-img rounded-circle mb-3"
-                    alt="onderzoeksbureau"
-                  />
-                  <h3 class="card-title">Onderzoeksbureau</h3>
+<main role="main" id="main-content" tabindex="-1">
+    <h1 class="text-center mt-5">Welkom bij Stichting Accessibility HUB!</h1>
+
+    <section class="p-5" aria-labelledby="kies-rol-heading">
+        <div class="container">
+            <h2 id="kies-rol-heading" class="text-center mb-5">Kies uw rol:</h2>
+
+            <div class="row justify-content-center" role="list">
+                <!-- Onderzoeksbureau -->
+                <div class="col-md-4 mb-4" role="listitem">
+                    <a href="{{ url_for('frontend.documentation') }}"
+                       class="text-decoration-none d-block h-100"
+                       aria-label="Inloggen als Onderzoeksbureau">
+                        <div class="card bg-light-subtle border-dark-subtle rounded h-100">
+                            <div class="card-body text-center">
+                                <img src="{{ url_for('.static', filename='img/onderzoeksbureau.png') }}"
+                                     class="login-card-img rounded-circle mb-3"
+                                     alt="Pictogram van een onderzoeksbureau" width="150" height="150" />
+                                <h3 class="card-title">Onderzoeksbureau</h3>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-              </div>
-            </a>
-          </div>
-          <div class="col">
-              <a href="{{ url_for('frontend.login_admin') }}" class="text-decoration-none">
-                  <!--link naar inlogpagina voor stichting accessibility-->
-                <div class="card bg-light-subtle border-dark-subtle rounded">
-                <div class="card-body text-center">
-                    <img src="{{ url_for('.static', filename='img/beheer.png') }}"
-                    class="login-card-img rounded-circle mb-3"
-                    alt="stichting Accesibility"
-                  />
-                    <h3 class="card-title">Stichting Accessibility</h3>
+                <!-- Stichting Accessibility -->
+                <div class="col-md-4 mb-4" role="listitem">
+                    <a href="{{ url_for('frontend.login_admin') }}"
+                       class="text-decoration-none d-block h-100"
+                       aria-label="Inloggen als Stichting Accessibility">
+                        <div class="card bg-light-subtle border-dark-subtle rounded h-100">
+                            <div class="card-body text-center">
+                                <img src="{{ url_for('.static', filename='img/beheer.png') }}"
+                                     class="login-card-img rounded-circle mb-3"
+                                     alt="Pictogram van Stichting Accessibility beheer" width="150" height="150" />
+                                <h3 class="card-title">Stichting Accessibility</h3>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-              </div>
-            </a>
-          </div>
-          <div class="col">
-              <a href="{{ url_for('frontend.peer_home') }}" class="text-decoration-none">
-              <!--link naar inlogpagina voor ervaringsdeskundige-->
-                <div class="card bg-light-subtle border-dark-subtle rounded">
-                <div class="card-body text-center">
-                    <img src="{{ url_for('.static', filename='img/ervaringsdeskundige.png') }}"
-                    class="login-card-img rounded-circle mb-3"
-                    alt="ervaringsdeskundige"
-                  />
-                  <h3 class="card-title">Ervaringsdeskundige</h3>
+                <!-- Ervaringsdeskundige -->
+                <div class="col-md-4 mb-4" role="listitem">
+                    <a href="{{ url_for('frontend.peer_home') }}"
+                       class="text-decoration-none d-block h-100"
+                       aria-label="Inloggen als Ervaringsdeskundige">
+                        <div class="card bg-light-subtle border-dark-subtle rounded h-100">
+                            <div class="card-body text-center">
+                                <img src="{{ url_for('.static', filename='img/ervaringsdeskundige.png') }}"
+                                     class="login-card-img rounded-circle mb-3"
+                                     alt="Pictogram van een ervaringsdeskundige" width="150" height="150" />
+                                <h3 class="card-title">Ervaringsdeskundige</h3>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-              </div>
-            </a>
-          </div>
+            </div>
         </div>
-      </div>
     </section>
+</main>
 {% endblock %}
