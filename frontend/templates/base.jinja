@@ -37,20 +37,20 @@
                         alt="Homepage, logo Accessibility, onderdeel van Bartimeus"
                 />
             </a>
-            {% if session.get('user') %}
+            {% if session.get('user') and request.path == url_for('frontend.dashboard') %}
                 <ul class="navbar-nav gap-4">
                     <li class="nav-item active">
-                        <a href="#" class="nav-link active">
+                        <a href="{{ url_for('frontend.onderzoeken') }}" class="nav-link active">
                             Onderzoeken
                         </a>
                     </li>
                     <li class="nav-item active">
-                        <a href="#" class="nav-link active">
+                        <a href="{{ url_for('frontend.beheerders') }}" class="nav-link active">
                             Beheerders
                         </a>
                     </li>
                     <li class="nav-item active">
-                        <a href="#" class="nav-link active">
+                        <a href="{{ url_for('frontend.ervaringsdeskundigen') }}" class="nav-link active">
                             Ervaringsdeskundigen
                         </a>
                     </li>
