@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialiseer weergave bij pagina laden
     toggleSupervisorField();
 
-
     // Algemene Voorwaarden pop-up logica
     const acceptedTermsCheckbox = document.getElementById('accepted_terms');
     const voorwaardenPopup = document.getElementById('voorwaarden-popup');
@@ -51,6 +50,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    // Sluit pop-up wanneer op kruisje wordt geklikt
+    voorwaardenCloseBtn.addEventListener('click', function() {
+        voorwaardenPopup.style.display = 'none';
+    });
 
     const form = document.querySelector(".registration-form");
 
