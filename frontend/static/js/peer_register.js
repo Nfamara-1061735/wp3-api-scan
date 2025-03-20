@@ -38,6 +38,12 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialiseer weergave bij pagina laden
     toggleSupervisorField();
 
+    // Algemene Voorwaarden pop-up logica
+    const acceptedTermsCheckbox = document.getElementById('accepted_terms');
+    const voorwaardenPopup = document.getElementById('voorwaarden-popup');
+    const voorwaardenCloseBtn = document.querySelector('.voorwaarden-close-btn');
+
+
 
     const form = document.querySelector(".registration-form");
 
