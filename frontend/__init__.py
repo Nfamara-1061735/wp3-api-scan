@@ -65,7 +65,7 @@ def logout():
 @frontend_bp.route('/peer/signin')
 def signup():
     if "user" in session:
-        redirect(url_for("frontend.peer_dashboard"))
+        return redirect(url_for("frontend.peer_dashboard"))
     return render_template("sign_in.jinja", role='peer', target_redirect=url_for("frontend.peer_dashboard"),
                            theme=g.theme)
 

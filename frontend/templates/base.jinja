@@ -61,7 +61,7 @@
                 {% block logout %}
                    <div class="dropdown">
                       <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Mijn profiel <!--hier komt de naam van degene die is ingelogd-->
+                        {{ session['user']['first_name'] }}
                       </button>
                       <ul class="dropdown-menu text-center">
                         <li>
@@ -82,6 +82,7 @@
         </div>
     </nav>
 </header>
+
 <!--Dit is voor de main content-->
 <main>
     {% block content %} {% endblock %}

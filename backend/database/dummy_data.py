@@ -375,7 +375,7 @@ def generate_admin_account():
 
     return [Users(
         first_name="admin",
-        last_name="",
+        last_name="admin",
         email="admin",
         phone_number=-1,
         password=hash_password("admin", salt),
