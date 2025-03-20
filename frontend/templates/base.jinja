@@ -22,7 +22,7 @@
 <body class="d-flex flex-column min-vh-100" data-bs-theme="{{ theme }}">
 <!--header van de html paginas-->
 <header class="header">
-    <nav class="navbar navbar-expand navbar-dark bg-primary " style="justify-content: space-between;">
+    <nav class="navbar navbar-expand navbar-dark nav-background" style="justify-content: space-between;">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <a
                     class="navbar-brand"
@@ -61,7 +61,8 @@
             <ul class="navbar-nav gap-3">
                 {% block logout %}
                    <div class="dropdown">
-                      <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                       <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
                         {{ session['user']['first_name'] }}
                       </button>
                       <ul class="dropdown-menu text-center">
