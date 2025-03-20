@@ -21,7 +21,7 @@
 <body class="d-flex flex-column min-vh-100" data-bs-theme="{{ theme }}">
 <!--header van de html paginas-->
 <header class="header">
-    <nav class="navbar navbar-expand" style="background-color: #334ee6; justify-content: space-between;">
+    <nav class="navbar navbar-expand navbar-dark bg-primary " style="justify-content: space-between;">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <a
                     class="navbar-brand"
@@ -40,17 +40,17 @@
 
             <ul class="navbar-nav gap-4">
                 <li class="nav-item active">
-                    <a href="#" class="nav-link active" style="color: white">
+                    <a href="#" class="nav-link active">
                         Onderzoeken
                     </a>
                 </li>
                 <li class="nav-item active">
-                    <a href="#" class="nav-link active" style="color: white">
+                    <a href="#" class="nav-link active">
                         Beheerders
                     </a>
                 </li>
                 <li class="nav-item active">
-                    <a href="#" class="nav-link active" style="color: white">
+                    <a href="#" class="nav-link active">
                         Ervaringsdeskundigen
                     </a>
                 </li>
@@ -61,11 +61,11 @@
                 {% block logout %}
                    <div class="dropdown">
                       <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Opties
+                        Mijn profiel <!--hier komt de naam van degene die is ingelogd-->
                       </button>
                       <ul class="dropdown-menu text-center">
                         <li>
-                          <a class="dropdown-item" href="#">Mijn Profiel</a>
+                          <a class="dropdown-item" href="#">Bekijk profiel</a>
                         </li>
                         <li>
                           <a href="{{ url_for('frontend.logout') }}" class="btn btn-primary d-block mx-auto w-75" style="cursor: pointer;">
