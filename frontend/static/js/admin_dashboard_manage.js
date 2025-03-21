@@ -434,12 +434,18 @@ $(document).ready(function () {
     }
 
     function getStatusBadge(statusId) {
+        const baseStyle = 'width: 15px; height: 15px; display: inline-block;';
         switch (statusId) {
-            case 1: return '<span class="badge bg-warning rounded-circle" style="width: 15px; height: 15px;"></span>';
-            case 2: return '<span class="badge bg-success rounded-circle" style="width: 15px; height: 15px;"></span>';
-            case 3: return '<span class="badge bg-danger rounded-circle" style="width: 15px; height: 15px;"></span>';
-            case 4: return '<span class="badge bg-secondary rounded-circle" style="width: 15px; height: 15px;"></span>';
-            default: return '<span class="badge bg-dark rounded-circle" style="width: 15px; height: 15px;"></span>';
+            case 1:
+                return `<span class="badge bg-warning rounded-circle" style="${baseStyle}"></span>`;
+            case 2:
+                return `<span class="badge bg-success rounded-circle" style="${baseStyle}"></span>`;
+            case 3:
+                return `<span class="badge bg-danger rounded-circle" style="${baseStyle}"></span>`;
+            case 4:
+                return `<span class="badge bg-secondary rounded-circle" style="${baseStyle}"></span>`;
+            default:
+                return `<span class="badge bg-dark rounded-circle" style="${baseStyle}"></span>`;
         }
     }
 
