@@ -173,11 +173,11 @@ Op deze pagina kan een (al goedgekeurde) ervaringsdeskundige inloggen met een em
 
 Als je de database goed hebt gevuld bij het opstarten van de applicatie zou er een credentials.json bestand moeten verschijnen.
 
-![image](docs/images/ReadMe screenshots/credentials_json_file.png)
+![image](docs/images/ReadMe%20screenshots/credentials_json_file.png)
 
 Hierin vind je test inloggegevens voor de ervaringsdeskundigen 
 
-![image](docs/images/ReadMe screenshots/Inlogcredentials_jason_file.png)
+![image](docs/images/ReadMe%20screenshots/Inlogcredentials_jason_file.png)
 
 En met een van deze gegevens kan je inloggen bij de ervaringsdeskundigen 
 
