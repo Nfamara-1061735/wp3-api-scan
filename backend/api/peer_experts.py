@@ -6,10 +6,45 @@ from flask_sqlalchemy.query import Query
 from sqlalchemy import asc, desc
 
 from backend import db
-from backend.database.models import PeerExperts, Users
+from backend.database.models import PeerExperts, Users, PeerExpertsLimitations, PeerExpertsResearchTypes
 from backend.utils.check_permissions import check_permission_rest
-from backend.utils.password import generate_salt, hash_password
 
+
+def flatten_peer_expert(expert: PeerExperts):
+    return {
+        'peer_expert_id': expert.peer_expert_id,
+        'postal_code': expert.postal_code,
+        'gender': expert.gender,
+        'birth_date': expert.birth_date.isoformat() if expert.birth_date else None,
+        'tools_used': expert.tools_used,
+        'short_bio': expert.short_bio,
+        'special_notes': expert.special_notes,
+        'accepted_terms': expert.accepted_terms,
+        'has_supervisor': expert.has_supervisor,
+        'supervisor_or_guardian_name': expert.supervisor_or_guardian_name,
+        'supervisor_or_guardian_email': expert.supervisor_or_guardian_email,
+        'supervisor_or_guardian_phone': expert.supervisor_or_guardian_phone,
+        'availability_notes': expert.availability_notes,
+        'contact_preference_id': expert.contact_preference_id,
+        'user_id': expert.user_id,
+        'peer_expert_status_id': expert.peer_expert_status_id,
+        'user': {
+            'user_id': expert.user.user_id,
+            'first_name': expert.user.first_name,
+            'last_name': expert.user.last_name,
+            'email': expert.user.email,
+            'phone_number': expert.user.phone_number,
+        },
+        'limitations': [{
+            'limitation_id': lim.limitation_id,
+            'limitation': lim.limitation.limitation if lim.limitation else None
+        } for lim in expert.limitations],
+        'research_types': [{
+            'research_type_id': rt.research_type_id
+        } for rt in expert.research_types]
+    }
+
+# GET all peer experts (paginated + sorted)
 class PeerExpertRest(Resource):
     @check_permission_rest()
     def get(self):
@@ -69,9 +104,7 @@ class PeerExpertRest(Resource):
             pagination = None
             peer_experts = query.all()
 
-        peer_expert_list = []
-        for expert in peer_experts:
-            peer_expert_list.append(flatten_peer_expert(expert))
+        peer_expert_list = [flatten_peer_expert(expert) for expert in peer_experts]
 
         return {
             'peer_experts': peer_expert_list,
@@ -83,7 +116,6 @@ class PeerExpertRest(Resource):
             }
         }, 200
 
-
 class SinglePeerExpertRest(Resource):
     @check_permission_rest()
     def get(self, peer_expert_id):
@@ -92,43 +124,30 @@ class SinglePeerExpertRest(Resource):
         if not peer_expert:
             abort(404, message="Peer expert not found")
 
-        if g.user.admin_info:
+        if g.user.admin_info or (
+            g.user.peer_expert_info and g.user.peer_expert_info.peer_expert_id == peer_expert_id
+        ):
             return flatten_peer_expert(peer_expert), 200
-        elif g.user.peer_expert_info and g.user.peer_expert_info.peer_expert_id == peer_expert_id:
-            return flatten_peer_expert(peer_expert), 200
-        else:
-            abort(403, message="Forbidden: You don't have permission to view this peer expert.")
 
-def flatten_peer_expert(expert: PeerExperts):
-    return {
-        'peer_expert_id': expert.peer_expert_id,
-        'postal_code': expert.postal_code,
-        'gender': expert.gender,
-        'birth_date': expert.birth_date.isoformat() if expert.birth_date else None,
-        'tools_used': expert.tools_used,
-        'short_bio': expert.short_bio,
-        'special_notes': expert.special_notes,
-        'accepted_terms': expert.accepted_terms,
-        'has_supervisor': expert.has_supervisor,
-        'supervisor_or_guardian_name': expert.supervisor_or_guardian_name,
-        'supervisor_or_guardian_email': expert.supervisor_or_guardian_email,
-        'supervisor_or_guardian_phone': expert.supervisor_or_guardian_phone,
-        'availability_notes': expert.availability_notes,
-        'contact_preference_id': expert.contact_preference_id,
-        'user_id': expert.user_id,
-        'peer_expert_status_id': expert.peer_expert_status_id,
-        'user': {
-            'user_id': expert.user.user_id,
-            'first_name': expert.user.first_name,
-            'last_name': expert.user.last_name,
-            'email': expert.user.email,
-            'phone_number': expert.user.phone_number,
-        },
-        'limitations': [{
-            'limitation_id': lim.limitation_id,
-            'limitation': lim.limitation.limitation
-        } for lim in expert.limitations],
-        'research_types': [{
-            'research_type_id': rt.research_type_id
-        } for rt in expert.research_types]
-    }
+        abort(403, message="Forbidden: You don't have permission to view this peer expert.")
+
+    @check_permission_rest('admin')
+    def patch(self, peer_expert_id):
+        peer_expert: PeerExperts = PeerExperts.query.get(peer_expert_id)
+
+        if not peer_expert:
+            abort(404, message="Peer expert not found")
+
+        data = request.get_json()
+
+        new_status_id = data.get('peer_expert_status_id')
+        if new_status_id is None:
+            abort(400, message="'peer_expert_status_id' is required.")
+
+        try:
+            peer_expert.peer_expert_status_id = new_status_id
+            db.session.commit()
+            return {'message': f"Peer expert status updated to {new_status_id}."}, 200
+        except Exception:
+            db.session.rollback()
+            abort(500, message="Error updating peer expert status.")
