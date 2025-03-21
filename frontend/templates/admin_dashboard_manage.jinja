@@ -204,6 +204,55 @@
     </div>
 </div>
 
+<!-- Modal for Research Details -->
+<div class="modal fade" id="researchDetailsModal" tabindex="-1" aria-labelledby="researchDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Onderzoek Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body">
+                <form id="researchDetailsForm">
+                    <input type="hidden" id="researchId">
+
+                    <div class="mb-3">
+                        <label for="researchTitle" class="form-label">Titel</label>
+                        <input type="text" class="form-control" id="researchTitle">
+                    </div>
+                    <div class="mb-3">
+                        <label for="researchLocation" class="form-label">Locatie</label>
+                        <input type="text" class="form-control" id="researchLocation">
+                    </div>
+                    <div class="mb-3">
+                        <label for="researchDescription" class="form-label">Beschrijving</label>
+                        <textarea class="form-control" id="researchDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="researchStartDate" class="form-label">Startdatum</label>
+                        <input type="date" class="form-control" id="researchStartDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="researchEndDate" class="form-label">Einddatum</label>
+                        <input type="date" class="form-control" id="researchEndDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="researchStatusId" class="form-label">Status ID</label>
+                        <input type="number" class="form-control" id="researchStatusId">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="deleteResearchBtn">Verwijderen</button>
+                        <div class="mx-auto"></div>
+                        <button type="submit" class="btn btn-primary">Wijzigingen Opslaan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
