@@ -214,3 +214,15 @@ In dit tabje kan je de onderzoeken zien waarvoor je je hebt ingeschreven.
 
 - Beoordeelde onderzoeken:
 In dit tabje kan je de onderzoeken zien waar je aan hebt deelgenomen en die zijn beoordeeld.
+
+# RESTFUL API
+
+Voor de restful API kan je de documentatie bekijken op de documentatie pagina op de website.
+
+![image](docs/images/ReadMe screenshots/homepage.png)
+
+Klik op onderzoeksbureau om bij de documentatie te komen hierin staat precies uitgelegd hoe de api werkt. 
+
+![image](docs/images/ReadMe screenshots/api_documentatie.png)
+
+
