@@ -15,6 +15,19 @@
             <h1>Ervaringsdeskundige Registratie</h1>
         </div>
         <form method="POST" action="{{ url_for('frontend.register') }}" class="registration-form mt-4" novalidate>
+
+            <div class="mb-3">
+                <label for="first_name" class="form-label">Voornaam</label>
+                <input id="first_name" type="text" name="first_name" class="form-control" required>
+                <small class="error-message" id="first_name_error">Vul je voornaam in.</small>
+        </div>
+
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Achternaam</label>
+                <input id="last_name" type="text" name="last_name" class="form-control" required>
+                <small class="error-message" id="last_name_error">Vul je achternaam in.</small>
+        </div>
+
             <div class="mb-3">
                 <label for="postal_code" class="form-label">Postcode</label>
                 <input id="postal_code" type="text" name="postal_code" required pattern="^[0-9]{4}[A-Za-z]{2}$" class="form-control" required>

@@ -9,12 +9,17 @@ class ExpertRegistrationModule:
     def register_expert(self, form_data):
         try:
             expert = PeerExperts(
+                first_name=form_data['first_name'],
+                last_name=form_data['last_name'],
                 postal_code=form_data.get('postal_code'),
                 gender=form_data.get('gender'),
                 birth_date=datetime.strptime(form_data.get('birth_date'), '%Y-%m-%d').date(),
                 tools_used=form_data.get('tools_used'),
                 short_bio=form_data.get('short_bio'),
                 special_notes=form_data.get('special_notes'),
+                email_adress=form_data.get('email_adress'),
+                phone_number=form_data.get('telefoon_nummer'),
+                password=form_data.get('password'),
                 accepted_terms='accepted_terms' in form_data,
                 has_supervisor='has_supervisor' in form_data,
                 supervisor_or_guardian_name=form_data.get('supervisor_or_guardian_name'),
