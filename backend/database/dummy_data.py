@@ -16,7 +16,7 @@ import secrets
 from backend.utils.password import hash_password, generate_salt
 
 
-def generate_api_keys():
+def generate_api_keys(organizations: list[Organizations]):
     print_message("API-keys worden gegenereerd en toegevoegd...")
 
     api_keys_data = [
@@ -27,16 +27,9 @@ def generate_api_keys():
     existing_keys = {key.api_key for key in ApiKeys.query.all()}
 
     new_api_keys = [
-        ApiKeys(api_key=key, organization_name=org_name)
+        ApiKeys(api_key=key, company_id=random.choice(organizations).organization_id)
         for org_name, key in api_keys_data if key not in existing_keys
     ]
-
-    if new_api_keys:
-        db.session.add_all(new_api_keys)
-        db.session.commit()
-        print_message(f"{len(new_api_keys)} nieuwe API-key toegevoegd.")
-    else:
-        print_message("Geen nieuwe API-key toegevoegd, deze key bestaat al.")
 
     return new_api_keys
 
@@ -309,6 +302,7 @@ def generate_research_types():
 
 
 def generate_researches(fake: Faker, research_statuses: list[ResearchStatus], research_types: list[ResearchTypesModel],
+                        organizations: list[Organizations],
                         multiplier=1):
     print_message("Generating dummy organization data...")
 
@@ -332,6 +326,7 @@ def generate_researches(fake: Faker, research_statuses: list[ResearchStatus], re
         target_max_age = random.randint(target_min_age, 65)
 
         fake_research = Research(
+            company_id=random.choice(organizations).organization_id,
             title=fake.text(max_nb_chars=45),
             is_available=random.choice([True, False]),
             description=fake.text(max_nb_chars=500),
@@ -352,7 +347,7 @@ def generate_researches(fake: Faker, research_statuses: list[ResearchStatus], re
     return fake_researches
 
 
-def get_researches(limitations_lookup):
+def get_researches(limitations_lookup, organizations: list[Organizations]):
     print_message("Generating dummy organization data...")
 
     researches_data = [
@@ -557,6 +552,7 @@ def get_researches(limitations_lookup):
             target_max_age=data["target_max_age"],
             status_id=data["status_id"],
             research_type_id=data["research_type_id"],
+            company_id=random.choice(organizations).organization_id
         )
 
         if data["limitation_ids"]:
@@ -746,8 +742,9 @@ def init_db_data(amount_multiplier=1):
     research_types = generate_research_types()
     db.session.bulk_save_objects([*research_statuses, *research_types], return_defaults=True)
 
-    fake_researches = generate_researches(fake, research_statuses, research_types, amount_multiplier)
-    fake_researches = [*get_researches(limitations_lookup), *fake_researches]
+    fake_researches = generate_researches(fake, research_statuses, research_types, fake_organizations,
+                                          amount_multiplier)
+    fake_researches = [*get_researches(limitations_lookup, fake_organizations), *fake_researches]
     db.session.bulk_save_objects(fake_researches, return_defaults=True)
 
     peer_experts_research_types = generate_peer_expert_research_types(research_types, peer_experts)
@@ -759,8 +756,8 @@ def init_db_data(amount_multiplier=1):
     registrations = generate_registrations(peer_experts, fake_researches, registration_statuses)
     db.session.bulk_save_objects(registrations)
 
-    api_keys = generate_api_keys()
-    # db.session.bulk_save_objects(api_keys)
+    api_keys = generate_api_keys(fake_organizations)
+    db.session.bulk_save_objects(api_keys)
 
     db.session.commit()  # Save data
 

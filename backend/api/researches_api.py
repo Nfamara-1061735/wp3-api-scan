@@ -1,5 +1,6 @@
 import datetime
 
+from flask import g
 from flask_restful import Resource, reqparse, fields, marshal_with, abort
 
 from backend import db
@@ -17,6 +18,7 @@ research_args.add_argument('end_date', type=str, required=True, help="Geldige in
 research_args.add_argument('location', type=str, required=True, help="location is verplicht")
 research_args.add_argument('has_reward', type=bool, required=True, help="has_reward is verplicht")
 research_args.add_argument('reward', type=str)
+research_args.add_argument('company_id', type=int)
 research_args.add_argument('target_min_age', type=int)
 research_args.add_argument('target_max_age', type=int)
 research_args.add_argument('status_id', type=int, required=True, help="Status ID is verplicht")
@@ -61,16 +63,29 @@ researchFields = {
 
 
 class Researches(Resource):
-    @require_api_key
+    @require_api_key()
     @marshal_with(researchFields)
     def get(self):
-        researches = Research.query.all()
+        if 'key' in g:
+            researches = Research.query.filter(Research.company_id == g.key['company_id']).all()
+        else:
+            researches = Research.query.all()
         return researches, 200
 
     @marshal_with(researchFields)
-    @require_api_key
+    @require_api_key('admin')
     def post(self):
+        if not 'key' in g and 'user' not in g:
+            abort(403, message="Forbidden.")
+
         args = research_args.parse_args()
+
+        return []
+
+        if 'key' in g:
+            company_id = g.key['company_id']
+        else:
+            company_id = args['company_id']
 
         # This converts the dates from strings to date.datetime objects
         try:
@@ -85,6 +100,7 @@ class Researches(Resource):
             description=args['description'],
             start_date=start_date,
             end_date=end_date,
+            company_id=company_id,
             location=args['location'],
             has_reward=args['has_reward'],
             reward=args['reward'],
@@ -115,22 +131,32 @@ class Researches(Resource):
 
 
 class SingleResearch(Resource):
-    @require_api_key
+    @require_api_key()
     @marshal_with(researchFields)
     def get(self, research_id):
+        if not 'key' in g and 'user' not in g:
+            abort(403, message="Forbidden.")
+
         single_research = Research.query.filter_by(research_id=research_id).first()
         if not single_research:
             abort(404, message="Onderzoek niet gevonden.")
+        if 'key' in g and not single_research.company_id == g.key['company_id']:
+            abort(403, message="Forbidden.")
         return single_research, 200
 
-    @require_api_key
+    @require_api_key('admin')
     @marshal_with(researchFields)
     def patch(self, research_id):
         args = patch_research_args.parse_args()
+        if not 'key' in g and 'user' not in g:
+            abort(403, message="Forbidden.")
 
         single_research = Research.query.filter_by(research_id=research_id).first()
         if not single_research:
             abort(404, message="Onderzoek niet gevonden")
+
+        if 'key' in g and not single_research.company_id == g.key['company_id']:
+            abort(403, message="Forbidden.")
 
         if args.get('title'):
             single_research.title = args['title']
@@ -176,11 +202,17 @@ class SingleResearch(Resource):
         db.session.commit()
         return single_research, 200
 
-    @require_api_key
+    @require_api_key('admin')
     def delete(self, research_id):
+        if not 'key' in g and 'user' not in g:
+            abort(403, message="Forbidden.")
+            
         single_research = Research.query.filter_by(research_id=research_id).first()
         if not single_research:
             abort(404, message="Onderzoek niet gevonden.")
+
+        if 'key' in g and not single_research.company_id == g.key['company_id']:
+            abort(403, message="Forbidden.")
 
         db.session.delete(single_research)
         db.session.commit()
@@ -194,21 +226,27 @@ class SingleResearch(Resource):
 
 
 class FilteredResearch(Resource):
-    @require_api_key
+    @require_api_key()
     @marshal_with(researchFields)
     def get(self, status_id):
         filtered_researches = Research.query.filter_by(status_id=status_id).all()
 
         return filtered_researches, 200
 
-    @require_api_key
+    @require_api_key('admin')
     @marshal_with(researchFields)
     def patch(self, new_status_id, research_id):
+        if not 'key' in g and 'user' not in g:
+            abort(403, message="Forbidden.")
+
         args = research_args.parse_args()
 
         single_research = Research.query.filter_by(research_id=research_id).first()
         if not single_research:
             abort(404, message="Onderzoek niet gevonden")
+
+        if 'key' in g and not single_research.company_id == g.key['company_id']:
+            abort(403, message="Forbidden.")
 
         if args.get('status_id'):
             single_research.status_id = new_status_id
