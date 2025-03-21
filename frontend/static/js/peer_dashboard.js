@@ -262,3 +262,28 @@ $('#researchModal').on('show.bs.modal', function () {
         map.invalidateSize();
     }, 500);
 });
+
+function updateRatedCards() {
+    $.ajax({
+        // Verwijs naar het endpoint met de queryparameter state=rated
+        url: '/api/researches/registration-state?state=rated',
+        type: 'GET',
+        success: function (data) {
+            // Werk de teller bij
+            $('#rated-card-count').text(data.length);
+            // Maak de container leeg
+            $('#rated-card-container').empty();
+
+
+        error: function (error) {
+            console.error(error);
+            $('#error-message').text('Er is een fout opgetreden. Probeer het opnieuw.').show();
+        }
+    });
+}
+
+// Zorg dat deze functie wordt aangeroepen bij het laden van de pagina:
+$(document).ready(function () {
+    updateRatedCards();
+    setInterval(updateRatedCards, 10000); // Vernieuw elke 10 seconden
+});
