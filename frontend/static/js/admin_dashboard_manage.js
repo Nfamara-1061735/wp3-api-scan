@@ -14,6 +14,21 @@ function formatDate(dateString) {
 }
 
 $(document).ready(function () {
+    function toggleRewardDescription() {
+        if ($('#researchHasReward').is(':checked')) {
+            $('#researchRewardContainer').fadeIn();
+        } else {
+            $('#researchRewardContainer').fadeOut();
+            $('#researchReward').val('');
+        }
+    }
+
+    toggleRewardDescription();
+
+    $('#researchHasReward').on('change', function () {
+        toggleRewardDescription();
+    });
+
     // Add event listener to the 'Details' button
     $('#peerTable').on('click', '.btn-primary', function () {
         const peerExpertId = $(this).closest('tr').find('td').first().text();
