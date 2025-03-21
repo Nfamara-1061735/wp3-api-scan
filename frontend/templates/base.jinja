@@ -60,9 +60,8 @@
                             {{ session['user']['first_name'] }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="accountDropdown" id="account-menu">
-                            <li>
-                                <a class="dropdown-item" href="#">Bekijk profiel</a>
-                            </li>
+                            {% block userDropdown %}
+                            {% endblock %}
                             <li>
                                 <a href="{{ url_for('frontend.logout') }}" class="btn btn-primary d-block mx-auto w-75">
                                     Uitloggen
@@ -96,8 +95,8 @@
 
     <!-- Footer -->
     <footer role="contentinfo" class="mt-auto">
-        <div class="text-center p-3 bg-secondary-subtle">
-            <a href="/" style="text-decoration: none; color: #052c65; font-weight: bold">© 2025 Stichting Accessibility</a>
+        <div class="text-center p-3 bg-body-secondary">
+            <a href="/" style="text-decoration: none; font-weight: bold">© 2025 Stichting Accessibility</a>
         </div>
     </footer>
 

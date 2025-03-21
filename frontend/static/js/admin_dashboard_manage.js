@@ -115,7 +115,6 @@ $(document).ready(function () {
         });
     }
 
-    // Usage example:
     loadPreferences('/api/contact_preferences', 'contact_preference_id', 'type', '#contactPreference');
     loadPreferences('/api/peers/status', 'peer_expert_status_id', 'status', '#peerStatus');
     loadPreferencesCheckboxes('/api/researches/types', 'research', 'research_type_id', 'type', '#researchType');
