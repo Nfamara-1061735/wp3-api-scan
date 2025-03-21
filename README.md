@@ -200,6 +200,11 @@ Door op de 'details'-knop te drukken kan je een kort overzicht van de belangrijk
 
 ![image](docs/images/ReadMe%20screenshots/peer_dashboard_details.png)
 
+Als je bent ingelogd als ervaringsdeskundige kan je ook je eigen gegevens bewerken. Dit doe je door bij de dropdown-knop op 'bekijk profiel' te klikken
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_account_dropdown.png)
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_account.png)
+
 Er zijn drie verschillende tabjes met onderzoeken:
 - Open onderzoeken:
 In dit tabje kan je de open onderzoeken zien waarvoor je je kan inschrijven.
