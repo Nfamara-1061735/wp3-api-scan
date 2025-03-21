@@ -40,6 +40,7 @@ peer_experts_fields = {
     }),
     'limitations': fields.List(fields.Nested({
         'limitation_id': fields.Integer,
+        'limitation': fields.String,
     })),
     'research_types': fields.List(fields.Nested({
         'research_type_id': fields.Integer,
