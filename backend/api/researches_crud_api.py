@@ -145,6 +145,20 @@ class SingleResearchRest(Resource):
             db.session.commit()
         except Exception as exception:
             db.session.rollback()
-            abort(500, message=f"Onderzoek updaten niet gelukt: {str(exception)}")
+            abort(500, message=f"updaten van onderzoek niet gelukt: {str(exception)}")
         return research, 200
+
+    @check_permission_rest('admin')
+    def delete(self, research_id):
+        research = Research.query.get(research_id)
+        if not research:
+            abort(404, message="Onderzoek niet gevonden")
+        try:
+            db.session.delete(research)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            abort(500, message=f"Verwijderen van onderzoek niet gelukt: {str(e)}")
+
+        return {'message': 'Onderzoek succesvol verwijderd.'}, 200
 
