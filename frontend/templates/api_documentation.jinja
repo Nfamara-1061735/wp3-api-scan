@@ -9,7 +9,7 @@
         <!-- Introductie -->
         <section>
             <h2>Introductie</h2>
-            <p>De Accessibility Hub API stelt organisaties in staat om ervaringsdeskundigen te registreren en onderzoeken te beheren via een RESTful interface.</p>
+            <p>De Accessibility Hub API stelt organisaties in staat om onderzoeken te beheren en ervaringsdeskundigen te registreren via een RESTful interface.</p>
             <p><strong>Base URL:</strong> <code>http://127.0.0.1:5000/api/researches/</code></p>
         </section>
 
@@ -18,7 +18,7 @@
         <!-- Authenticatie -->
         <section>
             <h2>Authenticatie</h2>
-            <p>De API gebruikt <strong>Bearer Token Authenticatie</strong>. Voeg de API-key toe aan de headers van elk verzoek:</p>
+            <p>De API maakt gebruik van <strong>API Key Authenticatie</strong>. Voeg de API-key toe aan de headers:</p>
             <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
         </section>
 
@@ -28,56 +28,137 @@
         <section>
             <h2>Endpoints</h2>
 
-            <!-- Registratie van een ervaringsdeskundige -->
-            <h3>📌 POST http://127.0.0.1:5000/api/researches</h3>
-            <h3>📌 GET http://127.0.0.1:5000/api/researches</h3>
-            <h3>📌 PATCH http://127.0.0.1:5000/api/researches</h3>
-            <p><strong>Beschrijving:</strong> Registreert een nieuwe ervaringsdeskundige.</p>
+            <!-- Researches API -->
+            <h3>📌 GET /researches/</h3>
+            <p><strong>Beschrijving:</strong> Haalt alle onderzoeken op.</p>
 
             <h4>🔹 Headers</h4>
             <pre><code>{
-    "Authorization": "Bearer YOUR_API_KEY",
-    "Content-Type": "application/json"
+    "Authorization": "Bearer YOUR_API_KEY"
 }</code></pre>
+
+            <h4>🔹 Response (200 OK)</h4>
+            <pre><code>[
+    {
+        "research_id": 1,
+        "title": "Toegankelijkheid van openbare gebouwen",
+        "is_available": true,
+        "description": "Een studie naar de toegankelijkheid van openbare ruimtes.",
+        "start_date": "2025-04-01",
+        "end_date": "2025-06-01",
+        "location": "Amsterdam",
+        "has_reward": true,
+        "reward": "€50",
+        "target_min_age": 18,
+        "target_max_age": 65,
+        "status_id": 2,
+        "research_type_id": 1,
+        "limitations": []
+    }
+]</code></pre>
+
+            <h3>📌 POST /researches/</h3>
+            <p><strong>Beschrijving:</strong> Voegt een nieuw onderzoek toe.</p>
 
             <h4>🔹 Request Body (JSON)</h4>
             <pre><code>{
-    "first_name": "Jan",
-    "last_name": "Willem",
-    "email_adress": "janwillem@gmail.com",
-    "phone_number": "0612345678",
-    "password": "SterkWachtwoord123!",
-    "postal_code": "3011AA",
-    "gender": "male",
-    "birth_date": "2001-01-01",
-    "tools_used": "lenzen",
-    "short_bio": "Ik ben een ervaringsdeskundige in toegankelijkheid.",
-    "peer_expert_status_id": 1
+    "title": "Onderzoek naar digitale toegankelijkheid",
+    "is_available": true,
+    "description": "Een onderzoek naar de toegankelijkheid van websites voor blinden en slechtzienden.",
+    "start_date": "01-05-2025",
+    "end_date": "30-06-2025",
+    "location": "Utrecht",
+    "has_reward": false,
+    "target_min_age": 18,
+    "target_max_age": 65,
+    "status_id": 1,
+    "research_type_id": 2
 }</code></pre>
 
-            <h4>🔹 Mogelijke Responses</h4>
-
-            <h5>✅ Succesvolle registratie (201)</h5>
+            <h4>🔹 Response (201 Created)</h4>
             <pre><code>{
-    "message": "Nieuwe ervaringsdeskundige succesvol geregistreerd.",
-    "peer_expert_id": 42
+    "message": "Nieuw onderzoek succesvol aangemaakt.",
+    "research_id": 5
 }</code></pre>
 
-            <h5>❌ Fout (400 - Verplichte velden missen)</h5>
+            <h3>📌 GET /researches/&lt;int:research_id&gt;/</h3>
+            <p><strong>Beschrijving:</strong> Haalt een specifiek onderzoek op.</p>
+
+            <h4>🔹 Response (200 OK)</h4>
             <pre><code>{
-    "error": "email_adress is verplicht"
+    "research_id": 5,
+    "title": "Onderzoek naar digitale toegankelijkheid",
+    "is_available": true,
+    "description": "Een onderzoek naar de toegankelijkheid van websites.",
+    "start_date": "2025-05-01",
+    "end_date": "2025-06-30",
+    "location": "Utrecht",
+    "has_reward": false,
+    "target_min_age": 18,
+    "target_max_age": 65,
+    "status_id": 1,
+    "research_type_id": 2
 }</code></pre>
 
-            <h5>❌ Fout (401 - API-key validatie mislukt)</h5>
+            <h3>📌 PATCH /researches/&lt;int:research_id&gt;/</h3>
+            <p><strong>Beschrijving:</strong> Update een bestaand onderzoek.</p>
+
+            <h4>🔹 Request Body (JSON)</h4>
             <pre><code>{
-    "error": "API-key of organisatie onjuist, Authenticatie is vereist."
+    "title": "Geüpdatet onderzoekstitel",
+    "is_available": false
+}</code></pre>
+
+            <h4>🔹 Response (200 OK)</h4>
+            <pre><code>{
+    "message": "Onderzoek succesvol bijgewerkt."
 }</code></pre>
 
         </section>
 
         <hr>
 
-        <!-- Error Codes -->
+        <!-- Peer Experts API -->
+        <section>
+            <h2>Ervaringsdeskundigen Endpoints</h2>
+
+            <h3>📌 GET /peer_experts/</h3>
+            <p><strong>Beschrijving:</strong> Haalt alle ervaringsdeskundigen op.</p>
+
+            <h4>🔹 Response (200 OK)</h4>
+            <pre><code>[
+    {
+        "peer_expert_id": 3,
+        "postal_code": "3011AA",
+        "gender": "male",
+        "birth_date": "2001-01-01",
+        "tools_used": "lenzen",
+        "short_bio": "Ik ben een ervaringsdeskundige in toegankelijkheid.",
+        "peer_expert_status_id": 1
+    }
+]</code></pre>
+
+            <h3>📌 POST /peers/</h3>
+            <p><strong>Beschrijving:</strong> Registreert een nieuwe ervaringsdeskundige.</p>
+
+            <h4>🔹 Request Body (JSON)</h4>
+            <pre><code>{
+    "first_name": "Hamza",
+    "last_name": "Achraf",
+    "email_adress": "hamza@example.com",
+    "phone_number": "0612345678",
+    "password": "SterkWachtwoord123!",
+    "postal_code": "3011AA",
+    "gender": "male",
+    "birth_date": "2001-01-01",
+    "peer_expert_status_id": 1
+}</code></pre>
+
+        </section>
+
+        <hr>
+
+        <!-- Foutcodes -->
         <section>
             <h2>Foutcodes</h2>
             <table class="table table-bordered">
@@ -112,32 +193,8 @@
                         <td>404 Not Found</td>
                         <td>Het gevraagde item bestaat niet.</td>
                     </tr>
-                    <tr>
-                        <td>500 Internal Server Error</td>
-                        <td>Er is een onverwachte fout opgetreden.</td>
-                    </tr>
                 </tbody>
             </table>
         </section>
-
-        <hr>
-
-        <!-- Versiebeheer -->
-        <section>
-            <h2>Changelog / Versiebeheer</h2>
-            <p>Hieronder vind je een overzicht van wijzigingen in de API.</p>
-
-            <h3>🔹 Versie 1.1 (2025-03-21)</h3>
-            <ul>
-                <li>Toegevoegd: <code>PATCH /update-expert</code> endpoint</li>
-                <li>Verbeterd: Validatie van <code>email_adress</code></li>
-            </ul>
-
-            <h3>🔹 Versie 1.0 (2025-03-15)</h3>
-            <ul>
-                <li>Eerste versie met registratie en login functionaliteit</li>
-            </ul>
-        </section>
-
     </div>
 {% endblock %}
