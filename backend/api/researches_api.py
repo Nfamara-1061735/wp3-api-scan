@@ -63,7 +63,7 @@ researchFields = {
 
 
 class Researches(Resource):
-    @require_api_key()
+    @require_api_key('all')
     @marshal_with(researchFields)
     def get(self):
         if 'key' in g:
@@ -131,7 +131,7 @@ class Researches(Resource):
 
 
 class SingleResearch(Resource):
-    @require_api_key()
+    @require_api_key('all')
     @marshal_with(researchFields)
     def get(self, research_id):
         if not 'key' in g and 'user' not in g:
@@ -226,7 +226,7 @@ class SingleResearch(Resource):
 
 
 class FilteredResearch(Resource):
-    @require_api_key()
+    @require_api_key('all')
     @marshal_with(researchFields)
     def get(self, status_id):
         filtered_researches = Research.query.filter_by(status_id=status_id).all()
