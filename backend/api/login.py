@@ -20,9 +20,6 @@ class Login(Resource):
 
         target_status = request.args.get('status', None)
 
-        if not target_status:
-            abort(422)
-
         # Verify credentials
         if target_role == 'peer':
             if (user and self.verify_role(user, target_role)
