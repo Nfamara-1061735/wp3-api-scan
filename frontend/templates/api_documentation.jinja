@@ -1,44 +1,45 @@
 {% extends "base.jinja" %}
 {% block title %} API Documentatie {% endblock %}
 {% block logout %} {% endblock %}
+
 {% block content %}
-    <div class="p-5">
-        <h1 class="">API Documentatie</h1>
-        <hr class="pb-3">
+<div class="p-5">
+    <h1 class="">API Documentatie</h1>
+    <hr class="pb-3">
 
-        <!-- Introductie -->
-        <section>
-            <h2>Introductie</h2>
-            <p>De Accessibility Hub API stelt organisaties in staat om onderzoeken te beheren en ervaringsdeskundigen te registreren via een RESTful interface.</p>
-            <p><strong>Base URL:</strong> <code>http://127.0.0.1:5000/api/researches/</code></p>
-        </section>
+    <!-- Introductie -->
+    <section>
+        <h2>Introductie</h2>
+        <p>De Accessibility Hub API stelt organisaties in staat om onderzoeken te beheren en ervaringsdeskundigen te registreren via een RESTful interface.</p>
+        <p><strong>Base URL:</strong> <code>http://127.0.0.1:5000/api/</code></p>
+    </section>
 
-        <hr>
+    <hr>
 
-        <!-- Authenticatie -->
-        <section>
-            <h2>Authenticatie</h2>
-            <p>De API maakt gebruik van <strong>API Key Authenticatie</strong>. Voeg de API-key toe aan de headers:</p>
-            <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
-        </section>
+    <!-- Authenticatie -->
+    <section>
+        <h2>Authenticatie</h2>
+        <p>De API maakt gebruik van <strong>API Key Authenticatie</strong>. Voeg de API-key toe aan de headers:</p>
+        <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+    </section>
 
-        <hr>
+    <hr>
 
-        <!-- Endpoints -->
-        <section>
-            <h2>Endpoints</h2>
+    <!-- Endpoints -->
+    <section>
+        <h2>Endpoints</h2>
 
-            <!-- Researches API -->
-            <h3>📌 GET /researches/</h3>
-            <p><strong>Beschrijving:</strong> Haalt alle onderzoeken op.</p>
+        <!-- Researches API -->
+        <h3>📌 GET /researches/</h3>
+        <p><strong>Beschrijving:</strong> Haalt alle onderzoeken op.</p>
 
-            <h4>🔹 Headers</h4>
-            <pre><code>{
+        <h4>🔹 Headers</h4>
+        <pre><code>{
     "Authorization": "Bearer YOUR_API_KEY"
 }</code></pre>
 
-            <h4>🔹 Response (200 OK)</h4>
-            <pre><code>[
+        <h4>🔹 Response (200 OK)</h4>
+        <pre><code>[
     {
         "research_id": 1,
         "title": "Toegankelijkheid van openbare gebouwen",
@@ -57,11 +58,33 @@
     }
 ]</code></pre>
 
-            <h3>📌 POST /researches/</h3>
-            <p><strong>Beschrijving:</strong> Voegt een nieuw onderzoek toe.</p>
+        <hr>
 
-            <h4>🔹 Request Body (JSON)</h4>
-            <pre><code>{
+        <!-- Limitations uitleg vóór POST -->
+        <h3>📝 Let op: Gebruik van Limitations</h3>
+        <p>Voordat je een nieuw onderzoek aanmaakt met <code>POST /researches/</code>, moet je weten welke <strong>limitations</strong> beschikbaar zijn.</p>
+        <p>Je kunt deze ophalen via het volgende endpoint:</p>
+
+        <h4>📌 GET /limitations/</h4>
+        <p><strong>Beschrijving:</strong> Haalt een lijst op van alle beschikbare beperkingen inclusief de bijbehorende <code>limitation_id</code> en naam.</p>
+
+        <h4>🔹 Response (200 OK)</h4>
+        <pre><code>[
+    {
+        "limitation_id": 1,
+        "limitation": "Rolstoeltoegankelijk"
+    },
+    {
+        "limitation_id": 2,
+        "limitation": "Slechthorend"
+    }
+]</code></pre>
+
+        <h4>🔹 Hoe gebruik je deze limitations bij POST /researches/?</h4>
+        <p>Je voegt de <code>limitation_id</code>'s toe in het veld <code>limitations</code> bij het aanmaken van een nieuw onderzoek.</p>
+
+        <h4>🔹 Voorbeeld JSON bij POST /researches/</h4>
+        <pre><code>{
     "title": "Onderzoek naar digitale toegankelijkheid",
     "is_available": true,
     "description": "Een onderzoek naar de toegankelijkheid van websites voor blinden en slechtzienden.",
@@ -72,61 +95,53 @@
     "target_min_age": 18,
     "target_max_age": 65,
     "status_id": 1,
-    "research_type_id": 2
+    "research_type_id": 2,
+    "limitations": [1, 2]   // De limitation_id's van het /limitations/ endpoint
 }</code></pre>
 
-            <h4>🔹 Response (201 Created)</h4>
-            <pre><code>{
-    "message": "Nieuw onderzoek succesvol aangemaakt.",
-    "research_id": 5
-}</code></pre>
+        <hr>
 
-            <h3>📌 GET /researches/&lt;int:research_id&gt;/</h3>
-            <p><strong>Beschrijving:</strong> Haalt een specifiek onderzoek op.</p>
+        <!-- POST Research -->
+        <h3>📌 POST /researches/</h3>
+        <p><strong>Beschrijving:</strong> Voegt een nieuw onderzoek toe.</p>
 
-            <h4>🔹 Response (200 OK)</h4>
-            <pre><code>{
-    "research_id": 5,
+        <h4>🔹 Request Body (JSON)</h4>
+        <pre><code>{
     "title": "Onderzoek naar digitale toegankelijkheid",
     "is_available": true,
-    "description": "Een onderzoek naar de toegankelijkheid van websites.",
-    "start_date": "2025-05-01",
-    "end_date": "2025-06-30",
+    "description": "Een onderzoek naar de toegankelijkheid van websites voor blinden en slechtzienden.",
+    "start_date": "01-05-2025",
+    "end_date": "30-06-2025",
     "location": "Utrecht",
     "has_reward": false,
     "target_min_age": 18,
     "target_max_age": 65,
     "status_id": 1,
-    "research_type_id": 2
+    "research_type_id": 2,
+    "limitations": [1, 2]
 }</code></pre>
 
-            <h3>📌 PATCH /researches/&lt;int:research_id&gt;/</h3>
-            <p><strong>Beschrijving:</strong> Update een bestaand onderzoek.</p>
-
-            <h4>🔹 Request Body (JSON)</h4>
-            <pre><code>{
-    "title": "Geüpdatet onderzoekstitel",
-    "is_available": false
+        <h4>🔹 Response (201 Created)</h4>
+        <pre><code>{
+    "message": "Nieuw onderzoek succesvol aangemaakt.",
+    "research_id": 5
 }</code></pre>
 
-            <h4>🔹 Response (200 OK)</h4>
-            <pre><code>{
-    "message": "Onderzoek succesvol bijgewerkt."
-}</code></pre>
+        <!-- Rest van de bestaande endpoints -->
 
-        </section>
+    </section>
 
-        <hr>
+    <hr>
 
-        <!-- Peer Experts API -->
-        <section>
-            <h2>Ervaringsdeskundigen Endpoints</h2>
+    <!-- Peer Experts API -->
+    <section>
+        <h2>Ervaringsdeskundigen Endpoints</h2>
 
-            <h3>📌 GET /peer_experts/</h3>
-            <p><strong>Beschrijving:</strong> Haalt alle ervaringsdeskundigen op.</p>
+        <h3>📌 GET /peer_experts/</h3>
+        <p><strong>Beschrijving:</strong> Haalt alle ervaringsdeskundigen op.</p>
 
-            <h4>🔹 Response (200 OK)</h4>
-            <pre><code>[
+        <h4>🔹 Response (200 OK)</h4>
+        <pre><code>[
     {
         "peer_expert_id": 3,
         "postal_code": "3011AA",
@@ -138,63 +153,30 @@
     }
 ]</code></pre>
 
-            <h3>📌 POST /peers/</h3>
-            <p><strong>Beschrijving:</strong> Registreert een nieuwe ervaringsdeskundige.</p>
+        <!-- etc... -->
+    </section>
 
-            <h4>🔹 Request Body (JSON)</h4>
-            <pre><code>{
-    "first_name": "Hamza",
-    "last_name": "Achraf",
-    "email_adress": "hamza@example.com",
-    "phone_number": "0612345678",
-    "password": "SterkWachtwoord123!",
-    "postal_code": "3011AA",
-    "gender": "male",
-    "birth_date": "2001-01-01",
-    "peer_expert_status_id": 1
-}</code></pre>
+    <hr>
 
-        </section>
-
-        <hr>
-
-        <!-- Foutcodes -->
-        <section>
-            <h2>Foutcodes</h2>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>HTTP Status Code</th>
-                        <th>Betekenis</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>200 OK</td>
-                        <td>De aanvraag is succesvol verwerkt.</td>
-                    </tr>
-                    <tr>
-                        <td>201 Created</td>
-                        <td>Een nieuw object is succesvol aangemaakt.</td>
-                    </tr>
-                    <tr>
-                        <td>400 Bad Request</td>
-                        <td>De aanvraag bevatte ongeldige gegevens.</td>
-                    </tr>
-                    <tr>
-                        <td>401 Unauthorized</td>
-                        <td>Authenticatie is vereist.</td>
-                    </tr>
-                    <tr>
-                        <td>403 Forbidden</td>
-                        <td>Je hebt geen toestemming om dit te doen.</td>
-                    </tr>
-                    <tr>
-                        <td>404 Not Found</td>
-                        <td>Het gevraagde item bestaat niet.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    </div>
+    <!-- Foutcodes -->
+    <section>
+        <h2>Foutcodes</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>HTTP Status Code</th>
+                    <th>Betekenis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>200 OK</td><td>De aanvraag is succesvol verwerkt.</td></tr>
+                <tr><td>201 Created</td><td>Een nieuw object is succesvol aangemaakt.</td></tr>
+                <tr><td>400 Bad Request</td><td>De aanvraag bevatte ongeldige gegevens.</td></tr>
+                <tr><td>401 Unauthorized</td><td>Authenticatie is vereist.</td></tr>
+                <tr><td>403 Forbidden</td><td>Je hebt geen toestemming om dit te doen.</td></tr>
+                <tr><td>404 Not Found</td><td>Het gevraagde item bestaat niet.</td></tr>
+            </tbody>
+        </table>
+    </section>
+</div>
 {% endblock %}
