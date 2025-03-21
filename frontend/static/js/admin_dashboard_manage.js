@@ -221,6 +221,7 @@ $(document).ready(function () {
     let researchSortOrder = 'asc';
 
     function fetchResearches(sortBy = 'research_id', sortOrder = 'asc', page = 1) {
+        console.log('fetching researches...');
         $.ajax({
             url: '/api/researches-admin',
             method: 'GET',

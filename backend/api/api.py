@@ -8,6 +8,7 @@ from backend.api.login import Login
 from backend.api.peer_experts import PeerExpertRest, SinglePeerExpertRest
 from backend.api.registrations import Registrations, Registration, ResearchesRegistrationState
 from backend.api.researches import Researches, SingleResearch
+from backend.api.researches_crud_api import ResearchesRest
 from backend.api.utils import method_not_allowed
 from backend.database.models.api_keys_model import ApiKeys
 from backend.database.models.limitations_model import LimitationsModel
@@ -150,3 +151,4 @@ api.add_resource(PeerExpertRest, '/peers')
 api.add_resource(SinglePeerExpertRest, '/peers/<int:peer_expert_id>')
 api.add_resource(Registrations, '/peers/registrations')
 api.add_resource(Registration, '/peers/registrations/<int:registration_id>')
+api.add_resource(ResearchesRest, '/researches-admin')
