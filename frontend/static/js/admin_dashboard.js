@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(() => {
         fetchResearches();
         fetchPeerExperts();
+        fetchRegistrations();
     }, 1000); //
 });
 
@@ -265,6 +266,109 @@ function rejectPeerExpert(peer_id) {
 }
 
 
+// REGISTRATIES (INSCHRIJVINGEN)
+
+function fetchRegistrations() {
+    fetch("/api/registrations?registration_status_id=1")
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById("registrationApprovalContainer");
+            container.innerHTML = "";
+
+            if (data.length === 0) {
+                container.innerHTML = "<p class='text-muted'>Geen nieuwe inschrijvingen om weer te geven.</p>";
+                return;
+            }
+
+            data.forEach(registration => {
+                const item = document.createElement("div");
+                item.classList.add("border", "rounded-3", "p-3", "d-flex", "justify-content-between", "align-items-center");
+
+                const info = document.createElement("p");
+                info.classList.add("mb-0");
+                info.textContent = `Inschrijving ${registration.peer_expert_registration_id}`;
+
+                const detailsButton = document.createElement("button");
+                detailsButton.textContent = "Details";
+                detailsButton.classList.add("btn", "btn-info", "me-2");
+                detailsButton.addEventListener("click", () => openRegistrationModal(registration.peer_expert_registration_id));
+
+                item.appendChild(info);
+                item.appendChild(detailsButton);
+
+                container.appendChild(item);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching registrations:", error);
+        });
+}
+
+function openRegistrationModal(registrationId) {
+    fetch(`/api/registrations/${registrationId}`)
+        .then(response => response.json())
+        .then(registration => {
+            document.getElementById("registrationModalTitle").textContent = `Inschrijving ${registration.peer_expert_registration_id}`;
+            document.getElementById("registrationId").textContent = registration.peer_expert_registration_id;
+            document.getElementById("registrationStatus").textContent = registration.registration_status.status;
+            document.getElementById("registrationPeerExpert").textContent = registration.peer_expert_id; // evt uitbreiden met meer info
+            document.getElementById("registrationResearch").textContent = registration.research_id; // evt uitbreiden met meer info
+
+            const approveBtn = document.getElementById("modalApproveRegistrationButton");
+            const rejectBtn = document.getElementById("modalRejectRegistrationButton");
+
+            approveBtn.onclick = () => approveRegistration(registration.peer_expert_registration_id);
+            rejectBtn.onclick = () => rejectRegistration(registration.peer_expert_registration_id);
+
+            const modal = new bootstrap.Modal(document.getElementById("registrationModal"));
+            modal.show();
+        })
+        .catch(error => {
+            console.error("Error fetching registration details:", error);
+        });
+}
+
+function approveRegistration(registrationId) {
+    fetch(`/api/registrations/${registrationId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registration_status_id: 2 }) // 2 = goedgekeurd
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Goedkeuren mislukt.");
+            return response.json();
+        })
+        .then(() => {
+            showAlert("Inschrijving goedgekeurd.", "success");
+            bootstrap.Modal.getInstance(document.getElementById("registrationModal")).hide();
+            fetchRegistrations();
+        })
+        .catch(error => {
+            console.error(error);
+            showAlert("Goedkeuren mislukt.", "danger");
+        });
+}
+
+function rejectRegistration(registrationId) {
+    fetch(`/api/registrations/${registrationId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registration_status_id: 3 }) // 3 = afgekeurd
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Afkeuren mislukt.");
+            return response.json();
+        })
+        .then(() => {
+            showAlert("Inschrijving afgekeurd.", "success");
+            bootstrap.Modal.getInstance(document.getElementById("registrationModal")).hide();
+            fetchRegistrations();
+        })
+        .catch(error => {
+            console.error(error);
+            showAlert("Afkeuren mislukt.", "danger");
+        });
+}
 function showAlert(message, type = "success") {
     const alertContainer = document.getElementById("alertContainer");
     alertContainer.innerHTML = `
