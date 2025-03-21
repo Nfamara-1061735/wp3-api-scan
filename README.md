@@ -119,6 +119,10 @@ Deze pagina is bedoeld voor medewerkers van de organisaties. Hier staat de docum
 
 Deze pagina's zijn bedoeld voor de medewerkers van stichting Accessibility (de admins). Als je naar deze pagina gaat, zul je eerst moeten inloggen:
 
+De test inloggegevens voor deze pagina zijn 
+- **gebruiksnaam**: admin
+- **wachtwoord**: admin
+
 ![image](docs/images/ReadMe%20screenshots/admin_login.png)
 
 Nadat je in hebt gelogd kom je in het 'admin dashboard' terecht. Hier kunnen de admins CRUD-acties uitvoeren op de onderzoeksaanvragen, inschrijvingen en ervaringsdeskundigen. Dit kan op twee manieren:
@@ -139,6 +143,7 @@ Er zijn drie verschillende tabjes waarop je 'objecten' goed- of af kan keuren:
 Geen screenshot beschikbaar
 - Ervaringsdeskundigen:
 ![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren_ervaringsdeskundigen.png)
+
 #### Overige CRUD-acties
 Het uitvoeren van overige CRUD-acties zoals het aanpassen/verwijderen van gegevens moet via het 'beheren'-scherm:
 
@@ -156,4 +161,56 @@ Er zijn drie verschillende overzichten:
 - Beheerders:
 ![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_beheerders.png)
 
-### Ervaringsdeskundige
+
+### Ervaringsdeskundigen
+
+Deze pagina's zijn bedoeld voor de ervaringsdeskundigen. Als je naar deze pagina gaat, zul je eerst moeten inloggen of moeten registreren:
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_login_or_register.png)
+
+#### Inlogpagina
+Op deze pagina kan een (al goedgekeurde) ervaringsdeskundige inloggen met een email-adres en wachtwoord. Als de ervaringsdeskundige (nog) niet is goedgekeurd of is afgekeurd zal een foutmelding worden getoond.
+
+Als je de database goed hebt gevuld bij het opstarten van de applicatie zou er een credentials.json bestand moeten verschijnen.
+
+![image](docs/images/ReadMe%20screenshots/credentials_json_file.png)
+
+Hierin vind je test inloggegevens voor de ervaringsdeskundigen 
+
+![image](docs/images/ReadMe%20screenshots/Inlogcredentials_jason_file.png)
+
+En met een van deze gegevens kan je inloggen bij de ervaringsdeskundigen 
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_login.png)
+
+#### Registerpagina
+Op deze pagina kan een je een account aanmaken. Er moeten allerlei gegevens zoals voornaam, achternaam maar ook de beperkingen in worden gevuld. Hierna kan de je het account nog niet gebruiken. Dit kan pas nadat het goed is gekeurd door een admin.
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_1.png)
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_2.png)
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_3.png)
+
+#### Dashboard
+
+Als je bent ingelogd kom word je verwezen naar de 'ervaringsdeskundige dashboard' pagina. Hier staan drie tabjes waar je onderzoeken kan zien.
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard.png)
+
+Door op de 'details'-knop te drukken kan je een kort overzicht van de belangrijke data van het onderzoek zien.
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_details.png)
+
+Als je bent ingelogd als ervaringsdeskundige kan je ook je eigen gegevens bewerken. Dit doe je door bij de dropdown-knop op 'bekijk profiel' te klikken
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_account_dropdown.png)
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_account.png)
+
+Er zijn drie verschillende tabjes met onderzoeken:
+- Open onderzoeken:
+In dit tabje kan je de open onderzoeken zien waarvoor je je kan inschrijven.
+
+- Mijn inschrijvingen:
+In dit tabje kan je de onderzoeken zien waarvoor je je hebt ingeschreven.
+
+- Beoordeelde onderzoeken:
+In dit tabje kan je de onderzoeken zien waar je aan hebt deelgenomen en die zijn beoordeeld.
