@@ -2,8 +2,8 @@
 {% block title %}Peer Register{% endblock %}
 {% block head %}
     <link
-            rel="stylesheet"
-            href="{{ url_for('.static', filename='css/peer_register.css') }}"
+      rel="stylesheet"
+      href="{{ url_for('.static', filename='css/peer_register.css') }}"
     />
 {% endblock %}
 {% block logout %} {% endblock %}
@@ -14,74 +14,99 @@
                  class="register-icon mb-3">
             <h1>Ervaringsdeskundige Registratie</h1>
         </div>
-        <form method="POST" action="{{ url_for('frontend.register') }}" class="mt-4">
+        <form method="POST" action="{{ url_for('frontend.register') }}" class="registration-form mt-4" novalidate>
             <div class="mb-3">
                 <label for="postal_code" class="form-label">Postcode</label>
-                <input id="postal_code" type="text" name="postal_code" class="form-control" required>
-            </div>
+                <input id="postal_code" type="text" name="postal_code" required pattern="^[0-9]{4}[A-Za-z]{2}$" class="form-control" required>
+                <small class="error-message" id="postal_code_error">Vul een geldige postcode in (bijvoorbeeld 1234AB).</small>
+        </div>
 
             <div class="mb-3">
                 <label for="gender" class="form-label">Geslacht</label>
                 <select id="gender" name="gender" class="form-select" required>
-                    <option value="">Selecteer</option>
-                    <option value="male">Man</option>
-                    <option value="female">Vrouw</option>
-                    <option value="other">Anders</option>
-                </select>
-            </div>
+                <option value="">Selecteer</option>
+                <option value="male">Man</option>
+                <option value="female">Vrouw</option>
+                <option value="other">Anders</option>
+            </select>
+            <small class="error-message" id="gender_error">Selecteer je geslacht.</small>
+        </div>
 
             <div class="mb-3">
                 <label for="birth_date" class="form-label">Geboortedatum</label>
                 <input id="birth_date" type="date" name="birth_date" class="form-control" required>
-            </div>
+                <small class="error-message" id="birth_date_error">Vul je geboortedatum in.</small>
+        </div>
 
             <div class="mb-3">
                 <label for="tools_used" class="form-label">Hulpmiddelen</label>
                 <input id="tools_used" type="text" name="tools_used" class="form-control">
-            </div>
+                <small class="error-message" id="tools_used_error">Vul je hulpmiddelen in.</small>
+        </div>
 
             <div class="mb-3">
                 <label for="short_bio" class="form-label">Korte Bio</label>
                 <textarea id="short_bio" name="short_bio" class="form-control" required></textarea>
-            </div>
+                <small class="error-message" id="short_bio_error">Geef een korte bio.</small>
+        </div>
 
             <div class="mb-3">
                 <label for="special_notes" class="form-label">Speciale Opmerkingen</label>
                 <textarea id="special_notes" name="special_notes" class="form-control"></textarea>
-            </div>
+                <small class="error-message" id="special_notes_error">Geef een speciale opmerking.</small>
+        </div>
+
+            <div class="mb-3 form-check">
+                <input id="accepted_terms" type="checkbox" name="accepted_terms" class="form-check-input" required>
+                <label for="accepted_terms" class="form-check-label">Ik ga akkoord met de voorwaarden</label>
+                <small class="error-message" id="accepted_terms_error">Je moet akkoord gaan met de voorwaarden.</small>
+        </div>
 
             <div class="mb-3 form-check">
                 <input type="checkbox" name="has_supervisor" id="has_supervisor_checkbox" class="form-check-input">
                 <label for="has_supervisor_checkbox" class="form-check-label">Heeft Begeleider</label>
-            </div>
+        </div>
 
             <div id="supervisor-name-group" class="mb-3">
                 <label for="supervisor_or_guardian_name" class="form-label">Naam Begeleider/Voogd</label>
                 <input id="supervisor_or_guardian_name" type="text" name="supervisor_or_guardian_name"
                        class="form-control">
-            </div>
+                <small class="error-message" id="supervisor_or_guardian_name_error">Geef de naam van de begeleider of voogd op.</small>
+        </div>
 
             <div class="mb-3">
                 <label for="availability_notes" class="form-label">Beschikbaarheid</label>
                 <textarea id="availability_notes" name="availability_notes" class="form-control" required></textarea>
-            </div>
+                <small class="error-message" id="availability_notes_error">Vul je beschikbaarheid in.</small>
+        </div>
 
             <div class="mb-3">
                 <label for="contact_preference_id" class="form-label">Contactvoorkeur ID</label>
                 <input id="contact_preference_id" type="number" name="contact_preference_id" class="form-control"
                        required>
-            </div>
+                <small class="error-message" id="contact_preference_id_error">Geef je contactvoorkeur op.</small>
+        </div>
 
-            <div class="mt-3 form-check">
-                <input id="accepted_terms" type="checkbox" name="accepted_terms" class="form-check-input" required>
-                <label for="accepted_terms" class="form-check-label">Ik ga akkoord met <a target="_blank"
-                                                                                          href="{{ url_for('.static', filename='docs/accessibilitynl_voorwaarden_gegevens-01012025.pdf') }}">De
-                    voorwaarden <i class="bi bi-box-arrow-up-right"></i></a></label>
-            </div>
+            <div class="mb-3">
+                <label for="user_id" class="form-label">Gebruikers ID</label>
+                <input id="user_id" type="number" name="user_id" class="form-control" required>
+                <small class="error-message" id="user_id_error">Kies een gebruikersid.</small>
+        </div>
 
             <button type="submit" class="btn register-btn mt-4 w-100">Registreer</button>
-        </form>
+    </form>
+    <!-- Algemene Voorwaarden Pop-up -->
+    <div id="voorwaarden-popup" class="voorwaarden-popup-overlay">
+        <div class="voorwaarden-popup">
+            <span class="voorwaarden-close-btn">&times;</span>
+            <h2>Algemene Voorwaarden</h2>
+            <div class="voorwaarden-content">
+
+                <p>De algemene voorwaarden van Stichting Accessibility...</p>
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('.static', filename='js/peer_register.js') }}"></script>
