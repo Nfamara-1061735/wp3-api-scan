@@ -13,4 +13,7 @@ class LimitationsModel(db.Model):
     limitation: Mapped[str]
     """limitation"""
 
+    limitation_category: Mapped[str]
+    """limitation category"""
+
     researches: Mapped[list["Research"]] = relationship(secondary="research_limitations", back_populates="limitations")

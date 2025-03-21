@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy import ForeignKey
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, relationship
@@ -11,26 +11,31 @@ class PeerExperts(db.Model):
     __tablename__ = "peer_experts"
 
     peer_expert_id: Mapped[int] = mapped_column(primary_key=True)
-    first_name: Mapped[str]
-    last_name: Mapped[str]
     postal_code: Mapped[str]
     gender: Mapped[str]
     birth_date: Mapped[datetime.datetime] = mapped_column(sa.DateTime)  # only shows Date without time
     tools_used: Mapped[Optional[str]]
     short_bio: Mapped[str]
     special_notes:Mapped[Optional[str]]
-    email_adress: Mapped[str] = mapped_column(unique=True, nullable=False)
-    phone_number: Mapped[str]
-    password: Mapped[str]
     accepted_terms:Mapped[bool] = mapped_column(default=False)
     has_supervisor: Mapped[bool] = mapped_column(default=False)
     supervisor_or_guardian_name: Mapped[Optional[str]]
     supervisor_or_guardian_email: Mapped[Optional[str]]
+    supervisor_or_guardian_phone: Mapped[Optional[str]]
     availability_notes: Mapped[str]
 
     contact_preference_id: Mapped[int] = mapped_column(ForeignKey('contact_preferences.contact_preference_id'))
     user_id: Mapped[int] = mapped_column(ForeignKey('users.user_id'))
-    # peer_expert_status_id: Mapped[int] = mapped_column(ForeignKey('peer_expert_statuses.peer_expert_status_id'))
-    peer_expert_status_id: Mapped[int] = mapped_column(ForeignKey('peer_expert_statuses.peer_expert_status_id'),nullable=False, default=1)
+    peer_expert_status_id: Mapped[int] = mapped_column(ForeignKey('peer_expert_statuses.peer_expert_status_id'))
+
+    limitations: Mapped[List["PeerExpertsLimitations"]] = relationship("PeerExpertsLimitations",
+                                                                       backref="peer_experts_limitations",
+                                                                       cascade="all, delete-orphan")
+    """List of user limitations"""
+
+    research_types: Mapped[List["PeerExpertsResearchTypes"]] = relationship("PeerExpertsResearchTypes",
+                                                                            backref="peer_expert_research_type",
+                                                                            cascade="all, delete-orphan")
+    """Relationship to the PeerExpertsLimitations model"""
 
     user: Mapped["Users"] = relationship(back_populates="peer_expert_info")

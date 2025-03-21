@@ -12,6 +12,7 @@ from .research_status_model import ResearchStatus
 from .user_organizations import UserOrganization
 from .users_model import Users
 from .users_stichting_accessibility_model import UsersStichtingAccessibility
+from .api_keys_model import ApiKeys
 from .peer_expert_registration_model import PeerExpertRegistration
 from .peer_expert_status_model import PeerExpertStatus
 from .registration_status_model import RegistrationStatus
