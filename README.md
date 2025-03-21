@@ -132,6 +132,13 @@ Door op de 'details'-knop te drukken, word een kort overzicht van de gegevens va
 
 ![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren_details.png)
 
+Er zijn drie verschillende tabjes waarop je 'objecten' goed- of af kan keuren:
+- Onderzoeksaanvragen:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren_onderzoeksaanvragen.png)
+- Inschrijvingen:
+Geen screenshot beschikbaar
+- Ervaringsdeskundigen:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren_ervaringsdeskundigen.png)
 #### Overige CRUD-acties
 Het uitvoeren van overige CRUD-acties zoals het aanpassen/verwijderen van gegevens moet via het 'beheren'-scherm:
 
@@ -140,5 +147,13 @@ Het uitvoeren van overige CRUD-acties zoals het aanpassen/verwijderen van gegeve
 Door op de 'details'-knop te drukken, wordt een overzicht van alle beschikbare data van de ervaringsdeskundige, het onderzoek of de beheerder getoond. Hier kan je alle data aanpassen, waarna je door op de 'wijzigen opslaan'-knop te drukken de wijzigingen op kan slaan. Je kan ook het 'object' verwijderen door op de 'verwijderen'-knop te drukken.
 
 ![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_details.png)
+
+Er zijn drie verschillende overzichten:
+- Ervaringsdeskundigen:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_ervaringsdeskundigen.png)
+- Onderzoeken:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_onderzoeken.png)
+- Beheerders:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_beheerders.png)
 
 ### Ervaringsdeskundige
