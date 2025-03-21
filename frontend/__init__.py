@@ -5,6 +5,7 @@ from flask import render_template, request, g, Blueprint, redirect, url_for, fla
 from flask import session
 
 from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
+from backend.api.utils import require_api_key
 from backend.api.researches_api import FilteredResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
 from backend.database.models.research_model import Research

@@ -1,6 +1,4 @@
-from functools import wraps
-
-from flask import Blueprint, jsonify, request
+from flask import Blueprint
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 
 from backend import db
@@ -11,7 +9,6 @@ from backend.api.registrations import Registrations, Registration, ResearchesReg
 from backend.api.researches_api import Researches, SingleResearch
 from backend.api.researches_crud_api import ResearchesRest, SingleResearchRest
 from backend.api.utils import method_not_allowed
-from backend.database.models.api_keys_model import ApiKeys
 from backend.database.models.limitations_model import LimitationsModel
 from backend.database.models.peer_expert_registration_model import PeerExpertRegistration
 from backend.database.models.peer_experts_model import PeerExperts
