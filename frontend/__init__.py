@@ -129,7 +129,7 @@ def peer_dashboard():
 
 
 @frontend_bp.route('/docs')
-@require_api_key  # API-key validatie toepassen
+# @require_api_key  # API-key validatie toepassen
 def documentation():
     """Toon de API-documentatie, alleen als de API-key geldig is"""
     return render_template("api_documentation.jinja", theme=g.theme)
