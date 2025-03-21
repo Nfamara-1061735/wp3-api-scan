@@ -145,6 +145,32 @@
     </div>
 </div>
 
+<!-- Modal for registration details -->
+<div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="registrationModalTitle">Details Inschrijving</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th>Registratie ID</th><td id="registrationId"></td></tr>
+                        <tr><th>Status</th><td id="registrationStatus"></td></tr>
+                        <tr><th>Ervaringsdeskundige</th><td id="registrationPeerExpert"></td></tr>
+                        <tr><th>Onderzoek</th><td id="registrationResearch"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" id="modalApproveRegistrationButton" class="btn btn-success me-3">Goedkeuren</button>
+                <button type="button" id="modalRejectRegistrationButton" class="btn btn-danger">Afkeuren</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
