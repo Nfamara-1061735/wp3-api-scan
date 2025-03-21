@@ -18,25 +18,6 @@ from backend.database.models.peer_experts_model import PeerExperts
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
-
-#api-key validatie
-def require_api_key(f):
-   @wraps(f)
-   def decorated_function(*args, **kwargs):
-      api_key = request.headers.get("Authorization")
-
-      if not api_key or not api_key.startswith("Bearer "):
-         return jsonify({"error": "API-key ontbreekt of onjuist formaat"}), 401  # JSON-error
-
-      api_key = api_key.split("Bearer ")[1]
-
-      if not db.session.query(ApiKeys).filter_by(api_key=api_key).first():
-         return jsonify({"error": "Ongeldige API-key"}), 401  # JSON-error
-
-      return f(*args, **kwargs)  #Als API-key geldig is wordt de functie pas uitgevoerd
-
-   return decorated_function
-
 limitationFields = {
    'limitation_id': fields.Integer,
    'limitation': fields.String
