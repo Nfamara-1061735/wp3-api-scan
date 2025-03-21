@@ -252,7 +252,7 @@ $(document).ready(function () {
 
                 response.researches.forEach(function (research) {
                     const statusBadge = getStatusBadge(research.status_id);
-                    const row = $('<tr>');
+                    const row = $('<tr>').attr('data-research-id', research.research_id);
                     row.append(`<td class="text-center">${statusBadge}</td>`);
                     row.append(`<td>${research.title}</td>`);
                     row.append(`<td>${research.description || 'Geen beschrijving'}</td>`);
@@ -263,12 +263,38 @@ $(document).ready(function () {
                     $('#researchTable tbody').append(row);
                 });
             },
-            error: function (xhr, status, error) {
-                console.error("Error fetching researches:", error);
+            error: function () {
                 $('#alertContainer').text('Fout bij laden van onderzoeken.');
             }
         });
     }
+
+    $('#researchTable').on('click', '.btn-info', function () {
+        const row = $(this).closest('tr');
+        const researchId = row.data('research-id');
+        openResearchDetailsModal(researchId);
+    });
+
+    function openResearchDetailsModal(researchId) {
+        $.ajax({
+            url: `/api/researches-admin/${researchId}`,
+            method: 'GET',
+            success: function (research) {
+                $('#researchId').val(research.research_id);
+                $('#researchTitle').val(research.title);
+                $('#researchLocation').val(research.location);
+                $('#researchDescription').val(research.description);
+                $('#researchStartDate').val(research.start_date);
+                $('#researchEndDate').val(research.end_date);
+                $('#researchStatusId').val(research.status_id);
+                $('#researchDetailsModal').modal('show');
+            },
+            error: function () {
+                $('#alertContainer').text('Fout bij laden van onderzoek details.');
+            }
+        });
+    }
+
 
     // Research pagination
     $('#firstResearchPage').on('click', () => researchCurrentPage > 1 && fetchResearches(researchSortName, researchSortOrder, 1));
