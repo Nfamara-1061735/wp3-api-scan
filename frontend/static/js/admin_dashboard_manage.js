@@ -293,7 +293,9 @@ $(document).ready(function () {
                 $('#researchReward').val(research.reward);
                 $('#researchTargetMinAge').val(research.target_min_age);
                 $('#researchTargetMaxAge').val(research.target_max_age);
-                loadLimitations(research.limitations)
+
+                currentSelectedLimitations = research.limitations || [];
+                updateSelectedLimitationsList();
 
                 $('#researchDetailsModal').modal('show');
             },
@@ -335,7 +337,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         const researchId = $('#researchId').val();
-        const limitationIds = $('#researchLimitations').val().map(id => parseInt(id));
+        const limitationIds = currentSelectedLimitations.map(l => l.limitation_id);
 
         const payload = {
             title: $('#researchTitle').val(),
@@ -441,4 +443,80 @@ $(document).ready(function () {
         }
     }
 
+    let currentSelectedLimitations = [];
+
+    $('#openLimitationsModalBtn').on('click', function () {
+        loadLimitationsModal();
+        $('#limitationsModal').modal('show');
+    });
+
+    function loadLimitationsModal() {
+        $.ajax({
+            url: '/api/limitations/',
+            method: 'GET',
+            success: function (limitations) {
+                const container = $('#limitationsCheckboxes');
+                container.empty();
+
+                const selectedIds = currentSelectedLimitations.map(l => l.limitation_id);
+
+                limitations.forEach(function (limitation) {
+                    const isChecked = selectedIds.includes(limitation.limitation_id);
+                    const checkbox = `
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   value="${limitation.limitation_id}"
+                                   id="modal-limitation-${limitation.limitation_id}"
+                                   ${isChecked ? 'checked' : ''}>
+                            <label class="form-check-label" for="modal-limitation-${limitation.limitation_id}">
+                                ${limitation.limitation}
+                            </label>
+                        </div>
+                    `;
+                    container.append(checkbox);
+                });
+            },
+            error: function () {
+                console.error('Fout bij laden van beperkingen.');
+                $('#alertContainer').text('Beperkingen ophalen is mislukt.');
+            }
+        });
+    }
+
+    $('#saveLimitationsBtn').on('click', function () {
+        const selectedIds = [];
+
+        $('#limitationsCheckboxes input[type="checkbox"]:checked').each(function () {
+            const limitationId = parseInt($(this).val());
+            const limitationText = $(this).next('label').text();
+            selectedIds.push({
+                limitation_id: limitationId,
+                limitation: limitationText
+            });
+        });
+
+        currentSelectedLimitations = selectedIds;
+        updateSelectedLimitationsList();
+        $('#limitationsModal').modal('hide');
+    });
+
+    function updateSelectedLimitationsList() {
+        const container = $('#selectedLimitationsList');
+        container.empty();
+
+        if (currentSelectedLimitations.length === 0) {
+            container.html('<p class="text-muted">Geen beperkingen geselecteerd.</p>');
+            return;
+        }
+
+        const list = $('<ul class="list-group list-group-flush"></ul>');
+
+        currentSelectedLimitations.forEach(limitation => {
+            const item = `<li class="list-group-item">${limitation.limitation}</li>`;
+            list.append(item);
+        });
+
+        container.append(list);
+    }
 });
+
