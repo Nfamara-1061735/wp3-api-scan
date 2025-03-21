@@ -1,9 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     fetchResearches();
+    fetchNewPeerExperts();
 
-    setInterval(fetchResearches, 10000);
+    setInterval(() => {
+        fetchResearches();
+        fetchNewPeerExperts();
+    }, 10000);
 });
 
+/* ============= RESEARCHES ============= */
 function fetchResearches() {
     fetch("/api/researches")
         .then(response => response.json())
@@ -53,7 +58,7 @@ function openModal(research) {
     document.getElementById("researchReward").textContent = research.has_reward ? research.reward : "Geen beloning";
 
     const limitationsList = document.getElementById("researchLimitations");
-    limitationsList.innerHTML = ""; // Clear existing
+    limitationsList.innerHTML = "";
     if (research.limitations && research.limitations.length > 0) {
         research.limitations.forEach(limit => {
             const li = document.createElement("li");
@@ -73,67 +78,112 @@ function openModal(research) {
     rejectButton.onclick = () => rejectResearch(research.research_id);
 
     const modalElement = document.getElementById("researchModal");
-    const modal = new bootstrap.Modal(modalElement)
+    const modal = new bootstrap.Modal(modalElement);
     modal.show();
 }
 
 function approveResearch(research_id) {
     fetch(`/api/researches/${research_id}`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({status_id: 2})
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status_id: 2 })
     })
-        .then(response => {
-            if (!response.ok) throw new Error("Goedkeuren niet gelukt.");
-            return response.json();
-        })
-        .then(() => {
-            showAlert("Onderzoek is goedgekeurd.", "success");
-            const modal = bootstrap.Modal.getInstance(document.getElementById("researchModal"));
-            modal.hide();
-            fetchResearches();
-        })
-        .catch(error => {
-            console.error(error);
-            showAlert("Goedkeuren mislukt.", "danger");
-        });
+    .then(response => {
+        if (!response.ok) throw new Error("Goedkeuren niet gelukt.");
+        return response.json();
+    })
+    .then(() => {
+        showAlert("Onderzoek is goedgekeurd.", "success");
+        bootstrap.Modal.getInstance(document.getElementById("researchModal")).hide();
+        fetchResearches();
+    })
+    .catch(error => {
+        console.error(error);
+        showAlert("Goedkeuren mislukt.", "danger");
+    });
 }
 
 function rejectResearch(research_id) {
     fetch(`/api/researches/${research_id}`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({status_id: 3})
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status_id: 3 })
     })
-        .then(response => {
-            if (!response.ok) throw new Error("Afkeuren niet gelukt.");
-            return response.json();
-        })
-        .then(() => {
-            showAlert("Onderzoek is afgekeurd.", "success");
-            const modal = bootstrap.Modal.getInstance(document.getElementById("researchModal"));
-            modal.hide();
-            fetchResearches();
+    .then(response => {
+        if (!response.ok) throw new Error("Afkeuren niet gelukt.");
+        return response.json();
+    })
+    .then(() => {
+        showAlert("Onderzoek is afgekeurd.", "success");
+        bootstrap.Modal.getInstance(document.getElementById("researchModal")).hide();
+        fetchResearches();
+    })
+    .catch(error => {
+        console.error(error);
+        showAlert("Afkeuren mislukt.", "danger");
+    });
+}
+
+/* ============= NEW PEER EXPERTS ============= */
+function fetchNewPeerExperts() {
+    fetch("/api/peers?sort_by=peer_expert_id&sort_order=asc")
+        .then(response => response.json())
+        .then(data => {
+            const peerExperts = data.peer_experts.filter(peer => peer.peer_expert_status_id === 1);
+            const tableBody = document.querySelector("#newPeerExpertsTable tbody");
+            const message = document.getElementById("noNewPeerExpertsMessage");
+
+            tableBody.innerHTML = "";
+
+            if (peerExperts.length === 0) {
+                message.classList.remove("d-none");
+                return;
+            } else {
+                message.classList.add("d-none");
+            }
+
+            peerExperts.forEach(peer => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${peer.peer_expert_id}</td>
+                    <td>${peer.user.first_name}</td>
+                    <td>${peer.user.last_name}</td>
+                    <td>${peer.postal_code}</td>
+                    <td>${peer.gender}</td>
+                    <td>${formatDate(peer.birth_date)}</td>
+                    <td><button class="btn btn-info btn-sm" onclick="openPeerExpertModal(${peer.peer_expert_id})">Details</button></td>
+                `;
+
+                tableBody.appendChild(row);
+            });
         })
         .catch(error => {
-            console.error(error);
-            showAlert("Afkeuren mislukt.", "danger");
+            console.error("Error fetching peer experts:", error);
         });
 }
 
-function showAlert(message, type = "succes") {
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('nl-NL', options);
+}
+
+function openPeerExpertModal(peerExpertId) {
+    window.location.href = `/admin/peer-experts/${peerExpertId}`;
+}
+
+/* ============= ALERT ============= */
+function showAlert(message, type = "success") {
     const alertContainer = document.getElementById("alertContainer");
 
     alertContainer.innerHTML = `
         <div class="alert alert-${type} alert-dismissible fade show" role="alert">
             ${message}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Sluiten"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Sluiten"></button>
         </div>
     `;
+
     setTimeout(() => {
         const alert = alertContainer.querySelector('.alert');
         if (alert) {
