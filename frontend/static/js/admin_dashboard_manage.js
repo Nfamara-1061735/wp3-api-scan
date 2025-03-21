@@ -293,6 +293,8 @@ $(document).ready(function () {
                 $('#researchReward').val(research.reward);
                 $('#researchTargetMinAge').val(research.target_min_age);
                 $('#researchTargetMaxAge').val(research.target_max_age);
+                loadLimitations(research.limitations)
+
                 $('#researchDetailsModal').modal('show');
             },
             error: function () {
@@ -301,10 +303,40 @@ $(document).ready(function () {
         });
     }
 
+    function loadLimitations(selectedLimitations = []) {
+        $.ajax({
+            url: '/api/limitations/',
+            method: 'GET',
+            success: function (limitations) {
+                const $select = $('#researchLimitations');
+                $select.empty(); // Clear previous options
+
+
+                const selectedIds = selectedLimitations.map(l => l.limitation_id);
+
+                limitations.forEach(function (limitation) {
+                    const isSelected = selectedIds.includes(limitation.limitation_id);
+                    const option = $('<option>')
+                        .val(limitation.limitation_id)
+                        .text(limitation.limitation)
+                        .prop('selected', isSelected);
+
+                    $select.append(option);
+                });
+            },
+            error: function () {
+                console.error('Fout bij laden van beperkingen.');
+                $('#alertContainer').text('Beperkingen ophalen is mislukt.');
+            }
+        });
+    }
+
     $('#researchDetailsForm').on('submit', function (e) {
         e.preventDefault();
 
         const researchId = $('#researchId').val();
+        const limitationIds = $('#researchLimitations').val().map(id => parseInt(id));
+
         const payload = {
             title: $('#researchTitle').val(),
             location: $('#researchLocation').val(),
@@ -317,7 +349,8 @@ $(document).ready(function () {
             has_reward: $('#researchHasReward').is(':checked'),
             reward: $('#researchReward').val(),
             target_min_age: parseInt($('#researchTargetMinAge').val()) || null,
-            target_max_age: parseInt($('#researchTargetMaxAge').val()) || null
+            target_max_age: parseInt($('#researchTargetMaxAge').val()) || null,
+            limitation_ids: limitationIds
         };
 
         $.ajax({
