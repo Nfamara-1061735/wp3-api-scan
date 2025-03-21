@@ -221,7 +221,7 @@ $(document).ready(function () {
     let researchSortOrder = 'asc';
 
     function fetchResearches(sortBy = 'research_id', sortOrder = 'asc', page = 1) {
-        console.log('fetching researches...');
+        console.log(`Fetching researches... page ${page}`);
         $.ajax({
             url: '/api/researches-admin',
             method: 'GET',
@@ -232,6 +232,8 @@ $(document).ready(function () {
                 page: page
             },
             success: function (response) {
+                console.log("Researches fetched:", response);
+
                 $('#researchTable tbody').empty();
                 $('#currentResearchPage').val(response.pagination.current_page);
 
@@ -243,9 +245,14 @@ $(document).ready(function () {
                 $('#nextResearchPage').prop('disabled', researchCurrentPage >= researchMaxPages);
                 $('#lastResearchPage').prop('disabled', researchCurrentPage >= researchMaxPages);
 
+                if (response.researches.length === 0) {
+                    $('#researchTable tbody').append('<tr><td colspan="7">Geen onderzoeken gevonden.</td></tr>');
+                    return;
+                }
+
                 response.researches.forEach(function (research) {
                     const statusBadge = getStatusBadge(research.status_id);
-                    var row = $('<tr>');
+                    const row = $('<tr>');
                     row.append(`<td class="text-center">${statusBadge}</td>`);
                     row.append(`<td>${research.title}</td>`);
                     row.append(`<td>${research.description || 'Geen beschrijving'}</td>`);
@@ -256,47 +263,59 @@ $(document).ready(function () {
                     $('#researchTable tbody').append(row);
                 });
             },
-            error: function () {
+            error: function (xhr, status, error) {
+                console.error("Error fetching researches:", error);
                 $('#alertContainer').text('Fout bij laden van onderzoeken.');
             }
         });
     }
 
-    $('#firstResearchPage').on('click', function () {
-        if (researchCurrentPage > 1) fetchResearches(researchSortName, researchSortOrder, 1);
-    });
-    $('#previousResearchPage').on('click', function () {
-        if (researchCurrentPage > 1) fetchResearches(researchSortName, researchSortOrder, researchCurrentPage - 1);
-    });
+    // Research pagination
+    $('#firstResearchPage').on('click', () => researchCurrentPage > 1 && fetchResearches(researchSortName, researchSortOrder, 1));
+    $('#previousResearchPage').on('click', () => researchCurrentPage > 1 && fetchResearches(researchSortName, researchSortOrder, researchCurrentPage - 1));
+    $('#nextResearchPage').on('click', () => researchCurrentPage < researchMaxPages && fetchResearches(researchSortName, researchSortOrder, researchCurrentPage + 1));
+    $('#lastResearchPage').on('click', () => researchCurrentPage < researchMaxPages && fetchResearches(researchSortName, researchSortOrder, researchMaxPages));
+
     $('#currentResearchPage').on('input', function () {
-        var page = parseInt($(this).val());
-        if (page >= 1 && page <= researchMaxPages) fetchResearches(researchSortName, researchSortOrder, page);
-        else $(this).val(researchCurrentPage);
-    });
-    $('#nextResearchPage').on('click', function () {
-        if (researchCurrentPage < researchMaxPages) fetchResearches(researchSortName, researchSortOrder, researchCurrentPage + 1);
-    });
-    $('#lastResearchPage').on('click', function () {
-        if (researchCurrentPage < researchMaxPages) fetchResearches(researchSortName, researchSortOrder, researchMaxPages);
+        const page = parseInt($(this).val());
+        if (page >= 1 && page <= researchMaxPages) {
+            fetchResearches(researchSortName, researchSortOrder, page);
+        } else {
+            $(this).val(researchCurrentPage);
+        }
     });
 
+
     $('#researchTable thead th').each(function () {
-        var sortName = $(this).attr('data-sort');
-        if (sortName) {
-            var button = $('<button class="p-0 btn btn-link"></button>').text($(this).text());
-            button.attr('data-sort', sortName);
+        const sort = $(this).attr('data-sort');
+        if (sort) {
+            const button = $('<button class="p-0 btn btn-link"></button>').text($(this).text());
+            button.attr('data-sort', sort);
             $(this).html(button);
         }
     });
 
     $('#researchTable thead').on('click', 'button', function () {
-        $('#researchTable thead button').not(this).find('i').remove();
+        $('#researchTable thead button i').remove();
         researchSortName = $(this).attr('data-sort');
+
         const icon = $('<i class="ms-1 bi bi-sort-up"></i>');
         $(this).append(icon);
+
         researchSortOrder = $(this).find('i').hasClass('bi-sort-down') ? 'desc' : 'asc';
         fetchResearches(researchSortName, researchSortOrder);
     });
+
+
+    $('#researches-tab').on('shown.bs.tab', function () {
+        console.log('Researches tab activated');
+        fetchResearches();
+    });
+
+
+    if ($('#researches').hasClass('show active')) {
+        fetchResearches();
+    }
 
     function getStatusBadge(statusId) {
         switch (statusId) {
