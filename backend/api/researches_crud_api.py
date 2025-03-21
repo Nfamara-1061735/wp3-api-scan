@@ -91,7 +91,7 @@ class SingleResearchRest(Resource):
     def get(self, research_id):
         research = Research.query.get(research_id)
         if not research:
-            abort(400, message=f"Onderzoek {research_id} bestaat niet.")
+            abort(404 , message=f"Onderzoek {research_id} bestaat niet.")
         return research, 200
 
     @check_permission_rest('admin')
