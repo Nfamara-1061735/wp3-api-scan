@@ -1,8 +1,8 @@
 from datetime import datetime
 from backend import db
 from backend.database.models.peer_experts_model import PeerExperts
-from backend.database.models.users_model import Users  # Toegevoegd voor user-model
-from backend.utils.password import generate_salt, hash_password  # Voor password hashing
+from backend.database.models.users_model import Users
+from backend.utils.password import generate_salt, hash_password
 
 class ExpertRegistrationModule:
     def __init__(self):
@@ -24,7 +24,7 @@ class ExpertRegistrationModule:
             )
 
             db.session.add(new_user)
-            db.session.flush()  # Genereert nieuwe user_id voordat je commit
+            db.session.flush()
 
             expert = PeerExperts(
                 postal_code=form_data.get('postal_code'),
@@ -38,7 +38,7 @@ class ExpertRegistrationModule:
                 supervisor_or_guardian_name=form_data.get('supervisor_or_guardian_name'),
                 availability_notes=form_data.get('availability_notes'),
                 contact_preference_id=form_data.get('contact_preference_id'),
-                user_id=form_data.get('user_id'),
+                user_id=new_user.user_id,
                 peer_expert_status_id = form_data.get('peer_expert_status_id', 1)
             )
             db.session.add(expert)
