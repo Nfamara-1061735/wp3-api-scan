@@ -92,6 +92,14 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
+        // Valideer voornaam
+        const firstName = document.getElementById('first_name');
+        showError('first_name', firstName.value.trim() ? '' : 'Vul je voornaam in.');
+
+        // Valideer achternaam
+        const lastName = document.getElementById('last_name');
+        showError('last_name', lastName.value.trim() ? '' : 'Vul je achternaam in.');
+
         // Valideer postcode
         const postalCode = document.getElementById('postal_code');
         const postalPattern = /^[0-9]{4}[A-Za-z]{2}$/;
