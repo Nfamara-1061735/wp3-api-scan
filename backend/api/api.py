@@ -6,6 +6,7 @@ from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from backend import db
 from backend.api.login import Login
 from backend.api.peer_experts import PeerExpertRest, SinglePeerExpertRest
+from backend.api.readonly import ContactPreferencesRest, PeerExpertStatusRest, LimitationsRest, ResearchTypesRest
 from backend.api.registrations import Registrations, Registration, ResearchesRegistrationState
 from backend.api.researches import Researches, SingleResearch
 from backend.api.utils import method_not_allowed
@@ -150,3 +151,9 @@ api.add_resource(PeerExpertRest, '/peers')
 api.add_resource(SinglePeerExpertRest, '/peers/<int:peer_expert_id>')
 api.add_resource(Registrations, '/peers/registrations')
 api.add_resource(Registration, '/peers/registrations/<int:registration_id>')
+
+# Get only
+api.add_resource(ContactPreferencesRest, '/contact_preferences')
+api.add_resource(PeerExpertStatusRest, '/peers/status')
+api.add_resource(LimitationsRest, '/limitations')
+api.add_resource(ResearchTypesRest, '/researches/types')

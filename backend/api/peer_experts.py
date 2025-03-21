@@ -7,8 +7,11 @@ from flask_sqlalchemy.query import Query
 from sqlalchemy import asc, desc
 
 from backend import db
-from backend.database.models import PeerExperts, Users
+from backend.database.models import PeerExperts, Users, PeerExpertsLimitations, ResearchTypesModel, \
+    PeerExpertsResearchTypes
+from backend.database.models.peer_expert_research_type_model import PeerExpertResearchTypeModel
 from backend.utils.check_permissions import check_permission_rest
+from backend.utils.password import generate_salt, hash_password
 
 # Fields for serializing the PeerExperts class to json for output (without pagination)
 peer_experts_fields = {
@@ -23,6 +26,7 @@ peer_experts_fields = {
     'has_supervisor': fields.Boolean,
     'supervisor_or_guardian_name': fields.String,
     'supervisor_or_guardian_email': fields.String,
+    'supervisor_or_guardian_phone': fields.String,
     'availability_notes': fields.String,
     'contact_preference_id': fields.Integer,
     'user_id': fields.Integer,
@@ -34,6 +38,12 @@ peer_experts_fields = {
         'email': fields.String,
         'phone_number': fields.String,
     }),
+    'limitations': fields.List(fields.Nested({
+        'limitation_id': fields.Integer,
+    })),
+    'research_types': fields.List(fields.Nested({
+        'research_type_id': fields.Integer,
+    })),
 }
 
 # Fields for serializing the PeerExperts class to json for output (with pagination)
@@ -93,6 +103,9 @@ class PeerExpertRest(Resource):
         max_entries_per_page: int | None = request.args.get('max_entries', None,
                                                             type=int)  # Default is None (i.e., show all entries)
 
+        # Get the show_all parameter (defaults to False)
+        show_all = request.args.get('show_all', 'false').lower() == 'true'
+
         if max_entries_per_page is not None and max_entries_per_page <= 0:
             abort(400, message="max_entries_per_page must be greater than 0.")
 
@@ -105,6 +118,10 @@ class PeerExpertRest(Resource):
             query = PeerExperts.query.filter_by(peer_expert_id=peer_id).join(Users).order_by(sort_direction)
         else:
             abort(403, message="Forbidden access")
+
+        # Exclude peer_expert_status_id of 4 unless show_all is True
+        if not show_all:
+            query = query.filter(PeerExperts.peer_expert_status_id != 4)
 
         # Pagination logic
         if max_entries_per_page:
@@ -188,44 +205,87 @@ class SinglePeerExpertRest(Resource):
     @check_permission_rest()
     @marshal_with(peer_experts_fields)
     def patch(self, peer_expert_id):
-        peer_expert: PeerExperts | None = PeerExperts.query.get(peer_expert_id)
+        with db.session.no_autoflush:
+            peer_expert: PeerExperts | None = PeerExperts.query.get(peer_expert_id)
 
-        if not peer_expert:
-            abort(404, message="Peer expert not found")
+            if not peer_expert:
+                abort(404, message="Peer expert not found")
 
-        # Check if the user is an admin or the peer expert themselves
-        if g.user.admin_info or (g.user.peer_expert_info and g.user.peer_expert_info.peer_expert_id == peer_expert_id):
-            # Get data from the request
-            data = request.get_json()
+            # Check if the user is an admin or the peer expert themselves
+            if g.user.admin_info or (
+                    g.user.peer_expert_info and g.user.peer_expert_info.peer_expert_id == peer_expert_id):
+                # Get data from the request
+                data = request.get_json()
 
-            # Update only the fields provided in the request using data.get()
-            peer_expert.postal_code = data.get('postal_code', peer_expert.postal_code)
-            peer_expert.gender = data.get('gender', peer_expert.gender)
+                # Update only the fields provided in the request using data.get()
+                peer_expert.postal_code = data.get('postal_code', peer_expert.postal_code)
+                peer_expert.gender = data.get('gender', peer_expert.gender)
 
-            # Safely handle birth_date, ensuring proper format conversion
-            birth_date_str = data.get('birth_date')
-            if birth_date_str:
-                peer_expert.birth_date = datetime.strptime(birth_date_str,
-                                                           '%Y-%m-%d')  # Assuming the date format is YYYY-MM-DD
+                # Safely handle birth_date, ensuring proper format conversion
+                birth_date_str = data.get('birth_date')
+                if birth_date_str:
+                    peer_expert.birth_date = datetime.strptime(birth_date_str,
+                                                               '%Y-%m-%d')  # Assuming the date format is YYYY-MM-DD
 
-            peer_expert.tools_used = data.get('tools_used', peer_expert.tools_used)
-            peer_expert.short_bio = data.get('short_bio', peer_expert.short_bio)
-            peer_expert.special_notes = data.get('special_notes', peer_expert.special_notes)
-            peer_expert.accepted_terms = data.get('accepted_terms', peer_expert.accepted_terms)
-            peer_expert.has_supervisor = data.get('has_supervisor', peer_expert.has_supervisor)
-            peer_expert.supervisor_or_guardian_name = data.get('supervisor_or_guardian_name',
-                                                               peer_expert.supervisor_or_guardian_name)
-            peer_expert.availability_notes = data.get('availability_notes', peer_expert.availability_notes)
-            peer_expert.contact_preference_id = data.get('contact_preference_id', peer_expert.contact_preference_id)
-            peer_expert.user_id = data.get('user_id', peer_expert.user_id)
-            peer_expert.peer_expert_status_id = data.get('peer_expert_status_id', peer_expert.peer_expert_status_id)
+                peer_expert.tools_used = data.get('tools_used', peer_expert.tools_used)
+                peer_expert.short_bio = data.get('short_bio', peer_expert.short_bio)
+                peer_expert.special_notes = data.get('special_notes', peer_expert.special_notes)
+                peer_expert.accepted_terms = data.get('accepted_terms', peer_expert.accepted_terms)
+                peer_expert.has_supervisor = data.get('has_supervisor', peer_expert.has_supervisor)
+                peer_expert.supervisor_or_guardian_name = data.get('supervisor_or_guardian_name',
+                                                                   peer_expert.supervisor_or_guardian_name)
+                peer_expert.availability_notes = data.get('availability_notes', peer_expert.availability_notes)
+                peer_expert.contact_preference_id = data.get('contact_preference_id', peer_expert.contact_preference_id)
+                peer_expert.peer_expert_status_id = data.get('peer_expert_status_id', peer_expert.peer_expert_status_id)
 
-            # Commit the updates to the database
-            db.session.commit()
+                # Handle updates to the nested "user" object
+                user_data = data.get('user')
+                if user_data:
+                    user: Users = peer_expert.user  # Assuming the peer_expert already has a related user
+                    if user:
+                        user.first_name = user_data.get('first_name', user.first_name)
+                        user.last_name = user_data.get('last_name', user.last_name)
+                        user.email = user_data.get('email', user.email)
+                        user.phone_number = user_data.get('phone_number', user.phone_number)
+                        if 'password' in user_data:
+                            salt = generate_salt()
+                            user.password = hash_password(user_data['password'], salt)
+                            user.salt = salt
 
-            return peer_expert, 200  # Return the updated peer_expert with HTTP 200 status
-        else:
-            abort(403, message="Forbidden: You can only update your own registration.")
+                # Handle updates to the "limitations" list
+                limitations_data = data.get('limitations')
+                if limitations_data is not None:
+                    # Clear existing limitations
+                    peer_expert.limitations = []
+
+                    # Add the new limitations
+                    for limitation in limitations_data:
+                        limitation_id = limitation.get('limitation_id')
+                        if limitation_id:
+                            limitation_entry = PeerExpertsLimitations(peer_expert_id=peer_expert.peer_expert_id,
+                                                                      limitation_id=limitation_id)
+                            peer_expert.limitations.append(limitation_entry)
+
+                # Handle updates to the "research_types" list
+                research_types_data = data.get('research_types')
+                if research_types_data is not None:
+                    # Clear existing research types
+                    peer_expert.research_types = []
+
+                    # Add the new research types
+                    for research_type in research_types_data:
+                        research_type_id = research_type.get('research_type_id')
+                        if research_type_id:
+                            research_type_entry = PeerExpertsResearchTypes(peer_expert_id=peer_expert.peer_expert_id,
+                                                                           research_type_id=research_type_id)
+                            peer_expert.research_types.append(research_type_entry)
+
+                # Commit the updates to the database
+                db.session.commit()
+
+                return peer_expert, 200  # Return the updated peer_expert with HTTP 200 status
+            else:
+                abort(403, message="Forbidden: You can only update your own registration.")
 
     @check_permission_rest()
     @marshal_with(peer_experts_fields)
@@ -246,3 +306,4 @@ class SinglePeerExpertRest(Resource):
             return {'message': 'Peer expert deleted successfully.'}, 200  # Return a success message
         else:
             abort(403, message="Forbidden: You can only delete your own registration.")
+
