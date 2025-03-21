@@ -28,9 +28,13 @@ class Login(Resource):
             if (user and self.verify_role(user, target_role)
                     and verify_password(password, user.password, user.salt)
                     and self.verify_peer_status(user, target_status)):
-                session["user"] = user.user_id  # Storing authentication using a session
-                response = {"success": True}
-                return response
+                session["user"] = {
+                'id': user.user_id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+            }  # Storing authentication using a session
+                return {"success": True}
             else:
                 if not verify_password(password, user.password, user.salt):
                     return {"success": False, "message": "Verkeerde gebruikersnaam of wachtwoord"}
@@ -40,9 +44,13 @@ class Login(Resource):
         elif target_role == 'admin':
             if (user and self.verify_role(user, target_role)
                     and verify_password(password, user.password, user.salt)):
-                session["user"] = user.user_id  # Storing authentication using a session
-                response = {"success": True}
-                return response
+                session["user"] = {
+                'id': user.user_id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+            }  # Storing authentication using a session
+                return {"success": True}
             else:
                 return {"success": False, "message": "Verkeerde gebruikersnaam of wachtwoord"}
 

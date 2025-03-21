@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import render_template, request, g, Blueprint, redirect, url_for, flash
 from flask import session
@@ -7,6 +8,7 @@ from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, Fil
 from backend.api.api import require_api_key
 from backend.api.researches import FilteredResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
+from backend.database.models.research_model import Research
 from backend.utils.check_permissions import check_permission
 
 template_dir = os.path.abspath('./frontend/templates/')
@@ -46,7 +48,7 @@ def register():
     if "user" in session and session['user'].peer_expert_info:
         redirect(url_for("frontend.peer_dashboard"))
     if request.method == 'GET':
-        return render_template('peer_register.html', theme=g.theme)
+        return render_template('peer_register.jinja', theme=g.theme)
     elif request.method == 'POST':
         form_data = request.form  # Haalt alle gegevens op uit het HTML-formulier
         registration = ExpertRegistrationModule()
@@ -55,7 +57,7 @@ def register():
             return redirect(url_for('frontend.peer_home'))
         else:
             flash('Er is een fout opgetreden tijdens de registratie.', 'danger')
-            return render_template('peer_register.html')
+            return render_template('peer_register.jinja')
 
 
 @frontend_bp.route('/logout')
@@ -130,3 +132,16 @@ def peer_dashboard():
 def documentation():
     """Toon de API-documentatie, alleen als de API-key geldig is"""
     return render_template("api_documentation.jinja", theme=g.theme)
+
+@frontend_bp.route('/onderzoeken')
+def onderzoeken():
+    alle_onderzoeken = Research.query.all()
+    return render_template("onderzoeken.jinja", theme=g.theme, alle_onderzoeken=alle_onderzoeken)
+
+@frontend_bp.route('/beheerders')
+def beheerders():
+    return render_template("beheerders.jinja", theme=g.theme)
+
+@frontend_bp.route('/ervaringsdeskundigen')
+def ervaringsdeskundigen():
+    return render_template("ervaringsdeskundigen.jinja", theme=g.theme)
