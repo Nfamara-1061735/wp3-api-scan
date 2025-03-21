@@ -308,7 +308,51 @@ def generate_research_types():
     return research_types
 
 
-def generate_researches(limitations_lookup):
+def generate_researches(fake: Faker, research_statuses: list[ResearchStatus], research_types: list[ResearchTypesModel],
+                        multiplier=1):
+    print_message("Generating dummy organization data...")
+
+    fake_researches = []
+    for _ in range(random.randrange(5 * multiplier, 15 * multiplier)):
+        # Start date
+        start_date = fake.date_time_between_dates(datetime_start=datetime(2020, 1, 1),
+                                                  datetime_end=datetime(2030, 1, 1))
+
+        # End date
+        random_days = random.randint(1, 24)
+        random_hours = random.randint(0, 365)
+        delta = timedelta(days=random_days, hours=random_hours)
+        end_date = start_date + delta
+
+        # Reward
+        has_reward = random.choice([True, False])
+
+        # Age
+        target_min_age = random.randint(4, 65)
+        target_max_age = random.randint(target_min_age, 65)
+
+        fake_research = Research(
+            title=fake.text(max_nb_chars=45),
+            is_available=random.choice([True, False]),
+            description=fake.text(max_nb_chars=500),
+            start_date=start_date,
+            end_date=end_date,
+            location=fake.address(),
+            has_reward=has_reward,
+            reward=fake.text(max_nb_chars=45) if has_reward else None,
+            target_min_age=target_min_age,
+            target_max_age=target_max_age,
+            status_id=random.choice(research_statuses).research_status_id,
+            research_type_id=random.choice(research_types).research_type_id,
+            limitations=[]
+        )
+
+        fake_researches.append(fake_research)
+
+    return fake_researches
+
+
+def get_researches(limitations_lookup):
     print_message("Generating dummy organization data...")
 
     researches_data = [
@@ -701,7 +745,8 @@ def init_db_data(amount_multiplier=1):
     research_types = generate_research_types()
     db.session.bulk_save_objects([*research_statuses, *research_types], return_defaults=True)
 
-    fake_researches = generate_researches(limitations_lookup)
+    fake_researches = generate_researches(fake, research_statuses, research_types, amount_multiplier)
+    fake_researches = [*get_researches(limitations_lookup), *fake_researches]
     db.session.bulk_save_objects(fake_researches, return_defaults=True)
 
     peer_experts_research_types = generate_peer_expert_research_types(research_types, peer_experts)
