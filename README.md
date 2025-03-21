@@ -107,4 +107,53 @@ En om je virtual environment te deactiveren gebruik je `deactivate`
 
 ## Homepage
 
-Nu de applicatie is gestart bevind je je op de homepage
+Nu de applicatie is gestart bevind je je op de homepage. Op de homepagina heb je 3 opties:
+
+![image](docs/images/ReadMe%20screenshots/homepage.png)
+
+### Onderzoeksbureau
+
+Deze pagina is bedoeld voor medewerkers van de organisaties. Hier staat de documentatie van de API waarmee de medewerkers onderzoeken kunnen aanmaken, bekijken en kunnen bewerken.
+
+### Stichting accessibility
+
+Deze pagina's zijn bedoeld voor de medewerkers van stichting Accessibility (de admins). Als je naar deze pagina gaat, zul je eerst moeten inloggen:
+
+![image](docs/images/ReadMe%20screenshots/admin_login.png)
+
+Nadat je in hebt gelogd kom je in het 'admin dashboard' terecht. Hier kunnen de admins CRUD-acties uitvoeren op de onderzoeksaanvragen, inschrijvingen en ervaringsdeskundigen. Dit kan op twee manieren:
+
+#### Goed- of afkeuren
+Het goed- of afkeuren van onderzoeksaanvragen, inschrijvingen en nieuwe ervaringsdeskundigen moet via het 'keuren'-scherm:
+
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren.png)
+
+Door op de 'details'-knop te drukken, word een kort overzicht van de gegevens van het onderzoek, inschrijving of ervaringsdeskundige getoond. Hier krijg je de optie om het gekozen object goed- of af te keuren:
+
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren_details.png)
+
+Er zijn drie verschillende tabjes waarop je 'objecten' goed- of af kan keuren:
+- Onderzoeksaanvragen:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren_onderzoeksaanvragen.png)
+- Inschrijvingen:
+Geen screenshot beschikbaar
+- Ervaringsdeskundigen:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren_ervaringsdeskundigen.png)
+#### Overige CRUD-acties
+Het uitvoeren van overige CRUD-acties zoals het aanpassen/verwijderen van gegevens moet via het 'beheren'-scherm:
+
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren.png)
+
+Door op de 'details'-knop te drukken, wordt een overzicht van alle beschikbare data van de ervaringsdeskundige, het onderzoek of de beheerder getoond. Hier kan je alle data aanpassen, waarna je door op de 'wijzigen opslaan'-knop te drukken de wijzigingen op kan slaan. Je kan ook het 'object' verwijderen door op de 'verwijderen'-knop te drukken.
+
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_details.png)
+
+Er zijn drie verschillende overzichten:
+- Ervaringsdeskundigen:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_ervaringsdeskundigen.png)
+- Onderzoeken:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_onderzoeken.png)
+- Beheerders:
+![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_beheerders.png)
+
+### Ervaringsdeskundige

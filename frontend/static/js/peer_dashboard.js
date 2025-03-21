@@ -262,3 +262,53 @@ $('#researchModal').on('show.bs.modal', function () {
         map.invalidateSize();
     }, 500);
 });
+
+function updateRatedCards() {
+    $.ajax({
+        // Verwijs naar het endpoint met de queryparameter state=rated
+        url: '/api/researches/registration-state?state=rated',
+        type: 'GET',
+        success: function (data) {
+            // Werk de teller bij
+            $('#rated-card-count').text(data.length);
+            // Maak de container leeg
+            $('#rated-card-container').empty();
+
+            data.forEach(function (research) {
+                // Maak een nieuw kaartje
+                var cardClone = $('<div class="card card-body col-2 d-flex flex-column"></div>');
+                var cardTitle = $('<h5 class="card-title"></h5>').text(research.title);
+                var cardDescription = $('<p class="card-text"></p>').text(research.description);
+
+                // Voeg een statusbadge toe (goedkeuring/afkeuring)
+                var statusBadge = $('<span class="badge mb-2"></span>');
+                if (research.registration_status && research.registration_status.status === 'goedgekeurd') {
+                    statusBadge.text('Goedgekeurd').addClass('bg-success');
+                } else if (research.registration_status && research.registration_status.status === 'afgekeurd') {
+                    statusBadge.text('Afgekeurd').addClass('bg-danger');
+                } else {
+                    statusBadge.text('Onbekend');
+                }
+
+                // "Meer informatie" knop toevoegen
+                var cardButton = $('<button class="btn btn-primary mt-auto">Meer informatie</button>');
+                cardButton.data('research', research);
+                cardButton.on('click', handleCardButtonClick);
+
+                // Bouw het kaartje en voeg toe aan de container
+                cardClone.append(cardTitle, $('<hr>'), cardDescription, statusBadge, cardButton);
+                $('#rated-card-container').append(cardClone);
+            });
+        },
+        error: function (error) {
+            console.error(error);
+            $('#error-message').text('Er is een fout opgetreden. Probeer het opnieuw.').show();
+        }
+    });
+}
+
+// Zorg dat deze functie wordt aangeroepen bij het laden van de pagina:
+$(document).ready(function () {
+    updateRatedCards();
+    setInterval(updateRatedCards, 10000); // Vernieuw elke 10 seconden
+});

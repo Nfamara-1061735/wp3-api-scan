@@ -162,6 +162,10 @@ class ResearchesRegistrationState(Resource):
         registered_research_ids = [research_id[0] for research_id in
                                    registered_research_ids]  # Flatten the list of tuples
 
+        # Voor "registered" en "unregistered" halen we de research_ids op van alle registraties
+        registrations = db.session.query(PeerExpertRegistration).filter_by(peer_expert_id=peer_id).all()
+        registered_research_ids = [r.research_id for r in registrations]
+
         # Initialize the research query
         researches_query = Research.query
 
@@ -175,6 +179,15 @@ class ResearchesRegistrationState(Resource):
         elif state == 'unregistered':
             if registered_research_ids:
                 researches_query = researches_query.filter(Research.research_id.notin_(registered_research_ids))
+        elif state == 'rated':
+            # Filter de registraties waar de status tussen 2 en 3 ligt (2 = goedgekeurd, 3 = afgekeurd)
+            rated_registrations = [r for r in registrations if 1 < r.registration_status_id < 4]
+            rated_research_ids = [r.research_id for r in rated_registrations]
+            if rated_research_ids:
+                researches_query = researches_query.filter(Research.research_id.in_(rated_research_ids))
+            else:
+                # Geen rated registraties gevonden: zorg voor een lege query
+                researches_query = researches_query.filter(Research.research_id == None)
         else:
             # If no valid state is provided, you can either return an error or all researches.
             return abort(400, message='Invalid state parameter. Use "registered" or "not_registered".')

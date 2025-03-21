@@ -5,6 +5,7 @@ from flask import render_template, request, g, Blueprint, redirect, url_for, fla
 from flask import session
 
 from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
+# from backend.api.utils import require_api_key
 from backend.api.researches_api import FilteredResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
 from backend.database.models.research_model import Research
@@ -135,12 +136,13 @@ def peer_settings():
     return render_template("peer_settings.jinja", theme=g.theme)
 
 @frontend_bp.route('/docs')
+# @require_api_key
 def documentation():
     """Toon de API-documentatie, alleen als de API-key geldig is"""
     return render_template("api_documentation.jinja", theme=g.theme)
 
-# @frontend_bp.route('/onderzoeken')
-# def onderzoeken():
-#     alle_onderzoeken = Research.query.all()
-#     return render_template("onderzoeken.jinja", theme=g.theme, alle_onderzoeken=alle_onderzoeken)
+@frontend_bp.route('/onderzoeken')
+def onderzoeken():
+    alle_onderzoeken = Research.query.all()
+    return render_template("onderzoeken.jinja", theme=g.theme, alle_onderzoeken=alle_onderzoeken)
 
