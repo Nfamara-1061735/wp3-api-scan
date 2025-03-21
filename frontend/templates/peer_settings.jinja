@@ -1,0 +1,165 @@
+{% extends "base.jinja" %}
+{% block title %} Ervaringsdeskundige wijzigen {% endblock %}
+{% block head %}
+{% endblock %}
+{% block userDropdown %}
+    <li>
+        <a class="dropdown-item" href="{{ url_for('frontend.peer_dashboard') }}">Dashboard</a>
+        <a class="dropdown-item" href="{{ url_for('frontend.peer_settings') }}">Bekijk profiel</a>
+    </li>
+{% endblock %}
+{% block content %}
+    <div class="pt-5 px-5 pb-4">
+        <h1>Ervaringsdeskundige gegevens wijzigen</h1>
+        <hr class="pb-3">
+        <div id="error-message" class="alert alert-danger mt-4" style="display: none;" role="alert"></div>
+        <div id="modalAlertContainer" class="alert alert-danger d-none">
+        </div>
+        <form class="row g-3" id="peerDetailsForm" method="dialog">
+            <input type="hidden" id="peerExpertId">
+
+            <!-- User Details -->
+            <div class="col-md-6">
+                <label for="firstName" class="form-label">Voornaam</label>
+                <input type="text" class="form-control" id="firstName">
+            </div>
+            <div class="col-md-6">
+                <label for="lastName" class="form-label">Achternaam</label>
+                <input type="text" class="form-control" id="lastName">
+            </div>
+            <div class="col-12">
+                <label for="gender" class="form-label">Geslacht</label>
+                <input class="form-control" id="gender" list=genders>
+                <datalist id="genders">
+                    <option>Man</option>
+                    <option>Vrouw</option>
+                    <option>Overig</option>
+                </datalist>
+            </div>
+            <div class="col-12">
+                <label for="birthDate" class="form-label">Geboortedatum</label>
+                <input type="date" class="form-control" id="birthDate">
+            </div>
+
+            <!-- Additional fields (email, phone, etc.) -->
+            <div class="col-12">
+                <label for="email" class="form-label">E-mailadres</label>
+                <input type="email" class="form-control" id="email">
+            </div>
+            <div class="col-12">
+                <label for="password" class="form-label">Wachtwoord wijzigen</label>
+                <input type="password" class="form-control" id="password" placeholder="Nieuw password">
+            </div>
+            <div id="passwordConfirm" class="col-12">
+                <label for="passwordVerify">Wachtwoord herhalen</label>
+                <input type="password" class="form-control" id="passwordVerify" name="passwordVerify"
+                       placeholder="Wachtwoord herhalen">
+                <div class="invalid-feedback" id="passwordMismatchFeedback">
+                    Passwords do not match.
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="phoneNumber" class="form-label">Telefoonnummer</label>
+                <input type="text" class="form-control" id="phoneNumber">
+            </div>
+            <div class="col-6">
+                <label for="postalCode" class="form-label">Postcode</label>
+                <input type="text" class="form-control" id="postalCode">
+            </div>
+
+            <!-- Disabilities Accordion -->
+            <div class="accordion" id="disabilitiesAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingDisabilities">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#disabilitiesCollapse" aria-expanded="false"
+                                aria-controls="disabilitiesCollapse">
+                            Beperkingen
+                        </button>
+                    </h2>
+                    <div id="disabilitiesCollapse" class="accordion-collapse collapse"
+                         aria-labelledby="headingDisabilities" data-bs-parent="#disabilitiesAccordion">
+                        <div id="disabilities" class="accordion-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="col-12">
+                <label for="toolsUsed" class="form-label">Gebruikte hulpmiddelen</label>
+                <input type="text" class="form-control" id="toolsUsed">
+            </div>
+            <div class="col-12">
+                <label for="shortBio" class="form-label">Kort voorstellen</label>
+                <textarea class="form-control" id="shortBio"></textarea>
+            </div>
+            <div class="col-12">
+                <label for="specialNotes" class="form-label">Bijzonderheden</label>
+                <textarea class="form-control" id="specialNotes"></textarea>
+            </div>
+
+            <!-- Supervisor / Guardian Information -->
+            <div class="col-12">
+                <input type="checkbox" class="form-check-input" id="hasSupervisor">
+                <label class="form-check-label" for="hasSupervisor">Heeft toezichthouder</label>
+            </div>
+            <div class="accordion" id="supervisorAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingSupervisor">
+                        <button id="supervisorAccordionButton" class="accordion-button collapsed"
+                                type="button" data-bs-toggle="collapse"
+                                data-bs-target="#supervisorGroupCollapse" aria-expanded="false"
+                                aria-controls="supervisorGroupCollapse">
+                            Toezichthouder / Voogd
+                        </button>
+                    </h2>
+                    <div id="supervisorGroupCollapse" class="accordion-collapse collapse"
+                         aria-labelledby="headingSupervisor" data-bs-parent="#supervisorAccordion">
+                        <div class="accordion-body">
+                            <div>
+                                <label for="supervisorOrGuardianName" class="form-label">Naam voogd of
+                                    toezichthouder</label>
+                                <input type="text" class="form-control" id="supervisorOrGuardianName">
+                            </div>
+                            <div>
+                                <label for="supervisorOrGuardianEmail" class="form-label">E-mailadres voogd
+                                    of toezichthouder</label>
+                                <input type="email" class="form-control" id="supervisorOrGuardianEmail">
+                            </div>
+                            <div>
+                                <label for="supervisorOrGuardianPhone" class="form-label">Telefoonnummer
+                                    voogd of toezichthouder</label>
+                                <input type="text" class="form-control" id="supervisorOrGuardianPhone">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Availability & Contact Preferences -->
+            <div id="contactPreferences" class="col-12">
+                <label for="contactPreference" class="form-label">Voorkeur benadering</label>
+                <select class="form-control" id="contactPreference">
+                </select>
+            </div>
+            <div id="researchType" class="col-12">
+                <label for="researchType" class="form-label">Type onderzoek</label>
+            </div>
+            <div class="col-12">
+                <label for="availabilityNotes" class="form-label">Bijzonderheden beschikbaarheid</label>
+                <textarea class="form-control" id="availabilityNotes"></textarea>
+            </div>
+            <a href="{{ url_for('frontend.peer_dashboard') }}" class="col btn btn-secondary mt-4" id="savePeer">
+                Terug naar dashboard
+            </a>
+            <div class="col-1"></div>
+            <button type="submit" class="col btn btn-primary mt-4" id="savePeer">
+                Wijzigingen Opslaan
+            </button>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('.static', filename='js/peer_settings.js') }}"></script>
+{% endblock %}

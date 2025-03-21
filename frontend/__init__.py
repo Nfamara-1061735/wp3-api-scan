@@ -127,6 +127,13 @@ def peer_dashboard():
     return render_template("peer_dashboard.jinja", theme=g.theme)
 
 
+@frontend_bp.route('/peer/settings', methods=['GET', 'POST'])
+@check_permission('peer')
+def peer_settings():
+    if not g.get('user', None):
+        return redirect(url_for("frontend.peer_home"))
+    return render_template("peer_settings.jinja", theme=g.theme)
+
 @frontend_bp.route('/docs')
 def documentation():
     """Toon de API-documentatie, alleen als de API-key geldig is"""

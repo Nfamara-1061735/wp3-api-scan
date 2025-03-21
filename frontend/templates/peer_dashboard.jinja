@@ -8,6 +8,12 @@
             href="{{ url_for('.static', filename='css/peer_dashboard.css') }}"
     />
 {% endblock %}
+{% block userDropdown %}
+    <li>
+        <a class="dropdown-item" href="{{ url_for('frontend.peer_dashboard') }}">Dashboard</a>
+        <a class="dropdown-item" href="{{ url_for('frontend.peer_settings') }}">Bekijk profiel</a>
+    </li>
+{% endblock %}
 {% block content %}
     <div class="pt-5 px-5 pb-4">
         <h1>Ervaringsdeskundige dashboard</h1>
