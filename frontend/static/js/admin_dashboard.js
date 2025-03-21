@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchResearches();
     fetchPeerExperts();
 
-    // Optional: Refresh data periodically
+    // Optioneel: Ververs periodiek
     setInterval(() => {
         fetchResearches();
         fetchPeerExperts();
-    }, 1000);
+    }, 1000); //
 });
 
-//** researches **?//
+// ONDERZOEKEN (RESEARCHES)
 
 function fetchResearches() {
     fetch("/api/researches")
@@ -36,7 +36,6 @@ function fetchResearches() {
                 const detailsButton = document.createElement("button");
                 detailsButton.textContent = "Details";
                 detailsButton.classList.add("btn", "btn-info", "me-2");
-                detailsButton.setAttribute("aria-label", "Details bekijken");
                 detailsButton.addEventListener("click", () => openResearchModal(research));
 
                 item.appendChild(title);
@@ -53,18 +52,19 @@ function fetchResearches() {
 function openResearchModal(research) {
     document.getElementById("researchModalTitle").textContent = research.title;
     document.getElementById("researchModalBody").textContent = research.description;
-    document.getElementById("researchStartDate").textContent = research.start_date;
-    document.getElementById("researchEndDate").textContent = research.end_date;
-    document.getElementById("researchLocation").textContent = research.location;
+    document.getElementById("researchStartDate").textContent = research.start_date || "Onbekend";
+    document.getElementById("researchEndDate").textContent = research.end_date || "Onbekend";
+    document.getElementById("researchLocation").textContent = research.location || "Onbekend";
     document.getElementById("researchAgeRange").textContent = `${research.target_min_age} - ${research.target_max_age}`;
     document.getElementById("researchReward").textContent = research.has_reward ? research.reward : "Geen beloning";
 
     const limitationsList = document.getElementById("researchLimitations");
     limitationsList.innerHTML = "";
+
     if (research.limitations && research.limitations.length > 0) {
         research.limitations.forEach(limit => {
             const li = document.createElement("li");
-            li.textContent = limit.limitation;
+            li.textContent = limit.limitation || limit.limitation_id;
             limitationsList.appendChild(li);
         });
     } else {
@@ -79,21 +79,18 @@ function openResearchModal(research) {
     approveButton.onclick = () => approveResearch(research.research_id);
     rejectButton.onclick = () => rejectResearch(research.research_id);
 
-    const modalElement = document.getElementById("researchModal");
-    const modal = new bootstrap.Modal(modalElement);
+    const modal = new bootstrap.Modal(document.getElementById("researchModal"));
     modal.show();
 }
 
 function approveResearch(research_id) {
     fetch(`/api/researches/${research_id}`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status_id: 2 })
     })
         .then(response => {
-            if (!response.ok) throw new Error("Goedkeuren niet gelukt.");
+            if (!response.ok) throw new Error("Goedkeuren mislukt.");
             return response.json();
         })
         .then(() => {
@@ -110,13 +107,11 @@ function approveResearch(research_id) {
 function rejectResearch(research_id) {
     fetch(`/api/researches/${research_id}`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status_id: 3 })
     })
         .then(response => {
-            if (!response.ok) throw new Error("Afkeuren niet gelukt.");
+            if (!response.ok) throw new Error("Afkeuren mislukt.");
             return response.json();
         })
         .then(() => {
@@ -130,33 +125,31 @@ function rejectResearch(research_id) {
         });
 }
 
-//** ---- peer experts ---- **//
+
+// ERVARINGSDESKUNDIGEN (PEER EXPERTS)
+
 
 function fetchPeerExperts() {
     fetch("/api/peers?sort_by=peer_expert_id&sort_order=asc")
         .then(response => response.json())
         .then(data => {
-            const container = document.getElementById("newPeerExpertsContainer");
-            const message = document.getElementById("noNewPeerExpertsMessage");
-
+            const container = document.getElementById("peerExpertApprovalContainer");
             container.innerHTML = "";
 
-            const newPeerExperts = data.peer_experts.filter(peer => peer.peer_expert_status_id === 1);
+            const newPeers = data.peer_experts.filter(peer => peer.peer_expert_status_id === 1);
 
-            if (newPeerExperts.length === 0) {
-                message.classList.remove("d-none");
+            if (newPeers.length === 0) {
+                container.innerHTML = "<p class='text-muted'>Geen nieuwe ervaringsdeskundigen om weer te geven.</p>";
                 return;
             }
 
-            message.classList.add("d-none");
-
-            newPeerExperts.forEach(peer => {
+            newPeers.forEach(peer => {
                 const item = document.createElement("div");
                 item.classList.add("border", "rounded-3", "p-3", "d-flex", "justify-content-between", "align-items-center");
 
                 const info = document.createElement("p");
                 info.classList.add("mb-0");
-                info.textContent = `${peer.user.first_name} ${peer.user.last_name} (${peer.postal_code})`;
+                info.textContent = `${peer.user.first_name} ${peer.user.last_name}`;
 
                 const detailsButton = document.createElement("button");
                 detailsButton.textContent = "Details";
@@ -221,8 +214,7 @@ function openPeerExpertModal(peer_id) {
             approveBtn.onclick = () => approvePeerExpert(peer.peer_expert_id);
             rejectBtn.onclick = () => rejectPeerExpert(peer.peer_expert_id);
 
-            const modalElement = document.getElementById("peerExpertModal");
-            const modal = new bootstrap.Modal(modalElement);
+            const modal = new bootstrap.Modal(document.getElementById("peerExpertModal"));
             modal.show();
         })
         .catch(error => {
@@ -233,17 +225,15 @@ function openPeerExpertModal(peer_id) {
 function approvePeerExpert(peer_id) {
     fetch(`/api/peers/${peer_id}`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ peer_expert_status_id: 2 })
     })
         .then(response => {
-            if (!response.ok) throw new Error("Goedkeuren niet gelukt.");
+            if (!response.ok) throw new Error("Goedkeuren mislukt.");
             return response.json();
         })
         .then(() => {
-            showAlert("Ervaringsdeskundige is goedgekeurd.", "success");
+            showAlert("Ervaringsdeskundige goedgekeurd.", "success");
             bootstrap.Modal.getInstance(document.getElementById("peerExpertModal")).hide();
             fetchPeerExperts();
         })
@@ -256,17 +246,15 @@ function approvePeerExpert(peer_id) {
 function rejectPeerExpert(peer_id) {
     fetch(`/api/peers/${peer_id}`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ peer_expert_status_id: 3 })
     })
         .then(response => {
-            if (!response.ok) throw new Error("Afkeuren niet gelukt.");
+            if (!response.ok) throw new Error("Afkeuren mislukt.");
             return response.json();
         })
         .then(() => {
-            showAlert("Ervaringsdeskundige is afgekeurd.", "success");
+            showAlert("Ervaringsdeskundige afgekeurd.", "success");
             bootstrap.Modal.getInstance(document.getElementById("peerExpertModal")).hide();
             fetchPeerExperts();
         })
@@ -279,7 +267,6 @@ function rejectPeerExpert(peer_id) {
 
 function showAlert(message, type = "success") {
     const alertContainer = document.getElementById("alertContainer");
-
     alertContainer.innerHTML = `
         <div class="alert alert-${type} alert-dismissible fade show" role="alert">
             ${message}
@@ -299,5 +286,9 @@ function showAlert(message, type = "success") {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' });
+    return date.toLocaleDateString('nl-NL', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 }

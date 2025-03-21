@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="px-5 pt-5">
-    <h1 class="">Dashboard - Keuren</h1>
+    <h1>Dashboard - Keuren</h1>
     <hr class="pb-3">
     <div id="alertContainer" class="my-3"></div>
 </div>
@@ -12,20 +12,20 @@
 <ul class="nav nav-tabs px-5" id="adminTabs" role="tablist">
     <li class="nav-item" role="presentation">
         <a class="nav-link active" id="researches-tab" data-bs-toggle="tab" href="#researches" role="tab"
-           aria-controls="Onderzoeksaanvragen" aria-selected="true">Onderzoeksaanvragen
-            <span id="open-card-count" class="ms-2 badge text-bg-primary"></span>
+           aria-controls="Onderzoeksaanvragen" aria-selected="true">
+            Onderzoeksaanvragen <span id="open-card-count" class="ms-2 badge text-bg-primary"></span>
         </a>
     </li>
     <li class="nav-item" role="presentation">
         <a class="nav-link" id="registrations-tab" data-bs-toggle="tab" href="#registrations" role="tab"
-           aria-controls="Inschrijvingen" aria-selected="false">Inschrijvingen
-            <span id="registered-card-count" class="ms-2 badge text-bg-primary"></span>
+           aria-controls="Inschrijvingen" aria-selected="false">
+            Inschrijvingen <span id="registered-card-count" class="ms-2 badge text-bg-primary"></span>
         </a>
     </li>
     <li class="nav-item" role="presentation">
         <a class="nav-link" id="peer-experts-tab" data-bs-toggle="tab" href="#peerExperts" role="tab"
-           aria-controls="Ervaringsdeskundigen" aria-selected="false">Ervaringsdeskundigen
-            <span id="rated-card-count" class="ms-2 badge text-bg-primary"></span>
+           aria-controls="Ervaringsdeskundigen" aria-selected="false">
+            Ervaringsdeskundigen <span id="rated-card-count" class="ms-2 badge text-bg-primary"></span>
         </a>
     </li>
     <li class="mx-auto"></li>
@@ -41,7 +41,7 @@
     <div class="tab-pane fade show active" id="researches" role="tabpanel" aria-labelledby="researches-tab">
         <div class="py-4">
             <div class="pb-3 d-flex flex-column gap-3" id="researchApprovalContainer">
-                <p class="text-muted">Geen nieuwe onderzoeken om weer te geven.</p>
+                <!-- Wordt dynamisch gevuld via JS -->
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
     <div class="tab-pane fade" id="registrations" role="tabpanel" aria-labelledby="registrations-tab">
         <div class="py-4">
             <div class="pb-3 d-flex flex-column gap-3" id="registrationApprovalContainer">
-                <p class="text-muted">Geen inschrijvingen om weer te geven.</p>
+                <!-- Wordt dynamisch gevuld via JS -->
             </div>
         </div>
     </div>
@@ -59,7 +59,7 @@
     <div class="tab-pane fade" id="peerExperts" role="tabpanel" aria-labelledby="peer-experts-tab">
         <div class="py-4">
             <div class="pb-3 d-flex flex-column gap-3" id="peerExpertApprovalContainer">
-                <p class="text-muted">Geen nieuwe ervaringsdeskundigen om weer te geven.</p>
+                <!-- Wordt dynamisch gevuld via JS -->
             </div>
         </div>
     </div>
@@ -87,7 +87,7 @@
                             <tr><th scope="row">Beperkingen:</th><td><ul id="researchLimitations"></ul></td></tr>
                         </tbody>
                     </table>
-                    <div id="map" class="col-auto" style="width: 500px"></div>
+                    <div id="map" class="col-auto" style="width: 500px;"></div>
                 </div>
             </div>
             <div class="modal-footer justify-content-center">
@@ -132,7 +132,6 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
