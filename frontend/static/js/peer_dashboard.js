@@ -59,7 +59,7 @@ function updateOpenCards() {
             data.forEach(function (research) {
                 // Create a new card for each research item
                 var cardClone = $('<div class="card card-body col-2 d-flex flex-column"></div>');
-                var cardTitle = $('<h5 class="card-title"></h5>').text(research.title);
+                var cardTitle = $('<h2 class="card-title"></h2>').text(research.title);
                 var cardDescription = $('<p class="card-text"></p>').text(research.description);
                 var cardButton = $('<button class="btn btn-primary mt-auto">Meer informatie</button>')
 
@@ -99,7 +99,7 @@ function updateRegisteredCards() {
             data.forEach(function (research) {
                 // Create a new card for each research item
                 var cardClone = $('<div class="card card-body col-2 d-flex flex-column"></div>');
-                var cardTitle = $('<h5 class="card-title"></h5>').text(research.title);
+                var cardTitle = $('<h2 class="card-title"></h2>').text(research.title);
                 var cardDescription = $('<p class="card-text"></p>').text(research.description);
                 var cardButton = $('<button class="btn btn-primary mt-auto">Meer informatie</button>')
 
@@ -277,7 +277,7 @@ function updateRatedCards() {
             data.forEach(function (research) {
                 // Maak een nieuw kaartje
                 var cardClone = $('<div class="card card-body col-2 d-flex flex-column"></div>');
-                var cardTitle = $('<h5 class="card-title"></h5>').text(research.title);
+                var cardTitle = $('<h2 class="card-title"></h2>').text(research.title);
                 var cardDescription = $('<p class="card-text"></p>').text(research.description);
 
                 // Voeg een statusbadge toe (goedkeuring/afkeuring)

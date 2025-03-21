@@ -221,11 +221,10 @@ class SinglePeerExpertRest(Resource):
                 peer_expert.postal_code = data.get('postal_code', peer_expert.postal_code)
                 peer_expert.gender = data.get('gender', peer_expert.gender)
 
-                # Safely handle birth_date, ensuring proper format conversion
+                # Parse birth date
                 birth_date_str = data.get('birth_date')
                 if birth_date_str:
-                    peer_expert.birth_date = datetime.strptime(birth_date_str,
-                                                               '%Y-%m-%d')  # Assuming the date format is YYYY-MM-DD
+                    peer_expert.birth_date = datetime.strptime(birth_date_str, '%Y-%m-%d')
 
                 peer_expert.tools_used = data.get('tools_used', peer_expert.tools_used)
                 peer_expert.short_bio = data.get('short_bio', peer_expert.short_bio)
@@ -236,7 +235,10 @@ class SinglePeerExpertRest(Resource):
                                                                    peer_expert.supervisor_or_guardian_name)
                 peer_expert.availability_notes = data.get('availability_notes', peer_expert.availability_notes)
                 peer_expert.contact_preference_id = data.get('contact_preference_id', peer_expert.contact_preference_id)
-                peer_expert.peer_expert_status_id = data.get('peer_expert_status_id', peer_expert.peer_expert_status_id)
+
+                if g.user.admin_info:
+                    peer_expert.peer_expert_status_id = data.get('peer_expert_status_id',
+                                                                 peer_expert.peer_expert_status_id)
 
                 # Handle updates to the nested "user" object
                 user_data = data.get('user')

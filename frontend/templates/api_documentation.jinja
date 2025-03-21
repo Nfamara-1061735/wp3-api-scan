@@ -5,5 +5,137 @@
     <div class="p-5">
         <h1 class="">API Documentatie</h1>
         <hr class="pb-3">
+
+        <!-- Introductie -->
+        <section>
+            <h2>Introductie</h2>
+            <p>De Accessibility Hub API stelt organisaties in staat om ervaringsdeskundigen te registreren en onderzoeken te beheren via een RESTful interface.</p>
+            <p><strong>Base URL:</strong> <code>http://127.0.0.1:5000/api/researches/</code></p>
+        </section>
+
+        <hr>
+
+        <!-- Authenticatie -->
+        <section>
+            <h2>Authenticatie</h2>
+            <p>De API gebruikt <strong>Bearer Token Authenticatie</strong>. Voeg de API-key toe aan de headers van elk verzoek:</p>
+            <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+        </section>
+
+        <hr>
+
+        <!-- Endpoints -->
+        <section>
+            <h2>Endpoints</h2>
+
+            <!-- Registratie van een ervaringsdeskundige -->
+            <h3>📌 POST /register-expert</h3>
+            <p><strong>Beschrijving:</strong> Registreert een nieuwe ervaringsdeskundige.</p>
+
+            <h4>🔹 Headers</h4>
+            <pre><code>{
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+}</code></pre>
+
+            <h4>🔹 Request Body (JSON)</h4>
+            <pre><code>{
+    "first_name": "Jan",
+    "last_name": "Willem",
+    "email_adress": "janwillem@gmail.com",
+    "phone_number": "0612345678",
+    "password": "SterkWachtwoord123!",
+    "postal_code": "3011AA",
+    "gender": "male",
+    "birth_date": "2001-01-01",
+    "tools_used": "lenzen",
+    "short_bio": "Ik ben een ervaringsdeskundige in toegankelijkheid.",
+    "peer_expert_status_id": 1
+}</code></pre>
+
+            <h4>🔹 Mogelijke Responses</h4>
+
+            <h5>✅ Succesvolle registratie (201)</h5>
+            <pre><code>{
+    "message": "Nieuwe ervaringsdeskundige succesvol geregistreerd.",
+    "peer_expert_id": 42
+}</code></pre>
+
+            <h5>❌ Fout (400 - Verplichte velden missen)</h5>
+            <pre><code>{
+    "error": "email_adress is verplicht"
+}</code></pre>
+
+            <h5>❌ Fout (401 - API-key validatie mislukt)</h5>
+            <pre><code>{
+    "error": "API-key of organisatie onjuist, Authenticatie is vereist."
+}</code></pre>
+
+        </section>
+
+        <hr>
+
+        <!-- Error Codes -->
+        <section>
+            <h2>Foutcodes</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>HTTP Status Code</th>
+                        <th>Betekenis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>200 OK</td>
+                        <td>De aanvraag is succesvol verwerkt.</td>
+                    </tr>
+                    <tr>
+                        <td>201 Created</td>
+                        <td>Een nieuw object is succesvol aangemaakt.</td>
+                    </tr>
+                    <tr>
+                        <td>400 Bad Request</td>
+                        <td>De aanvraag bevatte ongeldige gegevens.</td>
+                    </tr>
+                    <tr>
+                        <td>401 Unauthorized</td>
+                        <td>Authenticatie is vereist.</td>
+                    </tr>
+                    <tr>
+                        <td>403 Forbidden</td>
+                        <td>Je hebt geen toestemming om dit te doen.</td>
+                    </tr>
+                    <tr>
+                        <td>404 Not Found</td>
+                        <td>Het gevraagde item bestaat niet.</td>
+                    </tr>
+                    <tr>
+                        <td>500 Internal Server Error</td>
+                        <td>Er is een onverwachte fout opgetreden.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <hr>
+
+        <!-- Versiebeheer -->
+        <section>
+            <h2>Changelog / Versiebeheer</h2>
+            <p>Hieronder vind je een overzicht van wijzigingen in de API.</p>
+
+            <h3>🔹 Versie 1.1 (2025-03-21)</h3>
+            <ul>
+                <li>Toegevoegd: <code>PATCH /update-expert</code> endpoint</li>
+                <li>Verbeterd: Validatie van <code>email_adress</code></li>
+            </ul>
+
+            <h3>🔹 Versie 1.0 (2025-03-15)</h3>
+            <ul>
+                <li>Eerste versie met registratie en login functionaliteit</li>
+            </ul>
+        </section>
+
     </div>
 {% endblock %}
