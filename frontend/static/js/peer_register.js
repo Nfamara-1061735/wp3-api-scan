@@ -51,23 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
     checkDate();
     toggleSupervisorField();
 
-    // Algemene Voorwaarden pop-up logica
-    const acceptedTermsCheckbox = document.getElementById('accepted_terms');
-    const voorwaardenPopup = document.getElementById('voorwaarden-popup');
-    const voorwaardenCloseBtn = document.querySelector('.voorwaarden-close-btn');
-
-    // Toon pop-up wanneer gebruiker checkbox aanvinkt
-    acceptedTermsCheckbox.addEventListener('change', function() {
-        if (acceptedTermsCheckbox.checked) {
-            voorwaardenPopup.style.display = 'flex';
-        }
-    });
-
-    // Sluit pop-up wanneer op kruisje wordt geklikt
-    voorwaardenCloseBtn.addEventListener('click', function() {
-        voorwaardenPopup.style.display = 'none';
-    });
-
     const form = document.querySelector(".registration-form");
 
     form.addEventListener("submit", function (e) {
