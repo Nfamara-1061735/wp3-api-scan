@@ -56,6 +56,24 @@
                 <small class="error-message" id="special_notes_error">Geef een speciale opmerking.</small>
         </div>
 
+            <div class="mb-3">
+                <label for="email_adress" class="form-label">Emailadres</label>
+                <input id="email_adress" type="email" name="email_adress" class="form-control">
+                <small class="error-message" id="email_adress_error">Vul je emailadres in.</small>
+        </div>
+
+            <div class="mb-3">
+                <label for="telefoon_nummer" class="form-label">Telefoonnummer</label>
+                <input id="telefoon_nummer" type="number" name="telefoon_nummer" required pattern="^[0-9]{10}$" class="form-control">
+                <small class="error-message" id="telefoon_nummer_error">Vul je telefoonnummer in.</small>
+        </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Wachtwoord</label>
+                <input id="password" type="password" name="password" class="form-control">
+                <small class="error-message" id="password_error">Vul iets in en maak een wachtwoord aan.</small>
+        </div>
+
             <div class="mb-3 form-check">
                 <input id="accepted_terms" type="checkbox" name="accepted_terms" class="form-check-input" required>
                 <label for="accepted_terms" class="form-check-label">Ik ga akkoord met de voorwaarden</label>
