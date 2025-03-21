@@ -139,6 +139,7 @@ Er zijn drie verschillende tabjes waarop je 'objecten' goed- of af kan keuren:
 Geen screenshot beschikbaar
 - Ervaringsdeskundigen:
 ![image](docs/images/ReadMe%20screenshots/admin_dashboard_keuren_ervaringsdeskundigen.png)
+
 #### Overige CRUD-acties
 Het uitvoeren van overige CRUD-acties zoals het aanpassen/verwijderen van gegevens moet via het 'beheren'-scherm:
 
@@ -156,4 +157,39 @@ Er zijn drie verschillende overzichten:
 - Beheerders:
 ![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_beheerders.png)
 
+
 ### Ervaringsdeskundige
+
+Deze pagina's zijn bedoeld voor de ervaringsdeskundigen. Als je naar deze pagina gaat, zul je eerst moeten inloggen of moeten registreren:
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_login_or_register.png)
+
+#### Inlogpagina
+Op deze pagina kan een (al goedgekeurde) ervaringsdeskundige inloggen met een email-adres en wachtwoord. Als de ervaringsdeskundige (nog) niet is goedgekeurd of is afgekeurd zal een foutmelding worden getoond.
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_login.png)
+
+#### Registerpagina
+Op deze pagina kan een je een account aanmaken. Er moeten allerlei gegevens zoals voornaam, achternaam maar ook de beperkingen in worden gevuld. Hierna kan de je het account nog niet gebruiken. Dit kan pas nadat het goed is gekeurd door een admin.
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_1.png)
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_2.png)
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_3.png)
+
+Als je bent ingelogd kom word je verwezen naar de 'ervaringsdeskundige dashboard' pagina. Hier staan drie tabjes waar je onderzoeken kan zien.
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard.png)
+
+Door op de 'details'-knop te drukken kan je een kort overzicht van de belangrijke data van het onderzoek zien.
+
+![image](docs/images/ReadMe%20screenshots/peer_dashboard_details.png)
+
+Er zijn drie verschillende tabjes met onderzoeken:
+- Open onderzoeken:
+In dit tabje kan je de open onderzoeken zien waarvoor je je kan inschrijven.
+
+- Mijn inschrijvingen:
+In dit tabje kan je de onderzoeken zien waarvoor je je hebt ingeschreven.
+
+- Beoordeelde onderzoeken:
+In dit tabje kan je de onderzoeken zien waar je aan hebt deelgenomen en die zijn beoordeeld.
