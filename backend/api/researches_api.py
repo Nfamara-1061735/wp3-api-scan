@@ -3,9 +3,10 @@ import datetime
 from flask_restful import Resource, reqparse, fields, marshal_with, abort
 
 from backend import db
-from backend.api.utils import method_not_allowed
+from backend.api.utils import method_not_allowed, require_api_key
 from backend.database.models import Research
 from backend.database.models.limitations_model import LimitationsModel
+
 
 research_args = reqparse.RequestParser()
 research_args.add_argument('title', type=str, required=True, help="Title is verplicht (naam van je organisatie)")
@@ -60,12 +61,14 @@ researchFields = {
 
 
 class Researches(Resource):
+    @require_api_key
     @marshal_with(researchFields)
     def get(self):
         researches = Research.query.all()
         return researches, 200
 
     @marshal_with(researchFields)
+    @require_api_key
     def post(self):
         args = research_args.parse_args()
 
@@ -112,6 +115,7 @@ class Researches(Resource):
 
 
 class SingleResearch(Resource):
+    @require_api_key
     @marshal_with(researchFields)
     def get(self, research_id):
         single_research = Research.query.filter_by(research_id=research_id).first()
@@ -119,6 +123,7 @@ class SingleResearch(Resource):
             abort(404, message="Onderzoek niet gevonden.")
         return single_research, 200
 
+    @require_api_key
     @marshal_with(researchFields)
     def patch(self, research_id):
         args = patch_research_args.parse_args()
@@ -171,6 +176,7 @@ class SingleResearch(Resource):
         db.session.commit()
         return single_research, 200
 
+    @require_api_key
     def delete(self, research_id):
         single_research = Research.query.filter_by(research_id=research_id).first()
         if not single_research:
@@ -188,12 +194,14 @@ class SingleResearch(Resource):
 
 
 class FilteredResearch(Resource):
+    @require_api_key
     @marshal_with(researchFields)
     def get(self, status_id):
         filtered_researches = Research.query.filter_by(status_id=status_id).all()
 
         return filtered_researches, 200
 
+    @require_api_key
     @marshal_with(researchFields)
     def patch(self, new_status_id, research_id):
         args = research_args.parse_args()

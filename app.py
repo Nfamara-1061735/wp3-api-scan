@@ -24,6 +24,10 @@ def create_app():
     app.register_blueprint(frontend_bp)
     app.register_blueprint(api_bp, url_prefix='/api')  # API routes with '/api' prefix
 
+    print("🔍 Geregistreerde routes:") # Debugging
+    for rule in app.url_map.iter_rules():
+        print(rule)
+
     return app
 
 

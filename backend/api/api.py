@@ -8,9 +8,9 @@ from backend.api.login import Login
 from backend.api.peer_experts import PeerExpertRest, SinglePeerExpertRest
 from backend.api.readonly import ContactPreferencesRest, PeerExpertStatusRest, LimitationsRest, ResearchTypesRest
 from backend.api.registrations import Registrations, Registration, ResearchesRegistrationState
-from backend.api.researches import Researches, SingleResearch
+from backend.api.researches_api import Researches, SingleResearch
+from backend.api.researches_crud_api import ResearchesRest, SingleResearchRest
 from backend.api.utils import method_not_allowed
-from backend.database.models.api_keys_model import ApiKeys
 from backend.database.models.limitations_model import LimitationsModel
 from backend.database.models.peer_expert_registration_model import PeerExpertRegistration
 from backend.database.models.peer_experts_model import PeerExperts
@@ -18,24 +18,6 @@ from backend.database.models.peer_experts_model import PeerExperts
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
-
-#api-key validatie
-def require_api_key(f):
-   @wraps(f)
-   def decorated_function(*args, **kwargs):
-      api_key = request.headers.get("Authorization")
-
-      if not api_key or not api_key.startswith("Bearer "):
-         return jsonify({"error": "API-key ontbreekt of onjuist formaat"}), 401  # JSON-error
-
-      api_key = api_key.split("Bearer ")[1]
-
-      if not db.session.query(ApiKeys).filter_by(api_key=api_key).first():
-         return jsonify({"error": "Ongeldige API-key"}), 401  # JSON-error
-
-      return f(*args, **kwargs)  #Als API-key geldig is wordt de functie pas uitgevoerd
-
-   return decorated_function
 
 limitationFields = {
    'limitation_id': fields.Integer,
@@ -151,6 +133,8 @@ api.add_resource(PeerExpertRest, '/peers')
 api.add_resource(SinglePeerExpertRest, '/peers/<int:peer_expert_id>')
 api.add_resource(Registrations, '/peers/registrations')
 api.add_resource(Registration, '/peers/registrations/<int:registration_id>')
+api.add_resource(ResearchesRest, '/researches-admin')
+api.add_resource(SingleResearchRest, '/researches-admin/<int:research_id>')
 
 # Get only
 api.add_resource(ContactPreferencesRest, '/contact_preferences')

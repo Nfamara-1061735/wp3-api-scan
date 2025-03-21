@@ -46,3 +46,19 @@
     font-family: nexa-font, serif;
     background: #334ee6;
 }
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+}
+.visually-hidden-focusable:active,
+.visually-hidden-focusable:focus {
+    position: static !important;
+    height: auto; width: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}

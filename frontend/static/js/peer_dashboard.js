@@ -87,6 +87,46 @@ function updateOpenCards() {
     });
 }
 
+function updateRegisteredCards() {
+    // Fetch the research data
+    $.ajax({
+        url: '/api/researches/registration-state?state=registered',
+        type: 'GET',
+        success: function (data) {
+            $('#registered-card-count').text(data.length);
+            $('#registered-card-container').empty()
+
+            data.forEach(function (research) {
+                // Create a new card for each research item
+                var cardClone = $('<div class="card card-body col-2 d-flex flex-column"></div>');
+                var cardTitle = $('<h5 class="card-title"></h5>').text(research.title);
+                var cardDescription = $('<p class="card-text"></p>').text(research.description);
+                var cardButton = $('<button class="btn btn-primary mt-auto">Meer informatie</button>')
+
+                // Append the title and description to the card
+                cardClone.append(cardTitle, $('<hr>'), cardDescription, cardButton);
+
+                // Append the card to the container
+                $('#registered-card-container').append(cardClone);
+
+                // TEMP: Add random lat and long
+                research.latLon = getRandomCoordinates()
+
+                // Attach the data to the button
+                cardButton.data('research', research);
+
+                // Add click event listener to the button
+                cardButton.on('click', handleCardButtonClick);
+            });
+        },
+        error: function (x) {
+            console.log(x)
+            // Show error message for any server issues
+            $('#error-message').text('Er is een fout opgetreden. Probeer het opnieuw.').show();
+        }
+    });
+}
+
 function checkResearchRegistration(researchId) {
     $.ajax({
         url: '/api/peers/registrations?research_id=' + researchId,  // Assuming this endpoint returns a list of registrations for the current user
@@ -210,6 +250,11 @@ function handleCardButtonClick(research_button) {
 $(document).ready(function () {
     updateOpenCards()
     setInterval(updateOpenCards, 10000);
+});
+
+$(document).ready(function () {
+    updateRegisteredCards()
+    setInterval(updateRegisteredCards, 10000);
 });
 
 $('#researchModal').on('show.bs.modal', function () {

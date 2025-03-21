@@ -6,7 +6,7 @@ from flask import session
 
 from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 from backend.api.api import require_api_key
-from backend.api.researches import FilteredResearch
+from backend.api.researches_api import FilteredResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
 from backend.database.models.research_model import Research
 from backend.utils.check_permissions import check_permission
@@ -134,15 +134,8 @@ def documentation():
     """Toon de API-documentatie, alleen als de API-key geldig is"""
     return render_template("api_documentation.jinja", theme=g.theme)
 
-@frontend_bp.route('/onderzoeken')
-def onderzoeken():
-    alle_onderzoeken = Research.query.all()
-    return render_template("onderzoeken.jinja", theme=g.theme, alle_onderzoeken=alle_onderzoeken)
+# @frontend_bp.route('/onderzoeken')
+# def onderzoeken():
+#     alle_onderzoeken = Research.query.all()
+#     return render_template("onderzoeken.jinja", theme=g.theme, alle_onderzoeken=alle_onderzoeken)
 
-@frontend_bp.route('/beheerders')
-def beheerders():
-    return render_template("beheerders.jinja", theme=g.theme)
-
-@frontend_bp.route('/ervaringsdeskundigen')
-def ervaringsdeskundigen():
-    return render_template("ervaringsdeskundigen.jinja", theme=g.theme)
