@@ -158,7 +158,7 @@ Er zijn drie verschillende overzichten:
 ![image](docs/images/ReadMe%20screenshots/admin_dashboard_beheren_beheerders.png)
 
 
-### Ervaringsdeskundige
+### Ervaringsdeskundigen
 
 Deze pagina's zijn bedoeld voor de ervaringsdeskundigen. Als je naar deze pagina gaat, zul je eerst moeten inloggen of moeten registreren:
 
@@ -175,6 +175,8 @@ Op deze pagina kan een je een account aanmaken. Er moeten allerlei gegevens zoal
 ![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_1.png)
 ![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_2.png)
 ![image](docs/images/ReadMe%20screenshots/peer_dashboard_register_3.png)
+
+#### Dashboard
 
 Als je bent ingelogd kom word je verwezen naar de 'ervaringsdeskundige dashboard' pagina. Hier staan drie tabjes waar je onderzoeken kan zien.
 
