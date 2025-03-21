@@ -132,21 +132,26 @@
 
             <!-- Pagination for Researches -->
             <div class="row gap-3">
-                <button id="firstResearchPage" class="col-1 btn btn-primary">
-                    <i class="me-2 bi bi-chevron-double-left"></i> Eerste
+
+                <button id="firstResearchPage" class="col-auto btn btn-primary d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-chevron-double-left"></i>
+                    Eerste
                 </button>
-                <button id="previousResearchPage" class="col-1 btn btn-primary">
-                    <i class="me-2 bi bi-chevron-left"></i> Vorige
+                <button id="previousResearchPage" class="col-auto btn btn-primary d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-chevron-left"></i>
+                    Vorige
                 </button>
-                <div class="col text-center">
-                    <label for="currentResearchPage" class="me-2">Huidige pagina: </label>
-                    <input type="number" id="currentResearchPage" class="col-1 text-center" value="1" min="1"/>
+                <div class="col text-center d-flex align-items-center justify-content-center">
+                    <label for="currentResearchPage" class="me-2 mb-0">Huidige pagina: </label>
+                    <input type="number" id="currentResearchPage" class="text-center" value="1" min="1" style="width: 60px;" />
                 </div>
-                <button id="nextResearchPage" class="col-1 btn btn-primary">
-                    Volgende <i class="ms-2 bi bi-chevron-right"></i>
+                <button id="nextResearchPage" class="col-auto btn btn-primary d-flex align-items-center justify-content-center gap-2">
+                    Volgende
+                    <i class="bi bi-chevron-right"></i>
                 </button>
-                <button id="lastResearchPage" class="col-1 btn btn-primary">
-                    Laatste <i class="ms-2 bi bi-chevron-double-right"></i>
+                <button id="lastResearchPage" class="col-auto btn btn-primary d-flex align-items-center justify-content-center gap-2">
+                    Laatste
+                    <i class="bi bi-chevron-double-right"></i>
                 </button>
             </div>
         </div>
@@ -256,6 +261,8 @@
                         <label for="researchEndDate" class="form-label">Einddatum</label>
                         <input type="date" class="form-control" id="researchEndDate">
                     </div>
+
+                    <!-- Additional fields (beschikbaarheid, beloning, limitations, etc.) -->
                     <div class="mb-3">
                         <label for="researchIsAvailable" class="form-label">Beschikbaar</label>
                         <input type="checkbox" class="form-check-input" id="researchIsAvailable">
@@ -264,7 +271,7 @@
                         <label for="researchHasReward" class="form-label">Beloning</label>
                         <input type="checkbox" class="form-check-input" id="researchHasReward">
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" id="researchRewardContainer">
                         <label for="researchReward" class="form-label">Beloningsomschrijving</label>
                         <input type="text" class="form-control" id="researchReward">
                     </div>
