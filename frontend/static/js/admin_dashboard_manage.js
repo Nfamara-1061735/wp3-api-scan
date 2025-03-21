@@ -336,9 +336,26 @@ $(document).ready(function () {
         });
     });
 
+    $('#deleteResearchBtn').on('click', function () {
+        const researchId = $('#researchId').val();
+
+        if (!confirm('Weet je zeker dat je dit onderzoek wilt verwijderen?')) return;
+
+        $.ajax({
+            url: `/api/researches-admin/${researchId}`,
+            method: 'DELETE',
+            success: function () {
+                $('#alertContainer').text('Onderzoek succesvol verwijderd.');
+                $('#researchDetailsModal').modal('hide');
+                fetchResearches();
+            },
+            error: function () {
+                $('#alertContainer').text('Fout bij verwijderen van onderzoek.');
+            }
+        });
+    });
 
 
-    // Research pagination
     $('#firstResearchPage').on('click', () => researchCurrentPage > 1 && fetchResearches(researchSortName, researchSortOrder, 1));
     $('#previousResearchPage').on('click', () => researchCurrentPage > 1 && fetchResearches(researchSortName, researchSortOrder, researchCurrentPage - 1));
     $('#nextResearchPage').on('click', () => researchCurrentPage < researchMaxPages && fetchResearches(researchSortName, researchSortOrder, researchCurrentPage + 1));
@@ -353,7 +370,6 @@ $(document).ready(function () {
         }
     });
 
-
     $('#researchTable thead th').each(function () {
         const sort = $(this).attr('data-sort');
         if (sort) {
@@ -366,17 +382,14 @@ $(document).ready(function () {
     $('#researchTable thead').on('click', 'button', function () {
         $('#researchTable thead button i').remove();
         researchSortName = $(this).attr('data-sort');
-
         const icon = $('<i class="ms-1 bi bi-sort-up"></i>');
         $(this).append(icon);
-
         researchSortOrder = $(this).find('i').hasClass('bi-sort-down') ? 'desc' : 'asc';
         fetchResearches(researchSortName, researchSortOrder);
     });
 
 
     $('#researches-tab').on('shown.bs.tab', function () {
-        console.log('Researches tab activated');
         fetchResearches();
     });
 
