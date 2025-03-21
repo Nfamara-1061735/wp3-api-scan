@@ -156,9 +156,9 @@ class SingleResearchRest(Resource):
         try:
             db.session.delete(research)
             db.session.commit()
-        except Exception as e:
+        except Exception as exception:
             db.session.rollback()
-            abort(500, message=f"Verwijderen van onderzoek niet gelukt: {str(e)}")
+            abort(500, message=f"Verwijderen van onderzoek niet gelukt: {str(exception)}")
 
         return {'message': 'Onderzoek succesvol verwijderd.'}, 200
 
