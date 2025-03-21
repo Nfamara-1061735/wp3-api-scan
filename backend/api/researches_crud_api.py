@@ -6,14 +6,26 @@ from backend.database.models import Research
 from backend.utils.check_permissions import check_permission_rest
 
 
+limitation_fields = {
+    'limitation_id': fields.Integer,
+    'limitation': fields.String
+}
+
 research_fields = {
     'research_id': fields.Integer,
     'title': fields.String,
+    'is_available': fields.Boolean,
     'description': fields.String,
-    'start_date': fields.DateTime('iso8601'),
-    'end_date': fields.DateTime('iso8601'),
+    'start_date': fields.String,
+    'end_date': fields.String,
     'location': fields.String,
+    'has_reward': fields.Boolean,
+    'reward': fields.String,
+    'target_min_age': fields.Integer,
+    'target_max_age': fields.Integer,
     'status_id': fields.Integer,
+    'research_type_id': fields.Integer,
+    'limitations': fields.List(fields.Nested(limitation_fields))
 }
 
 paginated_research_fields = {
@@ -71,3 +83,13 @@ class ResearchesRest(Resource):
                 'items_per_page': pagination.per_page
             }
         }, 200
+
+class SingleResearchRest(Resource):
+    @check_permission_rest('admin')
+    @marshal_with(research_fields)
+    def get(self, research_id):
+        research = Research.query.get(research_id)
+        if not research:
+            abort(400, message=f"Research {research_id} does not exist.")
+        return research, 200
+
