@@ -590,9 +590,10 @@ def generate_peer_expert_research_types(research_types: list[ResearchTypesModel]
     print_message("Generating user-organization relationships...")
     peer_expert_research_types = []
 
-    research_type_count = len(research_types)
+    research_type_count = len(research_types) - 1
     for peer_expert in peer_experts:
-        research_types: list[ResearchTypesModel] = random.sample(research_types, research_type_count)
+        research_types: list[ResearchTypesModel] = random.sample(research_types,
+                                                                 random.randrange(1, research_type_count))
 
         for research_type in research_types:
             peer_expert_research = PeerExpertsResearchTypes(
