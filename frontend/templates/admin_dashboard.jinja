@@ -1,119 +1,152 @@
 {% extends "base.jinja" %}
 {% block title %} Admin - Keuren {% endblock %}
+
 {% block content %}
-    <div class="px-5 pt-5">
-        <h1 class="">Dashboard - Keuren</h1>
-        <hr class="pb-3">
-        <div id="alertContainer" class="my-3"></div>
-    </div>
+<div class="px-5 pt-5">
+    <h1 class="">Dashboard - Keuren</h1>
+    <hr class="pb-3">
+    <div id="alertContainer" class="my-3"></div>
+</div>
 
-    <!-- Tab navigation -->
-    <ul class="nav nav-tabs px-5" id="adminTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="researches-tab" data-bs-toggle="tab" href="#researches" role="tab"
-               aria-controls="Onderzoeksaanvragen" aria-selected="true">Onderzoeksaanvragen <span id="open-card-count"
-                                                                                                  class="ms-2 badge text-bg-primary"></span></a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="registrations-tab" data-bs-toggle="tab" href="#registrations" role="tab"
-               aria-controls="Inschrijvingen" aria-selected="false">Inschrijvingen <span id="registered-card-count"
-                                                                                         class="ms-2 badge text-bg-primary"></span></a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="peer-experts-tab" data-bs-toggle="tab" href="#peerExperts" role="tab"
-               aria-controls="Ervaringsdeskundigen" aria-selected="false">Ervaringsdeskundigen <span
-                    id="rated-card-count" class="ms-2 badge text-bg-primary"></span></a>
-        </li>
-        <li class="mx-auto"></li>
-        <li class="nav-item">
-            <a class="btn btn-outline-secondary text-primary-emphasis" href="{{ url_for('frontend.admin') }}">Admin</a>
-        </li>
-    </ul>
+<!-- Tab navigation -->
+<ul class="nav nav-tabs px-5" id="adminTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="researches-tab" data-bs-toggle="tab" href="#researches" role="tab"
+           aria-controls="Onderzoeksaanvragen" aria-selected="true">Onderzoeksaanvragen
+            <span id="open-card-count" class="ms-2 badge text-bg-primary"></span>
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="registrations-tab" data-bs-toggle="tab" href="#registrations" role="tab"
+           aria-controls="Inschrijvingen" aria-selected="false">Inschrijvingen
+            <span id="registered-card-count" class="ms-2 badge text-bg-primary"></span>
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="peer-experts-tab" data-bs-toggle="tab" href="#peerExperts" role="tab"
+           aria-controls="Ervaringsdeskundigen" aria-selected="false">Ervaringsdeskundigen
+            <span id="rated-card-count" class="ms-2 badge text-bg-primary"></span>
+        </a>
+    </li>
+    <li class="mx-auto"></li>
+    <li class="nav-item">
+        <a class="btn btn-outline-secondary text-primary-emphasis" href="{{ url_for('frontend.admin') }}">Admin</a>
+    </li>
+</ul>
 
-    <!-- Tab content -->
-    <div class="tab-content mx-5" id="dashboardTabs">
-        <div class="tab-pane fade show active" id="researches" role="tabpanel" aria-labelledby="researches-tab">
-            <div class="py-4">
-                <div class="pb-3 d-flex flex-column gap-3" id="researchApprovalContainer">
-                    <p class="text-muted">Geen nieuwe onderzoeken om weer te geven.</p>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="registrations" role="tabpanel" aria-labelledby="registrations-tab">
-            <div class="py-4">
-                <div class="pb-3 d-flex flex-column gap-3" id="registrationApprovalContainer">
-                    <p class="text-muted">Geen nieuwe aanmeldingen om weer te geven.</p>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="peerExperts" role="tabpanel" aria-labelledby="peer-experts-tab">
-            <div class="py-4">
-                <div class="pb-3 d-flex flex-column gap-3" id="peerExpertApprovalContainer">
-                    <div class="border rounded-3 p-3">
-                        <p>Inschrijving 1 door ervaringsdeskundige</p>
-                        <button class="btn btn-success me-2">Goedkeuren</button>
-                        <button class="btn btn-danger">Afkeuren</button>
-                    </div>
-                    <p class="text-muted d-none">Geen nieuwe ervaringsdeskundigen om weer te geven.</p>
-                </div>
+<!-- Tab content -->
+<div class="tab-content mx-5" id="dashboardTabs">
+
+    <!-- Onderzoeksaanvragen -->
+    <div class="tab-pane fade show active" id="researches" role="tabpanel" aria-labelledby="researches-tab">
+        <div class="py-4">
+            <div class="pb-3 d-flex flex-column gap-3" id="researchApprovalContainer">
+                <p class="text-muted">Geen nieuwe onderzoeken om weer te geven.</p>
             </div>
         </div>
     </div>
 
-    <!-----modal for research details----->
-    <div class="modal fade" id="researchModal" tabindex="-1" aria-labelledby="researchModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="researchModalTitle"></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="researchModalBody"></p>
-                    <div class="px-2 row">
-                        <table class="col table table-bordered table-hover">
-                            <tbody>
-                            <tr>
-                                <th class="w-auto" scope="row">Startdatum:</th>
-                                <td class="w-100" id="researchStartDate"></td>
-                            </tr>
-                            <tr>
-                                <th class="w-auto" scope="row">Einddatum:</th>
-                                <td class="w-100" id="researchEndDate"></td>
-                            </tr>
-                            <tr>
-                                <th class="w-auto" scope="row">Locatie:</th>
-                                <td class="w-100" id="researchLocation"></td>
-                            </tr>
-                            <tr>
-                                <th class="w-auto" scope="row">Doelgroep Leeftijd:</th>
-                                <td class="w-100" id="researchAgeRange"></td>
-                            </tr>
-                            <tr>
-                                <th class="w-auto" scope="row">Beloning:</th>
-                                <td class="w-100" id="researchReward"></td>
-                            </tr>
-                            <tr>
-                                <th class="w-auto" scope="row">Beperkingen:</th>
-                                <td class="w-100" colspan="2">
-                                    <ul id="researchLimitations"></ul>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="col-auto px-2"></div>
-                        <div id="map" class="col-auto" style="width: 500px"></div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" id="modalApproveButton" class="btn btn-success me-3">Goedkeuren</button>
-                    <button type="button" id="modalRejectButton" class="btn btn-danger">Afkeuren</button>
-                </div>
+    <!-- Registraties -->
+    <div class="tab-pane fade" id="registrations" role="tabpanel" aria-labelledby="registrations-tab">
+        <div class="py-4">
+            <div class="pb-3 d-flex flex-column gap-3" id="registrationApprovalContainer">
+                <p class="text-muted">Geen inschrijvingen om weer te geven.</p>
             </div>
         </div>
     </div>
+
+    <!-- Ervaringsdeskundigen -->
+    <div class="tab-pane fade" id="peerExperts" role="tabpanel" aria-labelledby="peer-experts-tab">
+        <div class="py-4">
+            <div class="pb-3 d-flex flex-column gap-3" id="peerExpertApprovalContainer">
+                <p class="text-muted">Geen nieuwe ervaringsdeskundigen om weer te geven.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal for research details -->
+<div class="modal fade" id="researchModal" tabindex="-1" aria-labelledby="researchModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="researchModalTitle"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body">
+                <p id="researchModalBody"></p>
+                <div class="px-2 row">
+                    <table class="col table table-bordered table-hover">
+                        <tbody>
+                            <tr><th scope="row">Startdatum:</th><td id="researchStartDate"></td></tr>
+                            <tr><th scope="row">Einddatum:</th><td id="researchEndDate"></td></tr>
+                            <tr><th scope="row">Locatie:</th><td id="researchLocation"></td></tr>
+                            <tr><th scope="row">Doelgroep Leeftijd:</th><td id="researchAgeRange"></td></tr>
+                            <tr><th scope="row">Beloning:</th><td id="researchReward"></td></tr>
+                            <tr><th scope="row">Beperkingen:</th><td><ul id="researchLimitations"></ul></td></tr>
+                        </tbody>
+                    </table>
+                    <div id="map" class="col-auto" style="width: 500px"></div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" id="modalApproveButton" class="btn btn-success me-3">Goedkeuren</button>
+                <button type="button" id="modalRejectButton" class="btn btn-danger">Afkeuren</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for peer expert details -->
+<div class="modal fade" id="peerExpertModal" tabindex="-1" aria-labelledby="peerExpertModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="peerExpertModalTitle">Details Ervaringsdeskundige</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr><th>Voornaam</th><td id="peerFirstName"></td></tr>
+                        <tr><th>Achternaam</th><td id="peerLastName"></td></tr>
+                        <tr><th>Email</th><td id="peerEmail"></td></tr>
+                        <tr><th>Telefoonnummer</th><td id="peerPhoneNumber"></td></tr>
+                        <tr><th>Postcode</th><td id="peerPostalCode"></td></tr>
+                        <tr><th>Geslacht</th><td id="peerGender"></td></tr>
+                        <tr><th>Geboortedatum</th><td id="peerBirthDate"></td></tr>
+                        <tr><th>Hulpmiddelen</th><td id="peerToolsUsed"></td></tr>
+                        <tr><th>Korte Bio</th><td id="peerShortBio"></td></tr>
+                        <tr><th>Speciale Notities</th><td id="peerSpecialNotes"></td></tr>
+                        <tr><th>Beschikbaarheid</th><td id="peerAvailabilityNotes"></td></tr>
+                        <tr>
+                            <th>Beperkingen</th>
+                            <td>
+                                <ul id="peerLimitationsList">
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Onderzoek Types</th>
+                            <td>
+                                <ul id="peerResearchTypesList">
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" id="modalApprovePeerButton" class="btn btn-success me-3">Goedkeuren</button>
+                <button type="button" id="modalRejectPeerButton" class="btn btn-danger">Afkeuren</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
+
 {% block scripts %}
-    <script src="{{ url_for('.static', filename='js/admin_dashboard.js') }}"></script>
+<script src="{{ url_for('.static', filename='js/admin_dashboard.js') }}"></script>
 {% endblock %}
