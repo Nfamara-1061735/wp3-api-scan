@@ -760,7 +760,7 @@ def init_db_data(amount_multiplier=1):
     db.session.bulk_save_objects(registrations)
 
     api_keys = generate_api_keys()
-    db.session.bulk_save_objects(api_keys)
+    # db.session.bulk_save_objects(api_keys)
 
     db.session.commit()  # Save data
 
