@@ -265,8 +265,12 @@
                         <input type="number" class="form-control" id="researchTypeId">
                     </div>
                     <div class="mb-3">
-                        <label for="researchLimitations" class="form-label">Beperkingen</label>
-                        <select id="researchLimitations" class="form-select" multiple></select>
+                        <label class="form-label">Beperkingen</label>
+                        <div id="selectedLimitationsList" class="mb-2">
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" id="openLimitationsModalBtn">
+                            Kies Beperkingen
+                        </button>
                     </div>
 
                     <div class="modal-footer">
