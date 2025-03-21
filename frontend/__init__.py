@@ -134,15 +134,8 @@ def documentation():
     """Toon de API-documentatie, alleen als de API-key geldig is"""
     return render_template("api_documentation.jinja", theme=g.theme)
 
-@frontend_bp.route('/onderzoeken')
-def onderzoeken():
-    alle_onderzoeken = Research.query.all()
-    return render_template("onderzoeken.jinja", theme=g.theme, alle_onderzoeken=alle_onderzoeken)
+# @frontend_bp.route('/onderzoeken')
+# def onderzoeken():
+#     alle_onderzoeken = Research.query.all()
+#     return render_template("onderzoeken.jinja", theme=g.theme, alle_onderzoeken=alle_onderzoeken)
 
-@frontend_bp.route('/beheerders')
-def beheerders():
-    return render_template("beheerders.jinja", theme=g.theme)
-
-@frontend_bp.route('/ervaringsdeskundigen')
-def ervaringsdeskundigen():
-    return render_template("ervaringsdeskundigen.jinja", theme=g.theme)
