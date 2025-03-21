@@ -119,6 +119,10 @@ Deze pagina is bedoeld voor medewerkers van de organisaties. Hier staat de docum
 
 Deze pagina's zijn bedoeld voor de medewerkers van stichting Accessibility (de admins). Als je naar deze pagina gaat, zul je eerst moeten inloggen:
 
+De test inloggegevens voor deze pagina zijn 
+- **gebruiksnaam**: admin
+- **wachtwoord**: admin
+
 ![image](docs/images/ReadMe%20screenshots/admin_login.png)
 
 Nadat je in hebt gelogd kom je in het 'admin dashboard' terecht. Hier kunnen de admins CRUD-acties uitvoeren op de onderzoeksaanvragen, inschrijvingen en ervaringsdeskundigen. Dit kan op twee manieren:
@@ -166,6 +170,16 @@ Deze pagina's zijn bedoeld voor de ervaringsdeskundigen. Als je naar deze pagina
 
 #### Inlogpagina
 Op deze pagina kan een (al goedgekeurde) ervaringsdeskundige inloggen met een email-adres en wachtwoord. Als de ervaringsdeskundige (nog) niet is goedgekeurd of is afgekeurd zal een foutmelding worden getoond.
+
+Als je de database goed hebt gevuld bij het opstarten van de applicatie zou er een credentials.json bestand moeten verschijnen.
+
+![image](docs/images/ReadMe screenshots/credentials_json_file.png)
+
+Hierin vind je test inloggegevens voor de ervaringsdeskundigen 
+
+![image](docs/images/ReadMe screenshots/Inlogcredentials_jason_file.png)
+
+En met een van deze gegevens kan je inloggen bij de ervaringsdeskundigen 
 
 ![image](docs/images/ReadMe%20screenshots/peer_dashboard_login.png)
 
