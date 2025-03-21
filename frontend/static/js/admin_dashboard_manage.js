@@ -287,6 +287,12 @@ $(document).ready(function () {
                 $('#researchStartDate').val(research.start_date);
                 $('#researchEndDate').val(research.end_date);
                 $('#researchStatusId').val(research.status_id);
+                $('#researchTypeId').val(research.research_type_id);
+                $('#researchIsAvailable').prop('checked', research.is_available);
+                $('#researchHasReward').prop('checked', research.has_reward);
+                $('#researchReward').val(research.reward);
+                $('#researchTargetMinAge').val(research.target_min_age);
+                $('#researchTargetMaxAge').val(research.target_max_age);
                 $('#researchDetailsModal').modal('show');
             },
             error: function () {
@@ -294,6 +300,42 @@ $(document).ready(function () {
             }
         });
     }
+
+    $('#researchDetailsForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const researchId = $('#researchId').val();
+        const payload = {
+            title: $('#researchTitle').val(),
+            location: $('#researchLocation').val(),
+            description: $('#researchDescription').val(),
+            start_date: $('#researchStartDate').val(),
+            end_date: $('#researchEndDate').val(),
+            status_id: parseInt($('#researchStatusId').val()),
+            research_type_id: parseInt($('#researchTypeId').val()),
+            is_available: $('#researchIsAvailable').is(':checked'),
+            has_reward: $('#researchHasReward').is(':checked'),
+            reward: $('#researchReward').val(),
+            target_min_age: parseInt($('#researchTargetMinAge').val()) || null,
+            target_max_age: parseInt($('#researchTargetMaxAge').val()) || null
+        };
+
+        $.ajax({
+            url: `/api/researches-admin/${researchId}`,
+            method: 'PATCH',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            success: function () {
+                $('#alertContainer').text('Onderzoek succesvol bijgewerkt.');
+                $('#researchDetailsModal').modal('hide');
+                fetchResearches();
+            },
+            error: function () {
+                $('#alertContainer').text('Fout bij bijwerken van onderzoek.');
+            }
+        });
+    });
+
 
 
     // Research pagination
