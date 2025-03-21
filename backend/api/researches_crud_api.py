@@ -1,8 +1,9 @@
 from flask import g, request
 from flask_restful import Resource, abort, fields, marshal_with
 from sqlalchemy import asc, desc
+import datetime
 from backend import db
-from backend.database.models import Research
+from backend.database.models import Research, LimitationsModel
 from backend.utils.check_permissions import check_permission_rest
 
 
@@ -90,6 +91,60 @@ class SingleResearchRest(Resource):
     def get(self, research_id):
         research = Research.query.get(research_id)
         if not research:
-            abort(400, message=f"Research {research_id} does not exist.")
+            abort(400, message=f"Onderzoek {research_id} bestaat niet.")
+        return research, 200
+
+    @check_permission_rest('admin')
+    @marshal_with(research_fields)
+    def patch(self, research_id):
+        research = Research.query.get(research_id)
+        if not research:
+            abort(404, message="Onderzoek niet gevonden")
+
+        data = request.get_json()
+
+        research.title = data.get('title', research.title)
+        research.is_available = data.get('is_available', research.is_available)
+        research.description = data.get('description', research.description)
+
+
+        start_date = data.get('start_date')
+        if start_date:
+            try:
+                research.start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+            except ValueError:
+                abort(400, message="Verkeerde begindatum, gebruik YYYY-MM-DD.")
+
+        end_date = data.get('end_date')
+        if end_date:
+            try:
+                research.end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+            except ValueError:
+                abort(400, message="Verkeerde einddatum, gebruik YYYY-MM-DD.")
+
+        research.location = data.get('location', research.location)
+        research.has_reward = data.get('has_reward', research.has_reward)
+        research.reward = data.get('reward', research.reward)
+        research.target_min_age = data.get('target_min_age', research.target_min_age)
+        research.target_max_age = data.get('target_max_age', research.target_max_age)
+        research.status_id = data.get('status_id', research.status_id)
+        research.research_type_id = data.get('research_type_id', research.research_type_id)
+
+
+        limitation_ids = data.get('limitation_ids')
+        if limitation_ids is not None:
+            research.limitations.clear()
+
+            limitations = LimitationsModel.query.filter(
+                LimitationsModel.limitation_id.in_(limitation_ids)
+            ).all()
+
+            research.limitations.extend(limitations)
+
+        try:
+            db.session.commit()
+        except Exception as exception:
+            db.session.rollback()
+            abort(500, message=f"Onderzoek updaten niet gelukt: {str(exception)}")
         return research, 200
 
