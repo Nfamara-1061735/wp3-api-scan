@@ -18,7 +18,7 @@ class Login(Resource):
 
         user: Users = Users.query.filter_by(email=email).first()
 
-        target_status = PeerExperts.query.filter_by(user_id=user.user_id).first().peer_expert_status_id
+        target_status = request.args.get('status', None)
 
         if not target_status:
             abort(422)
@@ -68,11 +68,11 @@ class Login(Resource):
         return False
 
     @staticmethod
-    def verify_peer_status(user: Users, target_status: int):
+    def verify_peer_status(user: Users, target_status: str):
         if not user:
             return
 
-        if target_status == 2:
+        if target_status == '2':
             return True
         else:
             return False
