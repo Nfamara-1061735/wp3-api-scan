@@ -6,7 +6,7 @@ from flask import session
 
 from backend.api.api import SingleResearch, FilteredPeerExpertRegistrations, FilteredPeerExperts
 from backend.api.api import require_api_key
-from backend.api.researches import FilteredResearch
+from backend.api.researches_api import FilteredResearch
 from backend.database.models.register_expert import ExpertRegistrationModule
 from backend.database.models.research_model import Research
 from backend.utils.check_permissions import check_permission

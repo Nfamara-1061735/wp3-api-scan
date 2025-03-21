@@ -7,7 +7,7 @@ from backend import db
 from backend.api.login import Login
 from backend.api.peer_experts import PeerExpertRest, SinglePeerExpertRest
 from backend.api.registrations import Registrations, Registration, ResearchesRegistrationState
-from backend.api.researches import Researches, SingleResearch
+from backend.api.researches_api import Researches, SingleResearch
 from backend.api.researches_crud_api import ResearchesRest, SingleResearchRest
 from backend.api.utils import method_not_allowed
 from backend.database.models.api_keys_model import ApiKeys

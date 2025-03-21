@@ -2,7 +2,7 @@ from flask import session, g, request
 from flask_restful import Resource, abort, fields, marshal_with
 
 from backend import db
-from backend.api.researches import researchFields
+from backend.api.researches_api import researchFields
 from backend.database.models import PeerExpertRegistration, Users, Research
 from backend.utils.check_permissions import check_permission_rest
 
