@@ -277,8 +277,13 @@
                         <input type="number" class="form-control" id="researchTargetMaxAge">
                     </div>
                     <div class="mb-3">
-                        <label for="researchStatusId" class="form-label">Status ID</label>
-                        <input type="number" class="form-control" id="researchStatusId">
+                        <label for="researchStatusId" class="form-label">Status</label>
+                        <select class="form-select" id="researchStatusId" required>
+                            <option value="1">Nieuw</option>
+                            <option value="2">Goedgekeurd</option>
+                            <option value="3">Afgekeurd</option>
+                            <option value="4">Afgesloten</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="researchTypeId" class="form-label">Type ID</label>
