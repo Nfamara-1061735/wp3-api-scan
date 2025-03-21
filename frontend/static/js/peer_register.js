@@ -106,8 +106,24 @@ document.addEventListener("DOMContentLoaded", function() {
         showError('birth_date', birthDate.value ? '' : 'Vul je geboortedatum in.');
 
         // Valideer korte bio
+        const toolsUsed = document.getElementById('tools_used');
+        showError('tools_used', toolsUsed.value.trim() ? '' : 'Vul je hulpmiddelen in.');
+
+        // Valideer korte bio
         const shortBio = document.getElementById('short_bio');
         showError('short_bio', shortBio.value.trim() ? '' : 'Geef een korte bio.');
+
+        // Valideer emailadress
+        const emailAdress = document.getElementById('email_adress');
+        showError('email_adress', emailAdress.value.trim() ? '' : 'Vul je emailadres in.');
+
+        // Valideer telefoonnummer
+        const telefoonNummer = document.getElementById('telefoon_nummer');
+        showError('telefoon_nummer', telefoonNummer.value.trim() ? '' : 'Vul je telefoonnummer in.');
+
+        // Valideer wachtwoord
+        const passWord = document.getElementById('password');
+        showError('password', passWord.value.trim() ? '' : 'Vul iets in en maak een wachtwoord aan.');
 
         // Valideer beschikbaarheid
         const availabilityNotes = document.getElementById('availability_notes');
