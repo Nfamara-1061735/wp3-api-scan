@@ -225,4 +225,17 @@ Klik op onderzoeksbureau om bij de documentatie te komen hierin staat precies ui
 
 ![image](docs/images/ReadMe screenshots/api_documentatie.png)
 
+# SOURCES (Hamza-1034556)
+[data uit db ophalen met '___repr___' als debug methode](https://www.geeksforgeeks.org/sqlalchemy-mapping-python-classes/)   
+[forms and getElementById](https://stackoverflow.com/questions/15864606/forms-and-getelementbyid)                                                  
+[JavaScript String trim()](https://www.w3schools.com/jsref/jsref_trim_string.asp)
+[Show error using javascript]( https://stackoverflow.com/questions/27965834/show-error-using-javascript)
+[HTML DOM textContent Property]( https://www.w3schools.am/jsref/prop_node_textcontent.html#gsc.tab=0)
+[Form submit() Method]( https://www.w3schools.com/jsref/met_form_submit.asp)
+[HTML DOM Document addEventListener()](https://www.w3schools.com/jsref/met_document_addeventlistener.asp)
+[Generating API Key and Secret in Python 3]( https://dnmtechs.com/generating-api-key-and-secret-in-python-3/)                                
+[JavaScript Fetch API 1](https://www.javascripttutorial.net/web-apis/javascript-fetch-api/)
+[JavaScript Fetch API 2]( https://forum.freecodecamp.org/t/fetch-api-with-api-key/317584/3)
+[Get Header from API](https://stackoverflow.com/questions/68231936/how-can-i-get-headers-or-a-specific-header-from-my-backend-api?rq=1)
+[Session API](https://docs.sqlalchemy.org/en/20/orm/session_api.html)
 
