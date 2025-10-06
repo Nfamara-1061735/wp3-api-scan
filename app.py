@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from flask import Flask
 from flask_talisman import Talisman
-from flask_seasurf import SeaSurf
+from flask_wtf.csrf import CSRFProtect, CSRFError
 
 from backend.api import api_bp
 from frontend import frontend_bp
@@ -25,12 +25,14 @@ def create_app():
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SECURE=False, #op true zetten als we de app echt zouden launchen dan zou het Https zijn ipv http     
         PERMANENT_SESSION_LIFETIME=timedelta(minutes=60),
+        WTF_CSRF_TIME_LIMIT=None
     )
 
 
     db.init_app(app)
     app.cli.add_command(init_db_command)
     app.cli.add_command(init_db_data_command)
+
 
     #security headers (CSP)
     csp = { 
@@ -47,6 +49,24 @@ def create_app():
         force_https=False
     )
 
+    #CRSF 
+    csrf = CSRFProtect()
+    csrf.init_app(app)
+    csrf.exempt(api_bp)
+
+    @app.after_request
+    def add_security_headers(response):
+
+        response.headers.pop('Server', None)
+        response.headers.setdefault('Content-Security-Policy', csp)
+        response.headers.setdefault('X-Content-Type-Options', 'nosniff')
+        response.headers.setdefault('X-Frame-Options', 'SAMEORIGIN')
+        response.headers.setdefault('Referrer-Policy', 'no-referrer')
+
+        if 'X-Content-Type-Options' not in response.headers:
+            response.headers['X-Content-Type-Options'] = 'nosniff'
+
+        return response
 
 
     from backend.database import models
