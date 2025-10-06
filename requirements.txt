@@ -10,9 +10,11 @@ Flask-SeaSurf==2.0.0
 Flask-SQLAlchemy==3.1.1
 flask-talisman==1.1.0
 Flask-WTF==1.2.2
+gunicorn==23.0.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.3
+packaging==25.0
 pycparser==2.23
 pytz==2025.2
 six==1.17.0
