@@ -9,6 +9,14 @@ from backend.api import api_bp
 from frontend import frontend_bp
 from backend import db, init_db_command, init_db_data_command
 
+class StripServerHeaderMiddleware:
+    def __init__(self, app):
+        self.app = app
+    def __call__(self, environ, start_response):
+        def custom_start_response(status, headers, exc_info=None):
+            headers = [(k, v) for (k, v) in headers if k.lower() != 'server']
+            return start_response(status, headers, exc_info)
+        return self.app(environ, custom_start_response)
 
 def create_app():
     """Create and configure an instance of the Flask application"""
@@ -63,11 +71,16 @@ def create_app():
     @app.after_request
     def add_security_headers(response):
 
-        response.headers.pop('Server', None)
+        if 'Server' in response.headers:
+            del response.headers['Server']
+
+        response.headers.setdefault('X-Content-Type-Options', 'nosniff')
+        response.headers.setdefault('X-Frame-Options', 'SAMEORIGIN')
+        response.headers.setdefault('Referrer-Policy', 'no-referrer')
+        response.headers.setdefault('Permissions-Policy', 'geolocation=(), microphone=()')
 
         return response
-
-
+    
     from backend.database import models
 
     # Register blueprints
@@ -78,6 +91,8 @@ def create_app():
     for rule in app.url_map.iter_rules():
         print(rule)
 
+    app.wsgi_app = StripServerHeaderMiddleware(app.wsgi_app)
+    
     return app
 
 
