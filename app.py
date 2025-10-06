@@ -25,13 +25,29 @@ def create_app():
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SECURE=False, #op true zetten als we de app echt zouden launchen dan zou het Https zijn ipv http     
         PERMANENT_SESSION_LIFETIME=timedelta(minutes=60),
-    
     )
 
 
     db.init_app(app)
     app.cli.add_command(init_db_command)
     app.cli.add_command(init_db_data_command)
+
+    #security headers (CSP)
+    csp = { 
+        'default-src': ["'self'"],
+        'script-src':  ["'self'"],
+        'style-src':   ["'self'", "'unsafe-inline'"]
+    }
+    
+    Talisman(
+        app,
+        content_security_policy=csp,
+        frame_options='SAMEORIGIN',      
+        referrer_policy='no-referrer',
+        force_https=False
+    )
+
+
 
     from backend.database import models
 
