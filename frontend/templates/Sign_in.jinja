@@ -8,6 +8,7 @@
     <h1 class="my-5 text-center">Log in bij Stichting Accessibility HUB</h1>
 
     <form id="login-form" class="login-card mx-auto p-4 bg-light-subtle shadow" method="post" role="form" aria-labelledby="login-heading" style="max-width: 400px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
         <div id="error-message" class="alert alert-danger visually-hidden" role="alert" aria-live="assertive"></div>
 
