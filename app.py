@@ -1,4 +1,9 @@
+import os 
+from datetime import timedelta
+
 from flask import Flask
+from flask_talisman import Talisman
+from flask_seasurf import SeaSurf
 
 from backend.api import api_bp
 from frontend import frontend_bp
@@ -11,8 +16,18 @@ def create_app():
     app = Flask(__name__)
 
     # Config flask application
-    app.config['SECRET_KEY'] = "dev"
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+    app.config.update(
+        SECRET_KEY=os.environ.get("SECRET_KEY", "dev"),
+        SQLALCHEMY_DATABASE_URI='sqlite:///database.db',
+
+        #cookies en sessies
+        SESSION_COOKIE_SAMESITE='Lax',  
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SECURE=False, #op true zetten als we de app echt zouden launchen dan zou het Https zijn ipv http     
+        PERMANENT_SESSION_LIFETIME=timedelta(minutes=60),
+    
+    )
+
 
     db.init_app(app)
     app.cli.add_command(init_db_command)
