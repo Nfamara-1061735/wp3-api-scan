@@ -38,12 +38,18 @@ def create_app():
     csp = { 
         'default-src': ["'self'"],
         'script-src':  ["'self'"],
-        'style-src':   ["'self'", "'unsafe-inline'"]
+        'style-src':   ["'self'", "'unsafe-inline'"],
+
+        'object-src':     ["'none'"],      
+        'base-uri':       ["'self'"],      
+        'form-action':    ["'self'"],     
+        'frame-ancestors':["'self'"],     
     }
     
     Talisman(
         app,
         content_security_policy=csp,
+        content_security_policy_nonce_in=["script-src", "style-src"],
         frame_options='SAMEORIGIN',      
         referrer_policy='no-referrer',
         force_https=False
@@ -58,13 +64,6 @@ def create_app():
     def add_security_headers(response):
 
         response.headers.pop('Server', None)
-        response.headers.setdefault('Content-Security-Policy', csp)
-        response.headers.setdefault('X-Content-Type-Options', 'nosniff')
-        response.headers.setdefault('X-Frame-Options', 'SAMEORIGIN')
-        response.headers.setdefault('Referrer-Policy', 'no-referrer')
-
-        if 'X-Content-Type-Options' not in response.headers:
-            response.headers['X-Content-Type-Options'] = 'nosniff'
 
         return response
 
